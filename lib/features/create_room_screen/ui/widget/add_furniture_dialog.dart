@@ -8,12 +8,12 @@ import '../../../../core/theming/font_weight_helper.dart';
 import '../../../../core/theming/styles.dart';
 import 'custom_room_sizes_text_Form.dart';
 
-class UploadRoomDialog extends StatefulWidget {
+class AddFurniturImage extends StatefulWidget {
   @override
-  _UploadRoomDialogState createState() => _UploadRoomDialogState();
+  _AddFurniturImageState createState() => _AddFurniturImageState();
 }
 
-class _UploadRoomDialogState extends State<UploadRoomDialog> {
+class _AddFurniturImageState extends State<AddFurniturImage> {
   String selectedUnit = 'meter';
   TextEditingController lengthController = TextEditingController();
   TextEditingController widthController = TextEditingController();
@@ -24,7 +24,7 @@ class _UploadRoomDialogState extends State<UploadRoomDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
-        height: 489.h,
+        height: 613.h,
         width: double.infinity,
         decoration: BoxDecoration(
           color: ColorsManager.colorDialog,
@@ -141,7 +141,7 @@ class _UploadRoomDialogState extends State<UploadRoomDialog> {
                 ],
               ),
               SizedBox(
-                height: 70.h,
+                height: 190.h,
               ),
               Center(
                 child: SizedBox(
@@ -166,7 +166,7 @@ class _UploadRoomDialogState extends State<UploadRoomDialog> {
                   ),
                 ),
               ),
-              SizedBox(height: 29.h,)
+              SizedBox(height: 30.h,)
             ],
           ),
         ),
