@@ -61,9 +61,9 @@ class _UnitDropdownState extends State<UnitDropdown> {
                         shape: BoxShape.circle,
                         color: ColorsManager.colorCircle,
                       ),
-                      child: const Center(
+                      child:  Center(
                           child: Icon(
-                            Icons.keyboard_arrow_down_rounded,
+                            !isExpanded? Icons.arrow_drop_down_sharp:Icons.arrow_drop_up_sharp,
                             color: Colors.black,
                             size: 13,
                           )),
@@ -106,6 +106,7 @@ class _UnitDropdownState extends State<UnitDropdown> {
         width: 46.w,
         padding: EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topRight: Radius.circular(9.r)), 
           color: ColorsManager.colorContainer,
         ),
         child: Center(
