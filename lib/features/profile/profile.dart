@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/theming/colors.dart';
+import 'package:rommify_app/features/profile/edit_profile_screen.dart';
 
 import '../../core/widgets/custom_gird_view.dart';
 
@@ -11,7 +12,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String? selectedIcon;
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +90,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Positioned(
             top: 25.h,
             right: 10.w,
-            child: Icon(Icons.settings, color: Colors.white, size: 28.sp),
+            child: GestureDetector(
+
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen()));
+              },
+              
+              
+              child: Icon(Icons.settings, color: Colors.white, size: 28.sp)),
           ),
         ],
       ),
@@ -109,12 +116,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Icon(
         icon,
         color: selectedIcon == key ? Colors.white : Colors.grey,
-        size: 35,
+        size: 35.h,
       ),
     );
   }
 }
-
 
 class ImageCard extends StatelessWidget {
   final String imageUrl;
@@ -122,7 +128,8 @@ class ImageCard extends StatelessWidget {
   final VoidCallback onExpand;
   final bool isExpanded;
 
-  const ImageCard({super.key, 
+  const ImageCard({
+    super.key,
     required this.imageUrl,
     required this.profileImageUrl,
     required this.onExpand,
@@ -159,7 +166,7 @@ class ImageCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (isExpanded)
-                 const Row(
+                  const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.bookmark_border,
@@ -174,7 +181,7 @@ class ImageCard extends StatelessWidget {
                   ),
                 Container(
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle, 
+                    shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white,
                       width: 2,
@@ -182,7 +189,7 @@ class ImageCard extends StatelessWidget {
                   ),
                   child: const Icon(
                     Icons.more_horiz,
-                    color: Colors.white, 
+                    color: Colors.white,
                     size: 14,
                   ),
                 )

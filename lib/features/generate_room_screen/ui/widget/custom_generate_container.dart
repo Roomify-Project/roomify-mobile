@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theming/styles.dart';
-
 class CustomGenerateContainer extends StatelessWidget {
   final double height;
   final double width;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theming/styles.dart';
-import 'custom_generate_container.dart';
+
 
 class RoomTypeItem extends StatelessWidget {
   const RoomTypeItem({super.key});
