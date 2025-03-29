@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/helpers/spacing.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/animated_bottom_right.dart';
@@ -40,39 +41,39 @@ class SignUpScreen extends StatelessWidget {
                               builder: (context) => LogInScrean()));
                     },
                   ),
-                  SizedBox(height: 44.h),
+                  verticatSpace(44),
                   Center(child: GoogleIcon()),
-                  SizedBox(height: 47.42.h),
+                  verticatSpace(47.42),
                   OrDivider(),
-                  SizedBox(height: 61.16.h),
+                  verticatSpace(61.16),
                   CustomTextFormField(
                     labelText: 'Full Name',
                     controller: TextEditingController(),
                     obscureText: false,
                     keyboardType: TextInputType.name,
                   ),
-                  SizedBox(height: 18.h),
+                  verticatSpace(18),
                   CustomTextFormField(
                     labelText: 'Username',
                     controller: TextEditingController(),
                     obscureText: false,
                     keyboardType: TextInputType.name,
                   ),
-                  SizedBox(height: 18.h),
+                  verticatSpace(18),
                   CustomTextFormField(
                     labelText: 'Email',
                     controller: TextEditingController(),
                     obscureText: false,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: 18.h),
+                  verticatSpace(18),
                   CustomTextFormField(
                     labelText: 'Password',
                     controller: TextEditingController(),
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                   ),
-                  SizedBox(height: 36.h),
+                  verticatSpace(36),
                   Center(
                       child: ColorChangingButton(
                     buttonText: "Sign Up",
