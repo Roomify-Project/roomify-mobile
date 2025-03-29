@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
-import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
+
 import 'package:rommify_app/features/profile/profile.dart';
 
 class NavBarScreen extends StatefulWidget {

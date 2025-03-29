@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
-import 'package:rommify_app/core/routing/app_router.dart';
+
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/add_furniture_image.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/add_room_Image.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.dart';
-import 'package:rommify_app/features/create_room_screen/ui/widget/custom_generate_container.dart';
+
 import 'package:rommify_app/features/create_room_screen/ui/widget/design_style.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/room_type.dart';
-import 'package:rommify_app/features/create_room_screen/ui/widget/room_type_list_view.dart';
 
 import '../../../core/routing/routes.dart';
 import '../../../core/theming/styles.dart';
@@ -47,7 +46,7 @@ class CreateRoomScreen extends StatelessWidget {
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20.r),
                                   topRight:
-                                  Radius.circular(20.r)), // Rounded corners
+                                      Radius.circular(20.r)), // Rounded corners
                             ),
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -55,7 +54,8 @@ class CreateRoomScreen extends StatelessWidget {
                               child: Text(
                                 "put this wall clock on the wall of room image above the sofa,fit it with with light and shadow of room image",
                                 style: TextStyles.font14WhiteRegular.copyWith(
-                                    fontSize: 16.sp, fontWeight: FontWeight.bold),
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -69,11 +69,12 @@ class CreateRoomScreen extends StatelessWidget {
                           ),
                           const AddFurnitureImage(),
                           SizedBox(
-                            height: 65 .h,
+                            height: 65.h,
                           ),
                           InkWell(
                             child: Text("Room type",
-                                style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp)),
+                                style: TextStyles.font15WhiteRegular
+                                    .copyWith(fontSize: 16.sp)),
                             onTap: () {
                               context.pushNamed(Routes.exploreScreen);
                             },
@@ -86,7 +87,8 @@ class CreateRoomScreen extends StatelessWidget {
                             height: 20.h,
                           ),
                           Text("Style",
-                              style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp)),
+                              style: TextStyles.font15WhiteRegular
+                                  .copyWith(fontSize: 16.sp)),
                           SizedBox(
                             height: 3.h,
                           ),
@@ -94,12 +96,10 @@ class CreateRoomScreen extends StatelessWidget {
                           SizedBox(
                             height: 50.h,
                           ),
-              
                         ],
                       ),
                     ),
                   ),
-
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -119,14 +119,13 @@ class CreateRoomScreen extends StatelessWidget {
                         ),
                       ),
                       child: Text('GENERATE',
-                          style: TextStyles.font21BlackSemiBold.copyWith(
-                              color: Colors.white, fontSize: 18.sp)),
+                          style: TextStyles.font21BlackSemiBold
+                              .copyWith(color: Colors.white, fontSize: 18.sp)),
                     ),
                   )
                 ],
               ),
             ),
-
           ],
         ));
   }

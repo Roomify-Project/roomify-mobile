@@ -16,7 +16,7 @@ class LogInScrean extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsManager.mainColor,
+      backgroundColor: ColorsManager.colorPrimary,
       body: SafeArea(
         child: Stack(
           children: [
@@ -26,40 +26,42 @@ class LogInScrean extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 157.w, top: 50.h),
+                    padding: EdgeInsets.only(left: 157.w, top: 68.h),
                     child: const AnimatedText(text: 'Log In'),
                   ),
+                  SizedBox(height: 20.h),
                   const SingupRichText(),
-                  SizedBox(height: 44.h),
+                  SizedBox(height: 67.h),
                   Center(child: GoogleIcon()),
                   SizedBox(height: 47.42.h),
                   OrDivider(),
-                  SizedBox(height: 61.16.h),
-                  SizedBox(height: 18.h),
+                  SizedBox(height: 97.16.h),
                   CustomTextFormField(
                     labelText: 'Email',
-                      controller: TextEditingController(),
+                    controller: TextEditingController(),
                     obscureText: false,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: 18.h),
+                  SizedBox(height: 67.h),
                   CustomTextFormField(
                     labelText: 'Password',
                     controller: TextEditingController(),
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                   ),
-                  SizedBox(height: 36.h),
-                  Center(
-                      child: ColorChangingButton(
-                    buttonText: "Log In",
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()));
-                    },
-                  ))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 213, bottom: 60),
+                    child: Center(
+                        child: ColorChangingButton(
+                      buttonText: "Log In",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen()));
+                      },
+                    )),
+                  )
                 ],
               ),
             ),

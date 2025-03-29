@@ -1,0 +1,2 @@
+D:/Flutter/roomify-mobile/android/app/.cxx/Debug/jh5c6t1j/x86/CMakeFiles/edit_cache.dir
+D:/Flutter/roomify-mobile/android/app/.cxx/Debug/jh5c6t1j/x86/CMakeFiles/rebuild_cache.dir
