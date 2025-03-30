@@ -3,6 +3,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../helpers/constans.dart';
 import '../helpers/shared_pref_helper.dart';
+import 'api_networking.dart';
 
 class DioFactory {
   /// private constructor as I don't want to allow creating an instance of this class
@@ -16,6 +17,7 @@ class DioFactory {
     if (dio == null) {
       dio = Dio();
       dio!
+      ..options.baseUrl=ApiConstants.apiBaseUrl
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
       addDioHeaders();

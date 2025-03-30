@@ -1,18 +1,8 @@
 class ApiConstants {
-  static const String singularServerUrl = "https://syncord.koyeb.app/chat";
-  static const String apiBaseUrl = "https://syncord.koyeb.app";
-  static const String loginModel = '/User/login';
-  static const String getFriendsListModel = '/User/dashboard';
-  static const String searchFriend = '/FriendShip/Search';
-  static const String addFriend = '/FriendShip/Send-request';
-  static const String sendMessage = '/Chat';
+  // static const String singularServerUrl = "https://syncord.koyeb.app/chat";
+  static const String apiBaseUrl = "http://roomify.runasp.net";
+  static const String loginModel = '/api/Auth/login';
 
-  static const String getMessagePath = '/Chat/{number}'; // Placeholder for dynamic path
-
-  static String getMessage(int number) => '/Chat/$number';
-  static const String getFriendsRequest = '/User/requests'; // Placeholder for dynamic path
-  static const String acceptFriendsRequest = '/FriendShip/accept-request'; // Placeholder for dynamic path
-  static const String rejectedFriendsRequest = '/FriendShip/reject-request'; // Placeholder for dynamic path
 
 }
 
