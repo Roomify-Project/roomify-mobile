@@ -21,5 +21,10 @@ class ColorsManager {
   static const Color colorCircle = Color(0xff9C00B9);
   static const Color colorIcon = Color(0xff9747FF);
   static final Color colorContainer = Colors.white.withOpacity(0.1);
+  static final Color colorDialog = const Color(0xFF280031).withOpacity(0.9);
+ static  const Color colorShowDialog = Color(0x1C7A7A1C);
+  static  const Color colorLightGrey2 = Color(0xffD9D9D9);
+  static  const Color colorDeepBurble= Color(0xff290031);
+
 
 }
