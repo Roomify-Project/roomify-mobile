@@ -38,7 +38,7 @@ class SignUpScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LogInScrean()));
+                              builder: (context) => const LogInScreen()));
                     },
                   ),
                   verticatSpace(44),
