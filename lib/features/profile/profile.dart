@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/profile/edit_profile_screen.dart';
 
@@ -90,14 +92,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Positioned(
             top: 25.h,
             right: 10.w,
-            child: GestureDetector(
-
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen()));
-              },
-              
-              
-              child: Icon(Icons.settings, color: Colors.white, size: 28.sp)),
+            child: Row(
+              children: [
+                InkWell(
+                  child: Icon(
+                    Icons.email_outlined,
+                    color: Colors.white,
+                    size: 28.sp,
+                  ),
+                  onTap: () {
+                    context.pushNamed(Routes.chatsScreen);
+                  },
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EditProfileScreen()));
+                    },
+                    child:
+                        Icon(Icons.settings, color: Colors.white, size: 28.sp)),
+              ],
+            ),
           ),
         ],
       ),

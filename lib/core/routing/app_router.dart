@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/chat/ui/chant_friend_screen.dart';
+import 'package:rommify_app/features/chat/ui/chat_screen.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
 import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
@@ -37,6 +39,14 @@ class AppRouter {
       case Routes.mainScreen:
         return MaterialPageRoute(
           builder: (_) =>  const MainScreen(),
+        );
+      case Routes.chatsScreen:
+        return MaterialPageRoute(
+          builder: (_) =>   ChatsScreen(),
+        );
+      case Routes.chatsFriendsScreen:
+        return MaterialPageRoute(
+          builder: (_) =>   ChatFriendScreen(),
         );
       default:
         return null;

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/routing/routes.dart';
 
 import '../../features/profile/profile.dart';
 
@@ -26,15 +29,20 @@ class _CustomGirdViewState extends State<CustomGirdView> {
       ),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return ImageCard(
-          imageUrl: 'assets/images/Group 25.png',
-          profileImageUrl: 'assets/images/1O0A0210.jpg',
-          onExpand: () {
-            setState(() {
-              isExpandedList[index] = !isExpandedList[index];
-            });
+        return InkWell(
+          onTap: () {
+            context.pushNamed(Routes.mainScreen);
           },
-          isExpanded: isExpandedList[index],
+          child: ImageCard(
+            imageUrl: 'assets/images/Group 25.png',
+            profileImageUrl: 'assets/images/1O0A0210.jpg',
+            onExpand: () {
+              setState(() {
+                isExpandedList[index] = !isExpandedList[index];
+              });
+            },
+            isExpanded: isExpandedList[index],
+          ),
         );
       },
     );
