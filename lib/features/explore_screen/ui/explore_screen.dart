@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:rommify_app/core/theming/colors.dart';
+import 'package:rommify_app/features/explore_screen/ui/widget/custom_grid_view_explore.dart';
 
 import '../../../core/widgets/custom_gird_view.dart';
 import '../../create_room_screen/ui/widget/circle_widget.dart';
@@ -22,7 +23,7 @@ class ExploreScreen extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding:  EdgeInsets.only(left: 23.w,right: 23.w,top: 89.h),
-                  child: const CustomGirdView(),
+                  child:  const CustomGridViewExplore(),
                 ),
               ),
             ],

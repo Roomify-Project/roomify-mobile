@@ -1,6 +1,9 @@
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
+import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
+import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 
 import '../../features/log_in/data/apis/login_api_service.dart';
 import '../../features/log_in/data/repos/login_repo.dart';
@@ -13,13 +16,16 @@ final getIt = GetIt.instance;
 Future<void> setupGetIt() async {
   // Dio & ApiService
   Dio dio = DioFactory.getDio();
+  // login
 
   getIt.registerLazySingleton<LoginApiService>(() => LoginApiService(dio: dio));
-
-  // login
   getIt.registerLazySingleton<LoginRepo>(() => LoginRepo(getIt()));
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt()));
 
+  //// posts
+  getIt.registerLazySingleton<PostsApiService>(() => PostsApiService(dio: dio));
+  getIt.registerLazySingleton<PostsRepo>(() => PostsRepo(getIt()));
+  getIt.registerFactory<PostsCubit>(() => PostsCubit(getIt()));
   //
   // //friend list
   // getIt.registerLazySingleton<GetFriendsApiService>(() => GetFriendsApiService(dio));
