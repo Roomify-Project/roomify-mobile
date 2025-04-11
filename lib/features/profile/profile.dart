@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 20.h),
                 // Image Grid - Modified mainAxisSpacing to 0
                 const Expanded(
-                  child: CustomGirdView(),
+                  child: CustomGridViewProfile(),
                 ),
               ],
             ),

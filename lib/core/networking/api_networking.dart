@@ -3,6 +3,9 @@ class ApiConstants {
   static const String apiBaseUrl = "http://roomify.runasp.net";
   static const String loginModel = '/api/Auth/login';
   static const String getAllPostsModel = '/api/PortfolioPost/';
+  static String getUserPostsModel({required String id}){
+    return "/api/PortfolioPost/by-user/$id";
+  }
 
 
 }

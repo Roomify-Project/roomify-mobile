@@ -5,30 +5,27 @@ import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../../features/profile/profile.dart';
-import 'custom_empity_list.dart';
-import 'custom_error.dart';
-import 'custom_shimmer.dart';
+import '../../../../core/widgets/custom_empity_list.dart';
+import '../../../../core/widgets/custom_error.dart';
+import '../../../../core/widgets/custom_shimmer.dart';
+import '../../../profile/profile.dart';
 
-class CustomGridViewProfile extends StatefulWidget {
-  const CustomGridViewProfile({super.key});
+class CustomGridViewExplore extends StatefulWidget {
+  const CustomGridViewExplore({super.key});
 
   @override
-  State<CustomGridViewProfile> createState() => _CustomGridViewProfileState();
+  State<CustomGridViewExplore> createState() => _CustomGridViewExploreState();
 }
 
-class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
+class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
   late List<bool> isExpandedList;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PostsCubit.get(context).getUserPosts(
-          id: '55f46b19-0291-4969-8f52-d77f0bbcedfa'
-      );
+      PostsCubit.get(context).getAllPosts();
     });
   }
 
@@ -38,19 +35,17 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
 
     return RefreshIndicator(
       onRefresh: () async {
-         PostsCubit.get(context).getUserPosts(
-            id: '55f46b19-0291-4969-8f52-d77f0bbcedfa'
-        );
+        postsCubit.getAllPosts();
       },
       child: BlocBuilder<PostsCubit, PostsStates>(
         builder: (BuildContext context, state) {
           // Loading State
-          if (state is GetUsePostsLoadingState) {
+          if (state is GetAllPostsLoadingState) {
             return const CustomShimmerEffect();
           }
 
           // Null Response State
-          if (postsCubit.getPostsResponse == null) {
+          if (postsCubit.getAllPostsResponse == null) {
             return const Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
@@ -61,7 +56,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
           }
 
           // Empty Posts State
-          if (postsCubit.getPostsResponse!.posts.isEmpty) {
+          if (postsCubit.getAllPostsResponse!.posts.isEmpty) {
             return const Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
@@ -72,7 +67,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
           }
 
           // Error State
-          if (state is GetUserPostsErrorState) {
+          if (state is GetAllPostsErrorState) {
             return Center(
               child: AnimatedErrorWidget(
                 title: "Error Occurred",
@@ -89,7 +84,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
 
           // Initialize isExpandedList with actual data length
           isExpandedList = List.generate(
-              postsCubit.getPostsResponse!.posts.length,
+              postsCubit.getAllPostsResponse!.posts.length,
                   (index) => false
           );
 

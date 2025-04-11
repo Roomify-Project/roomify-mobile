@@ -3,7 +3,7 @@ import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/core/networking/dio_factory.dart';
 import 'package:rommify_app/features/log_in/data/models/login_request_body.dart';
 
-import '../models/get_all_posts_response.dart';
+import '../models/get_posts_response.dart';
 
 class PostsApiService {
   final Dio dio;
@@ -11,5 +11,9 @@ class PostsApiService {
   Future<Response> getAllPost() async {
    final response= await dio.get(ApiConstants.getAllPostsModel);
      return  response;
+  }
+  Future<Response> getPostsUser({required String id}) async {
+    final response= await dio.get(ApiConstants.getUserPostsModel(id: id));
+    return  response;
   }
 }
