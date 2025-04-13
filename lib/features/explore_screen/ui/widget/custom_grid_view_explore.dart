@@ -45,7 +45,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           // Null Response State
-          if (postsCubit.getAllPostsResponse == null) {
+          if (state is GetAllPostsErrorState) {
             return const Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
@@ -56,7 +56,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           // Empty Posts State
-          if (postsCubit.getAllPostsResponse!.posts.isEmpty) {
+          if (postsCubit.getAllPostsResponse!=null&&postsCubit.getAllPostsResponse!.posts.isEmpty) {
             return const Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
@@ -67,55 +67,57 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           // Error State
-          if (state is GetAllPostsErrorState) {
-            return Center(
-              child: AnimatedErrorWidget(
-                title: "Error Occurred",
-                message: state.message,
-                lottieAnimationPath: 'assets/animation/error.json',
-                onRetry: () {
-                  PostsCubit.get(context).getUserPosts(
-                      id: '55f46b19-0291-4969-8f52-d77f0bbcedfa'
-                  );
-                },
+          // if (state is GetAllPostsErrorState) {
+          //   return Center(
+          //     child: AnimatedErrorWidget(
+          //       title: "Error Occurred",
+          //       message: state.message,
+          //       lottieAnimationPath: 'assets/animation/error.json',
+          //       onRetry: () {
+          //         PostsCubit.get(context).getUserPosts(
+          //             id: '55f46b19-0291-4969-8f52-d77f0bbcedfa'
+          //         );
+          //       },
+          //     ),
+          //   );
+          // }
+          else {
+            // Initialize isExpandedList with actual data length
+            isExpandedList = List.generate(
+                postsCubit.getAllPostsResponse!.posts.length,
+                    (index) => false
+            );
+
+            // Success State
+            return GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 15, // Changed from previous value to 0
+                childAspectRatio: 169 / 128, // Set the aspect ratio
               ),
+              itemCount: postsCubit.getPostsResponse!.posts.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    context.pushNamed(Routes.mainScreen);
+                  },
+                  child: ImageCard(
+                    imageUrl: postsCubit.getPostsResponse!.posts[index].imagePath,
+                    profileImageUrl: 'assets/images/1O0A0210.jpg',
+                    onExpand: () {
+                      setState(() {
+                        isExpandedList[index] = !isExpandedList[index];
+                      });
+                    },
+                    isExpanded: isExpandedList[index],
+                  ),
+                );
+              },
             );
           }
 
-          // Initialize isExpandedList with actual data length
-          isExpandedList = List.generate(
-              postsCubit.getAllPostsResponse!.posts.length,
-                  (index) => false
-          );
-
-          // Success State
-          return GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 15, // Changed from previous value to 0
-              childAspectRatio: 169 / 128, // Set the aspect ratio
-            ),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  context.pushNamed(Routes.mainScreen);
-                },
-                child: ImageCard(
-                  imageUrl: 'assets/images/Group 25.png',
-                  profileImageUrl: 'assets/images/1O0A0210.jpg',
-                  onExpand: () {
-                    setState(() {
-                      isExpandedList[index] = !isExpandedList[index];
-                    });
-                  },
-                  isExpanded: isExpandedList[index],
-                ),
-              );
-            },
-          );
         },
       ),
     );

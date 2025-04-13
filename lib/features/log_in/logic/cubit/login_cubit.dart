@@ -5,6 +5,7 @@ import '../../../../core/helpers/constans.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../../../core/networking/dio_factory.dart';
 import '../../data/models/login_request_body.dart';
+import '../../data/models/login_response.dart';
 import '../../data/repos/login_repo.dart';
 import 'login_states.dart';
 
@@ -18,6 +19,7 @@ class LoginCubit extends Cubit<LoginStates> {
 
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  LoginResponse? loginResponse;
 
   void login() async {
     emit(LoginLoadingState());
@@ -28,7 +30,7 @@ class LoginCubit extends Cubit<LoginStates> {
         emit(LoginLoadingErrorState(message: left.apiErrorModel.title??""));
       },
       (right) {
-        saveUserToken(right.token);
+        saveUserData(right);
         emit(LoginSuccessState());
       },
     );
@@ -37,5 +39,9 @@ class LoginCubit extends Cubit<LoginStates> {
   Future<void> saveUserToken(String token) async {
     await SharedPrefHelper.setData(SharedPrefKey.token, token);
     DioFactory.setTokenIntoHeaderAfterLogin(token);
+  }
+  Future<void> saveUserData(LoginResponse loginResponse) async {
+    await SharedPrefHelper.setData("userId", loginResponse.userId);
+    saveUserToken(loginResponse.token);
   }
 }
