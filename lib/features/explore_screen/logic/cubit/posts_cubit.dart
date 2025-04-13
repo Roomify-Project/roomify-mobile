@@ -34,7 +34,10 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(GetUserPostsErrorState(message: left.apiErrorModel.title??""));
       },
           (right) {
-        emit(GetUserPostsSuccessState());
+            print("sucessssss ${getAllPostsResponse!.posts}");
+            getPostsResponse=right;
+
+            emit(GetUserPostsSuccessState());
       },
     );
   }
