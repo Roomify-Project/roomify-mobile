@@ -98,7 +98,7 @@ class AddPostPage extends StatelessWidget {
                                     BorderRadius.circular(12.r),
                                   ),
                                   child: Image.file(postCubit.imageFile!,
-                                      fit: BoxFit.cover),
+                                      fit: BoxFit.contain),
                                 ),
                 
                                 Container(

@@ -95,12 +95,17 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(AddPostErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        getPostsResponse!.posts.add(GetPostsResponseData(
-            id: right.id,
-            imagePath: right.imageUrl,
-            description: right.description,
-            createdAt: DateTime.now().toString(),
-            applicationUserId: right.applicationUserId));
+        final newPost = GetPostsResponseData(
+          id: right.id,
+          imagePath: right.imageUrl,
+          description: right.description,
+          createdAt: DateTime.now().toIso8601String(), // Better date format
+          applicationUserId: right.applicationUserId,
+        );
+
+        // Update posts list
+        getPostsResponse!.posts.insert(0, newPost); // Add to beginning of list
+
         emit(AddPostSuccessState(right));
       },
     );
