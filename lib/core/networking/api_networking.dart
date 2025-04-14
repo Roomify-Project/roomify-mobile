@@ -6,8 +6,12 @@ class ApiConstants {
   static String getUserPostsModel({required String id}){
     return "/api/PortfolioPost/by-user/$id";
   }
-
-
+  static String getPost({required String id}){
+    return "/api/PortfolioPost/$id";
+  }
+  static String addPost({required String userId}){
+    return "/api/PortfolioPost/upload/$userId";
+  }
 }
 
 

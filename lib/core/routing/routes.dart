@@ -7,5 +7,6 @@ class Routes {
   static const String navBar = '/navBar';
   static const String chatsScreen = '/chatScreen';
   static const String chatsFriendsScreen = '/chatsFriendsScreen';
+  static const String addPost = '/addPost';
 
 }

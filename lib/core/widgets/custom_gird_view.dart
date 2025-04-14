@@ -21,18 +21,17 @@ class CustomGridViewProfile extends StatefulWidget {
 }
 
 class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
-  late List<bool> isExpandedList;
-
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PostsCubit.get(context).getUserPosts(
-          id: SharedPrefKey.userId
-      );
+      _loadUserPosts();
     });
+  }
+
+  void _loadUserPosts() {
+    PostsCubit.get(context).getUserPosts(id: SharedPrefKey.userId);
   }
 
   @override
@@ -41,9 +40,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
 
     return RefreshIndicator(
       onRefresh: () async {
-         PostsCubit.get(context).getUserPosts(
-            id: SharedPrefKey.userId
-        );
+        _loadUserPosts();
       },
       child: BlocBuilder<PostsCubit, PostsStates>(
         builder: (BuildContext context, state) {
@@ -52,24 +49,22 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
             return const CustomShimmerEffect();
           }
 
-          // Null Response State
+          final posts = postsCubit.getPostsResponse?.posts;
+
+          // Error State
           if (state is GetUserPostsErrorState) {
-            return  Center(
+            return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
                 message: "No data available",
                 lottieAnimationPath: 'assets/animation/error.json',
-                onRetry: () {
-                  PostsCubit.get(context).getUserPosts(
-                      id: SharedPrefKey.userId
-                  );
-                },
+                onRetry: _loadUserPosts,
               ),
             );
           }
 
           // Empty Posts State
-         else if (postsCubit.getPostsResponse!=null&&postsCubit.getPostsResponse!.posts.isEmpty) {
+          if (posts == null || posts.isEmpty) {
             return const Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
@@ -79,62 +74,45 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
             );
           }
 
-          // // Error State
-          // if (state is GetUserPostsErrorState) {
-          //   return Center(
-          //     child: AnimatedErrorWidget(
-          //       title: "Error Occurred",
-          //       message: state.message,
-          //       lottieAnimationPath: 'assets/animation/error.json',
-          //
-          //     ),
-          //   );
-          // }
+          // Success State
 
-          else if(postsCubit.getPostsResponse!=null&&postsCubit.getPostsResponse!.posts.isNotEmpty) {
-            // Initialize isExpandedList with actual data length
-            isExpandedList = List.generate(
-                postsCubit.getPostsResponse!.posts.length,
-                    (index) => false
-            );
+          return GridView.builder(
 
-            // Success State
-            return GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 15, // Changed from previous value to 0
-                childAspectRatio: 169 / 128, // Set the aspect ratio
-              ),
-              itemCount: postsCubit.getPostsResponse!.posts.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    context.pushNamed(Routes.mainScreen);
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 15,
+              childAspectRatio: 169 / 128,
+            ),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              return InkWell(
+                onTap: () {
+                  context.pushNamed(Routes.mainScreen,arguments: {
+                    'postId':posts[index].id
+                  });
+                },
+                child: ImageCard(
+                  imageUrl: post.imagePath,
+                  profileImageUrl: 'assets/images/1O0A0210.jpg',
+                  onExpand: () {
+                    setState(() {
+                      postsCubit.isExpandedList[index] = !postsCubit.isExpandedList[index];
+                      print(postsCubit.isExpandedList[index]);
+                    });
                   },
-                  child: ImageCard(
-                    imageUrl: postsCubit.getPostsResponse!.posts[index].imagePath,
-                    profileImageUrl: 'assets/images/1O0A0210.jpg',
-                    onExpand: () {
-                      setState(() {
-                        isExpandedList[index] = !isExpandedList[index];
-                      });
-                    },
-                    isExpanded: isExpandedList[index],
-                  ),
-                );
-              },
-            );
-          }
-          return const SizedBox();
+                  isExpanded: postsCubit.isExpandedList[index],
+                ),
+              );
+            },
+          );
         },
-//   final bool isExpanded;
-),
-);
+      ),
+    );
+  }
 }
-}
-
 // ImageCard Widget
 // class ImageCard extends StatelessWidget {
 //   final String imageUrl;
