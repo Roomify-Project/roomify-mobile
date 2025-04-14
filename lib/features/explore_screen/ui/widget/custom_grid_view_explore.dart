@@ -35,28 +35,27 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        postsCubit.getAllPosts();
+         postsCubit.getAllPosts();
       },
       child: BlocBuilder<PostsCubit, PostsStates>(
         builder: (BuildContext context, state) {
-          // Loading State
           if (state is GetAllPostsLoadingState) {
             return const CustomShimmerEffect();
           }
 
-          // Null Response State
           if (state is GetAllPostsErrorState) {
-            return const Center(
+            return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
-                message: "No data available",
+                message: state.message ?? "No data available",
                 lottieAnimationPath: 'assets/animation/error.json',
+                onRetry: () => postsCubit.getAllPosts(),
               ),
             );
           }
 
-          // Empty Posts State
-          if (postsCubit.getAllPostsResponse!=null&&postsCubit.getAllPostsResponse!.posts.isEmpty) {
+          final posts = postsCubit.getAllPostsResponse?.posts;
+          if (posts == null || posts.isEmpty) {
             return const Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
@@ -66,64 +65,43 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
             );
           }
 
-          // Error State
-          // if (state is GetAllPostsErrorState) {
-          //   return Center(
-          //     child: AnimatedErrorWidget(
-          //       title: "Error Occurred",
-          //       message: state.message,
-          //       lottieAnimationPath: 'assets/animation/error.json',
-          //       onRetry: () {
-          //         PostsCubit.get(context).getUserPosts(
-          //             id: '55f46b19-0291-4969-8f52-d77f0bbcedfa'
-          //         );
-          //       },
-          //     ),
-          //   );
-          // }
-          else {
-            // Initialize isExpandedList with actual data length
-            isExpandedList = List.generate(
-                postsCubit.getAllPostsResponse!.posts.length,
-                    (index) => false
-            );
+          // Initialize isExpandedList
+          isExpandedList = List.generate(posts.length, (index) => false);
 
-            // Success State
-            return GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 15, // Changed from previous value to 0
-                childAspectRatio: 169 / 128, // Set the aspect ratio
-              ),
-              itemCount: postsCubit.getPostsResponse!.posts.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    context.pushNamed(Routes.mainScreen);
+          return GridView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 15,
+              childAspectRatio: 169 / 128,
+            ),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  context.pushNamed(Routes.mainScreen,arguments: {
+                    'postId':posts[index].id
+                  });
                   },
-                  child: ImageCard(
-                    imageUrl: postsCubit.getPostsResponse!.posts[index].imagePath,
-                    profileImageUrl: 'assets/images/1O0A0210.jpg',
-                    onExpand: () {
-                      setState(() {
-                        isExpandedList[index] = !isExpandedList[index];
-                      });
-                    },
-                    isExpanded: isExpandedList[index],
-                  ),
-                );
-              },
-            );
-          }
-
+                child: ImageCard(
+                  imageUrl: posts[index].imagePath,
+                  profileImageUrl: 'assets/images/1O0A0210.jpg',
+                  onExpand: () {
+                    setState(() {
+                      isExpandedList[index] = !isExpandedList[index];
+                    });
+                  },
+                  isExpanded: isExpandedList[index],
+                ),
+              );
+            },
+          );
         },
       ),
     );
   }
 }
-
 // ImageCard Widget
 // class ImageCard extends StatelessWidget {
 //   final String imageUrl;

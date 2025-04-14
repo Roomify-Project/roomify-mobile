@@ -7,6 +7,7 @@ import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 
 import 'core/di/dependency_injection.dart';
+import 'core/helpers/shared_pref_helper.dart';
 import 'core/routing/app_router.dart';
 import 'features/log_in/data/repos/login_repo.dart';
 
@@ -32,11 +33,10 @@ class RoomifyApp extends StatelessWidget {
               // scaffoldBackgroundColor: ColorsManager.white,
               // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               // useMaterial3: true,
-
               ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRouter.generateRoute,
-          initialRoute: Routes.signUpScreen,
+          initialRoute:SharedPrefHelper.getString('token')!=null?Routes.navBar: Routes.signUpScreen,
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.da
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
 import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
 import 'package:rommify_app/features/main_screen/ui/main_screen.dart';
+import 'package:rommify_app/features/profile/add_post.dart';
 import 'package:rommify_app/features/sign_up/ui/sign_up_screen.dart';
 
 import '../../features/nav_bar/ui/nav_bar.dart';
@@ -37,8 +38,11 @@ class AppRouter {
           builder: (_) =>  const ExploreScreen(),
         );
       case Routes.mainScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
         return MaterialPageRoute(
-          builder: (_) =>  const MainScreen(),
+          builder: (_) =>   MainScreen(postId: arguments?['postId'] as String??"",
+          ),
         );
       case Routes.chatsScreen:
         return MaterialPageRoute(
@@ -47,6 +51,10 @@ class AppRouter {
       case Routes.chatsFriendsScreen:
         return MaterialPageRoute(
           builder: (_) =>   ChatFriendScreen(),
+        );
+      case Routes.addPost:
+        return MaterialPageRoute(
+          builder: (_) =>   AddPostPage(),
         );
       default:
         return null;

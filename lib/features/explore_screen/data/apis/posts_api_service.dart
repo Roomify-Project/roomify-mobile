@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/core/networking/dio_factory.dart';
@@ -14,6 +16,21 @@ class PostsApiService {
   }
   Future<Response> getPostsUser({required String id}) async {
     final response= await dio.get(ApiConstants.getUserPostsModel(id: id));
+    return  response;
+  }
+  Future<Response> getPost({required String postId}) async {
+    final response= await dio.get(ApiConstants.getPost(id: postId));
+    return  response;
+  }
+  Future<Response> addPost({required String userId,required String description,  required File imageFile,
+  }) async {
+    final formData = FormData.fromMap({
+      'Description': description,
+      'imageFile': await MultipartFile.fromFile(imageFile.path, filename: 'upload.jpg'),
+      // لو فيه ملف:
+      // 'image': await MultipartFile.fromFile('path/to/image.jpg', filename: 'image.jpg'),
+    });
+    final response= await dio.post(ApiConstants.addPost(userId: userId),data: formData);
     return  response;
   }
 }

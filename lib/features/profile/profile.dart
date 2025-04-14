@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/core/theming/colors.dart';
+import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
+import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.dart';
 import 'package:rommify_app/features/profile/edit_profile_screen.dart';
 
 import '../../core/widgets/custom_gird_view.dart';
@@ -14,6 +16,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String? selectedIcon;
+  bool showAddMore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: ColorsManager.mainColor,
       body: Stack(
         children: [
+          CircleWidget(),
+
           Padding(
             padding: const EdgeInsets.only(top: 60),
             child: Column(
@@ -73,6 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    _buildIcon(Icons.add, 'Add', () {
+                      context.pushNamed(Routes.addPost);
+                    }),
+                    SizedBox(width: 30.w),
                     _buildIcon(Icons.favorite, 'favorite', () {}),
                     SizedBox(width: 30.w),
                     _buildIcon(Icons.history, 'history', () {}),
@@ -82,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 SizedBox(height: 20.h),
                 // Image Grid - Modified mainAxisSpacing to 0
-                const Expanded(
+                 const Expanded(
                   child: CustomGridViewProfile(),
                 ),
               ],
@@ -159,12 +168,13 @@ class ImageCard extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
+            borderRadius: BorderRadius.circular(16),
+            // image: DecorationImage(
+            //   image: NetworkImage(imageUrl),
+            //   fit: BoxFit.cover,
+            // ),
           ),
+          child: CustomCachedNetworkImage(imageUrl: imageUrl,width: 169,height: 128,fit: BoxFit.cover,borderRadius: 10,),
         ),
         Positioned(
           top: 8,
@@ -187,12 +197,12 @@ class ImageCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.bookmark_border,
-                          color: Colors.white, size: 20),
+                          color: ColorsManager.colorPrimary, size: 20),
                       SizedBox(width: 10),
                       Icon(Icons.favorite_border,
-                          color: Colors.white, size: 20),
+                          color:  ColorsManager.colorPrimary, size: 20),
                       SizedBox(width: 10),
-                      Icon(Icons.download, color: Colors.white, size: 20),
+                      Icon(Icons.download, color:  ColorsManager.colorPrimary, size: 20),
                       SizedBox(width: 10),
                     ],
                   ),
@@ -200,13 +210,13 @@ class ImageCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white,
+                      color: ColorsManager.colorPrimary,
                       width: 2,
                     ),
                   ),
-                  child: const Icon(
+                  child:  const Icon(
                     Icons.more_horiz,
-                    color: Colors.white,
+                    color:  ColorsManager.colorPrimary,
                     size: 14,
                   ),
                 )
