@@ -209,7 +209,7 @@ class OtpPage extends StatelessWidget {
           showDialog(
             context: context,
             barrierDismissible: false,
-            barrierColor: Colors.blue.withOpacity(0.91),
+            barrierColor: Color(0xFF341D38).withOpacity(0.91),
             builder: (_) => BlocProvider.value(
               value: BlocProvider.of<ForgetPasswordCubit>(context),
               child: const NewPassword(),
