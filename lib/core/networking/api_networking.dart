@@ -15,6 +15,10 @@ class ApiConstants {
   static String deletePost({required String postId}){
       return "/api/PortfolioPost/$postId";
   }
+  static const String signUpModel = '/api/Auth/register';
+  static const String verifyOtpModel = '/api/Auth/confirm-email';
+  static const String forgetPasswordModel = '/api/Auth/forget-password';
+  static const String resetPasswordModel = '/api/Auth/reset-password';
 }
 
 

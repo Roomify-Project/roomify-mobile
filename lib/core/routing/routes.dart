@@ -8,5 +8,6 @@ class Routes {
   static const String chatsScreen = '/chatScreen';
   static const String chatsFriendsScreen = '/chatsFriendsScreen';
   static const String addPost = '/addPost';
-
+  static const String loginScreen = '/loginScreen';
+  static const String forgetPassword = '/forgetPassword';
 }

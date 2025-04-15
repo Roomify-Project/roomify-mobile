@@ -36,7 +36,7 @@ class RoomifyApp extends StatelessWidget {
               ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRouter.generateRoute,
-          initialRoute:SharedPrefHelper.getString('token')!=null?Routes.navBar: Routes.signUpScreen,
+          initialRoute:Routes.loginScreen,
         ),
       ),
     );
