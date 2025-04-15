@@ -37,12 +37,24 @@ class ChangePasswordDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 20),
-          const CustomTextField(
+          CustomTextField(
             hint: 'OLD PASSWORD',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your old password';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 15),
-          const CustomTextField(
+          CustomTextField(
             hint: 'NEW PASSWORD',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your new password';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 20),
           _buildConfirmButton(),
@@ -77,10 +89,10 @@ class ChangePasswordDialog extends StatelessWidget {
 
   Widget _buildCloseButton(BuildContext context) {
     return Positioned(
-      top: -69 ,
+      top: -69,
       child: InkWell(
         onTap: () => Navigator.of(context).pop(),
-        child: CircleAvatar(
+        child: const CircleAvatar(
           radius: 30,
           backgroundColor: Colors.white,
           child: Text(

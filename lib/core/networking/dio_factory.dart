@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
-import '../helpers/constans.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import '../helpers/shared_pref_helper.dart';
 import 'api_networking.dart';
 
 class DioFactory {
-  /// private constructor as I don't want to allow creating an instance of this class
   DioFactory._();
 
   static Dio? dio;
@@ -17,7 +15,7 @@ class DioFactory {
     if (dio == null) {
       dio = Dio();
       dio!
-      ..options.baseUrl=ApiConstants.apiBaseUrl
+        ..options.baseUrl = ApiConstants.apiBaseUrl
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
       addDioHeaders();
@@ -34,7 +32,6 @@ class DioFactory {
       'Authorization': 'Bearer ${SharedPrefHelper.getString(SharedPrefKey.token)}',
     };
     addDioInterceptor();
-
   }
 
   static void setTokenIntoHeaderAfterLogin(String token) {

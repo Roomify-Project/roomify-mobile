@@ -1,13 +1,7 @@
-
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'api_error_model.dart';
 import 'api_networking.dart';
 
-
-
-// TODO: wallahy I will refactor this .. Omar Ahmed
 enum DataSource {
   NO_CONTENT,
   BAD_REQUEST,
@@ -21,7 +15,6 @@ enum DataSource {
   SEND_TIMEOUT,
   CACHE_ERROR,
   NO_INTERNET_CONNECTION,
-  // API_LOGIC_ERROR,
   DEFAULT
 }
 
@@ -128,12 +121,63 @@ class ErrorHandler implements Exception {
 
   ErrorHandler.handle(dynamic error) {
     if (error is DioException) {
-      if(error.type ==  DioExceptionType.badResponse || error.type==DioExceptionType.unknown)
-      {
+      if(error.type == DioExceptionType.badResponse || error.type == DioExceptionType.unknown) {
         if (error.response != null &&
             error.response?.statusCode != null &&
             error.response?.statusMessage != null) {
-
+          // Check if there's a specific error message in the response
+          if (error.response?.data != null && error.response?.data is Map) {
+            final responseData = error.response?.data as Map<String, dynamic>;
+            
+            // Extract meaningful error messages for common issues
+            if (responseData.containsKey('message')) {
+              String errorMessage = responseData['message'];
+              
+              // Check for common error patterns and provide better messages
+              if (errorMessage.toLowerCase().contains('username') && 
+                  errorMessage.toLowerCase().contains('already')) {
+                apiErrorModel = ApiErrorModel(
+                  status: error.response?.statusCode,
+                  title: "Username is already taken. Please try another username.",
+                );
+                return;
+              } else if (errorMessage.toLowerCase().contains('email') && 
+                        errorMessage.toLowerCase().contains('already')) {
+                apiErrorModel = ApiErrorModel(
+                  status: error.response?.statusCode,
+                  title: "Email is already registered. Please use another email or login.",
+                );
+                return;
+              } else if (errorMessage.toLowerCase().contains('otp') && 
+                        (errorMessage.toLowerCase().contains('invalid') || 
+                         errorMessage.toLowerCase().contains('incorrect'))) {
+                apiErrorModel = ApiErrorModel(
+                  status: error.response?.statusCode,
+                  title: "Invalid verification code. Please try again.",
+                );
+                return;
+              } else {
+                apiErrorModel = ApiErrorModel(
+                  status: error.response?.statusCode,
+                  title: errorMessage,
+                );
+                return;
+              }
+            } else if (responseData.containsKey('error')) {
+              apiErrorModel = ApiErrorModel(
+                status: error.response?.statusCode,
+                title: _getImprovedErrorMessage(responseData['error'], error.response?.statusCode),
+              );
+              return;
+            }
+          }
+          
+          // If no specific message found, provide a better message based on status code
+          apiErrorModel = ApiErrorModel(
+            status: error.response?.statusCode,
+            title: _getImprovedErrorMessage(error.response?.statusMessage, error.response?.statusCode),
+          );
+          return;
         }
       }
       // dio error so its an error from response of the API or from dio itself
@@ -142,6 +186,23 @@ class ErrorHandler implements Exception {
       // default error
       apiErrorModel = DataSource.DEFAULT.getFailure();
     }
+  }
+  
+  String _getImprovedErrorMessage(String? originalMessage, int? statusCode) {
+    if (statusCode == 400) {
+      if (originalMessage?.toLowerCase().contains('username') ?? false) {
+        return "Username is already taken. Please try another username.";
+      } else if (originalMessage?.toLowerCase().contains('email') ?? false) {
+        return "Email is already registered. Please use another email.";
+      } else if (originalMessage?.toLowerCase().contains('otp') ?? false) {
+        return "Invalid verification code. Please try again.";
+      } else if (originalMessage?.toLowerCase().contains('password') ?? false) {
+        return "Password doesn't meet the security requirements.";
+      } else if (originalMessage?.toLowerCase().contains('bad request') ?? false) {
+        return "Invalid verification code. Please check and try again.";
+      }
+    }
+    return originalMessage ?? "An error occurred. Please try again.";
   }
 }
 
@@ -154,15 +215,43 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.receiveTimeout:
       return DataSource.RECIEVE_TIMEOUT.getFailure();
     case DioExceptionType.unknown:
-
+      if (error.message?.contains('SocketException') ?? false) {
+        return DataSource.NO_INTERNET_CONNECTION.getFailure();
+      }
+      return DataSource.DEFAULT.getFailure();
     case DioExceptionType.cancel:
       return DataSource.CANCEL.getFailure();
     case DioExceptionType.connectionError:
-      return DataSource.DEFAULT.getFailure();
+      return DataSource.NO_INTERNET_CONNECTION.getFailure();
     case DioExceptionType.badCertificate:
       return DataSource.DEFAULT.getFailure();
     case DioExceptionType.badResponse:
-      return DataSource.DEFAULT.getFailure();
+      switch (error.response?.statusCode) {
+        case ResponseCode.BAD_REQUEST:
+          // Check for OTP error specifically
+          if (error.response?.data != null && 
+              error.response?.data is Map &&
+              (error.response?.data as Map).containsKey('message')) {
+            String message = (error.response?.data as Map)['message'];
+            if (message.toLowerCase().contains('otp')) {
+              return ApiErrorModel(
+                status: ResponseCode.BAD_REQUEST,
+                title: "Invalid verification code. Please try again.",
+              );
+            }
+          }
+          return DataSource.BAD_REQUEST.getFailure();
+        case ResponseCode.FORBIDDEN:
+          return DataSource.FORBIDDEN.getFailure();
+        case ResponseCode.UNAUTORISED:
+          return DataSource.UNAUTORISED.getFailure();
+        case ResponseCode.NOT_FOUND:
+          return DataSource.NOT_FOUND.getFailure();
+        case ResponseCode.INTERNAL_SERVER_ERROR:
+          return DataSource.INTERNAL_SERVER_ERROR.getFailure();
+        default:
+          return DataSource.DEFAULT.getFailure();
+      }
   }
 }
 
