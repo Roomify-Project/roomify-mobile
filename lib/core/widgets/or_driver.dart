@@ -13,27 +13,26 @@ class OrDivider extends StatelessWidget {
           Expanded(
             child: Divider(
               color: Color(0xFFFFFFFF), // لون الخط
-              thickness: 1.0, // سمك الخط
-              indent: 0, // المسافة من اليسار إلى بداية الخط
+              thickness: .5, // سمك الخط
+              indent: 2.w, // المسافة من اليسار إلى بداية الخط
               endIndent: 6.5.w, // المسافة من نهاية الخط إلى "OR"
             ),
           ),
           // كلمة "OR"
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 6.5), // المسافة حول النص
-            child: Text(
-              'OR',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+          Text(
+            'OR',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.5.sp,
+                fontWeight: FontWeight.w900),
           ),
           // الخط الثاني
           Expanded(
             child: Divider(
               color: Colors.white, // لون الخط
-              thickness: 1.0, // سمك الخط
+              thickness: .5, // سمك الخط
               indent: 6.5.w, // المسافة من بداية الخط إلى "OR"
-              endIndent: 0, // المسافة من نهاية الخط
+              endIndent: 2.w, // المسافة من نهاية الخط
             ),
           ),
         ],

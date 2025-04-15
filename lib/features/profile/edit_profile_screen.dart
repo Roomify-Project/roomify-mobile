@@ -23,18 +23,46 @@ class EditProfileScreen extends StatelessWidget {
           children: [
             const ProfileImage(),
             const SizedBox(height: 40),
-            const CustomTextField(hint: 'FULL NAME'),
-            const SizedBox(height: 15),
-            const CustomTextField(hint: 'USER NAME'),
-            const SizedBox(height: 15),
-            const CustomTextField(
-              hint: 'EMAIL@GMAIL.COM',
-              keyboardType: TextInputType.emailAddress,
+            CustomTextField(
+              hint: 'FULL NAME',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your full name';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 15),
-            const CustomTextField(
+            CustomTextField(
+              hint: 'USER NAME',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 15),
+            CustomTextField(
+              hint: 'EMAIL@GMAIL.COM',
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 15),
+            CustomTextField(
               hint: 'PHONE NUMBER',
               keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your phone number';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 30),
             CustomButton(
@@ -42,7 +70,7 @@ class EditProfileScreen extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                 barrierColor: const Color(0xFF341D38).withOpacity(0.91), // استخدام barrierColor
+                  barrierColor: const Color(0xFF341D38).withOpacity(0.91),
                   builder: (BuildContext context) {
                     return const ChangePasswordDialog();
                   },

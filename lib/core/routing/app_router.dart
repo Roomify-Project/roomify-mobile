@@ -9,6 +9,8 @@ import 'package:rommify_app/features/main_screen/ui/main_screen.dart';
 import 'package:rommify_app/features/profile/add_post.dart';
 import 'package:rommify_app/features/sign_up/ui/sign_up_screen.dart';
 
+import '../../features/forget_password/ui/forget_password.dart';
+import '../../features/log_in/ui/log_in_screan.dart';
 import '../../features/nav_bar/ui/nav_bar.dart';
 
 class AppRouter {
@@ -24,6 +26,10 @@ class AppRouter {
       case Routes.navBar:
         return MaterialPageRoute(
           builder: (_) => const NavBarScreen(),
+        );
+      case Routes.forgetPassword: // Changed from forgetPassword
+        return MaterialPageRoute(
+          builder: (_) => const ForgetPasswordDialog(), // New screen
         );
       case Routes.createRoomScreen:
         return MaterialPageRoute(
@@ -55,6 +61,10 @@ class AppRouter {
       case Routes.addPost:
         return MaterialPageRoute(
           builder: (_) =>   AddPostPage(),
+        );
+      case Routes.loginScreen:
+        return MaterialPageRoute(
+          builder: (_) => const LogInScreen(),
         );
       default:
         return null;

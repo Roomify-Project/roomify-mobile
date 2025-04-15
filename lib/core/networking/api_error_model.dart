@@ -1,6 +1,5 @@
-
-
 class ApiErrorModel {
+  
   String? title;
    int? status;
 

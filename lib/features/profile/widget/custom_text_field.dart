@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final String hint;
   final TextInputType? keyboardType;
+  final TextEditingController? controller;
+  final bool obscureText;
 
   const CustomTextField({
     Key? key,
     required this.hint,
     this.keyboardType,
+    this.controller,
+    this.obscureText = false, required String? Function(dynamic value) validator,
   }) : super(key: key);
 
   @override
@@ -18,29 +22,37 @@ class _CustomTextFieldState extends State<CustomTextField> {
   late FocusNode _focusNode;
   bool _isFocused = false;
   bool _hasText = false;
-  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    _focusNode.addListener(() {
+    _focusNode.addListener(_handleFocusChange);
+
+    widget.controller?.addListener(_handleTextChange);
+  }
+
+  void _handleFocusChange() {
+    if (mounted) {
       setState(() {
         _isFocused = _focusNode.hasFocus;
       });
-    });
+    }
+  }
 
-    _controller.addListener(() {
+  void _handleTextChange() {
+    if (mounted) {
       setState(() {
-        _hasText = _controller.text.isNotEmpty;
+        _hasText = widget.controller?.text.isNotEmpty ?? false;
       });
-    });
+    }
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
+    widget.controller?.removeListener(_handleTextChange);
     _focusNode.dispose();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -77,9 +89,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
               color: const Color(0x75320C39),
             ),
             child: TextField(
-              controller: _controller,
+              controller: widget.controller,
               focusNode: _focusNode,
               keyboardType: widget.keyboardType,
+              obscureText: widget.obscureText,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,

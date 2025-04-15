@@ -8,7 +8,6 @@ abstract class ApiResult<T> {
 
 class Success<T> implements ApiResult<T> {
   final T data;
-
   Success(this.data);
 }
 
@@ -17,4 +16,3 @@ class Failure<T> implements ApiResult<T> {
 
   Failure(this.errorHandler);
 }
-
