@@ -18,13 +18,9 @@ class RoomifyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'RoomifyApp',
         builder:EasyLoading.init(),
-        theme: ThemeData(
-            // primaryColor: ColorsManager.white,
-            // scaffoldBackgroundColor: ColorsManager.white,
-            // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            // useMaterial3: true,
-
-            ),
+        // theme: ThemeData.dark().copyWith(
+        //   scaffoldBackgroundColor: Colors.black,
+        // ),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: appRouter.generateRoute,
         initialRoute: Routes.signUpScreen,

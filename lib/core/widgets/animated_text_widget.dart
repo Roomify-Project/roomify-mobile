@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rommify_app/core/theming/styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // تأكد من إضافة هذا Import
 
 class AnimatedText extends StatefulWidget {
-  final String text; // النص الذي سيتم تمريره للويدجت
+  final String text;
 
   const AnimatedText({Key? key, required this.text}) : super(key: key);
 
@@ -19,18 +19,15 @@ class _AnimatedTextState extends State<AnimatedText>
   void initState() {
     super.initState();
 
-    // AnimationController
     _controller = AnimationController(
-      duration: Duration(seconds: 2), // مدة الأنيميشن
+      duration: Duration(seconds: 2),
       vsync: this,
     );
 
-    // Animation for characters
     _charAnimation = IntTween(begin: 0, end: widget.text.length).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
-    // Start the animation
     _controller.forward();
   }
 
@@ -48,12 +45,16 @@ class _AnimatedTextState extends State<AnimatedText>
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(widget.text.length, (index) {
-            // عرض الحرف فقط إذا كان داخل نطاق الأنيميشن
             return Text(
-                index < _charAnimation.value
-                    ? widget.text[index]
-                    : " ", // عرض الحرف أو فراغ
-                style: TextStyles.font32WhiteInter);
+              index < _charAnimation.value ? widget.text[index] : " ",
+              style: TextStyle(
+                // تم تغيير الـ style هنا
+                fontSize: 32.sp,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                fontFamily: 'Inter',
+              ),
+            );
           }),
         );
       },

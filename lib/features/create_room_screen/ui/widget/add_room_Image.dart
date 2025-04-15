@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rommify_app/features/create_room_screen/ui/widget/unit_drop_down_widget.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/upload_room_dialog.dart';
-
 import '../../../../core/theming/colors.dart';
-import '../../../../core/theming/font_weight_helper.dart';
-import '../../../../core/theming/styles.dart';
-import 'custom_room_sizes_text_Form.dart';
 
 class AddRoomImage extends StatelessWidget {
   const AddRoomImage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

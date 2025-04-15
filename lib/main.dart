@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rommify_app/core/networking/dio_factory.dart';
+
 import 'package:rommify_app/core/routing/app_router.dart';
 import 'package:rommify_app/main_rommify.dart';
 

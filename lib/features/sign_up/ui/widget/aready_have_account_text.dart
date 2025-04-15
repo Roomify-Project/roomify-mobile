@@ -13,11 +13,17 @@ class LoginRichText extends StatelessWidget {
       child: RichText(
         text: TextSpan(
           text: "Already have an account? ",
-          style: TextStyle(color: Colors.white, fontSize: 16.sp),
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w800),
           children: [
             TextSpan(
               text: "Login",
-              style: TextStyle(color: Colors.red, fontSize: 18.sp),
+              style: TextStyle(
+                  color: const Color(0xffE11515),
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w800),
               recognizer: TapGestureRecognizer()..onTap = onLoginTap,
             ),
           ],

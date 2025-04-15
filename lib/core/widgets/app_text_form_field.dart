@@ -62,58 +62,78 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               padding: const EdgeInsets.only(left: 16, bottom: 4),
               child: Text(
                 widget.labelText,
-                style: TextStyle(
-                  color: Colors.grey[400],
-                  fontSize: 12,
+                style: const TextStyle(
+                  color: Color(0xff706772),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  height: 1.0,
+                  letterSpacing: 0,
+                  textBaseline: TextBaseline.alphabetic,
                 ),
               ),
             ),
           ),
-          TextFormField(
-            controller: widget.controller,
-            focusNode: _focusNode,
-            validator: widget.validator,
-            obscureText: widget.obscureText,
-            keyboardType: widget.keyboardType,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: !_isFocused && !_hasText ? widget.labelText : null,
-              hintStyle: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 14,
+          SizedBox(
+            child: TextFormField(
+              controller: widget.controller,
+              focusNode: _focusNode,
+              validator: widget.validator,
+              obscureText: widget.obscureText,
+              obscuringCharacter: '*',
+              keyboardType: widget.keyboardType,
+              enableSuggestions: false,
+              cursorColor: Colors.white,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                height: 1.0,
+                letterSpacing: 0,
+                textBaseline: TextBaseline.alphabetic,
               ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 15,
-              ),
-              filled: true,
-              fillColor: Colors.white.withOpacity(0.2),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(71),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(71),
-                borderSide: BorderSide(
-                  color: Colors.white.withOpacity(0.07),
+              decoration: InputDecoration(
+                isDense: true,
+                errorStyle: const TextStyle(
+                  height: 0.8,
+                  fontSize: 12,
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(71),
-                borderSide: BorderSide(
-                  color: Colors.white.withOpacity(0.07),
+                hintText: !_isFocused && !_hasText ? widget.labelText : null,
+                hintStyle: const TextStyle(
+                  color: Color(0xff706772),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  height: 1.0,
+                  letterSpacing: 0,
                 ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(71),
-                borderSide: BorderSide(
-                  color: Colors.red,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 18,
                 ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(71),
-                borderSide: BorderSide(
-                  color: Colors.red,
+                filled: true,
+                fillColor: const Color(0xFF3e3140),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(71),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(71),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(71),
+                  borderSide: BorderSide.none,
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(71),
+                  borderSide: const BorderSide(
+                    color: Colors.red,
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(71),
+                  borderSide: const BorderSide(
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ),
