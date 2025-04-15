@@ -12,6 +12,9 @@ class ApiConstants {
   static String addPost({required String userId}){
     return "/api/PortfolioPost/upload/$userId";
   }
+  static String deletePost({required String postId}){
+      return "/api/PortfolioPost/$postId";
+  }
 }
 
 

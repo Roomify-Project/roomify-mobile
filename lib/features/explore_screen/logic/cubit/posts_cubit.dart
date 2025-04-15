@@ -110,4 +110,21 @@ class PostsCubit extends Cubit<PostsStates> {
       },
     );
   }
+  void deletePost({required String postId}) async {
+    emit(DeletePostLoadingState());
+    final response = await _postsRepo.deletePost(postId: postId);
+    response.fold(
+          (left) {
+        emit(DeletePostErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+
+
+        getAllPostsResponse?.posts.removeWhere((element) =>  element.id==postId,); // Add to beginning of list
+        getPostsResponse?.posts.removeWhere((element) =>  element.id==postId,); // Add to beginning of list
+
+        emit(DeletePostSuccessState(right.message));
+      },
+    );
+  }
 }
