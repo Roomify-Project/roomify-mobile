@@ -50,4 +50,14 @@ class PostsRepo {
     }
   }
 
+  Future<Either<ErrorHandler,AddPostResponse>> deletePost({required String postId
+  }) async {
+    try {
+      final response = await _postsApiService.deletePost(postId: postId);
+      return Right(AddPostResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+
 }

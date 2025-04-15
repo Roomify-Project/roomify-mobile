@@ -41,6 +41,19 @@ class AddPostErrorState extends PostsStates{
 
   AddPostErrorState({required this.message});
 }
+
+
+//// delete post
+class DeletePostLoadingState extends PostsStates{}
+class  DeletePostSuccessState extends PostsStates{
+  final String message;
+  DeletePostSuccessState(this.message);
+}
+class DeletePostErrorState extends PostsStates{
+  final String message;
+
+  DeletePostErrorState({required this.message});
+}
 /// upload image
 class UploadImageStata extends PostsStates{}
 

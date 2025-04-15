@@ -193,17 +193,22 @@ class ImageCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (isExpanded)
-                  const Row(
+                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.bookmark_border,
+                      const Icon(Icons.bookmark_border,
                           color: ColorsManager.colorPrimary, size: 20),
-                      SizedBox(width: 10),
-                      Icon(Icons.favorite_border,
+                       SizedBox(width: 10.w),
+                      const Icon(Icons.favorite_border,
                           color:  ColorsManager.colorPrimary, size: 20),
-                      SizedBox(width: 10),
-                      Icon(Icons.download, color:  ColorsManager.colorPrimary, size: 20),
-                      SizedBox(width: 10),
+                      SizedBox(width: 10.w),
+                      InkWell(
+                          onTap: () {
+
+                          },
+                          child: Icon(Icons.download, color:  ColorsManager.colorPrimary, size: 20)),
+                      SizedBox(width: 10.w),
+
                     ],
                   ),
                 Container(
