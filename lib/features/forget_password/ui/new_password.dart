@@ -47,7 +47,7 @@
 //       },
 //       builder: (context, state) {
 //         final cubit = context.read<ForgetPasswordCubit>();
-        
+
 //         return Container(
 //           width: 368,
 //           height: 313,
