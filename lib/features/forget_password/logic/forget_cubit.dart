@@ -57,7 +57,7 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordStates> {
           message: "Email not found. Please try again."));
       return;
     }
-
+    
 
     emit(OtpVerificationLoadingState());
 
