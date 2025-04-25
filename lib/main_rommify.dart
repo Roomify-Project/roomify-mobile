@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/di/dependency_injection.dart';
 import 'core/helpers/shared_pref_helper.dart';
@@ -36,7 +38,7 @@ class RoomifyApp extends StatelessWidget {
               ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRouter.generateRoute,
-          initialRoute:Routes.loginScreen,
+          initialRoute:SharedPrefHelper.getString('token')!=null?Routes.navBar: Routes.loginScreen,
         ),
       ),
     );

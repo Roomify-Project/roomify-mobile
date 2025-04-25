@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
@@ -42,6 +43,9 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<ForgetPasswordApiService>(() => ForgetPasswordApiService(dio: dio));
   getIt.registerLazySingleton<ForgetPasswordRepo>(() => ForgetPasswordRepo(getIt()));
   getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit(getIt()));
+
+  ///// chat
+  getIt.registerFactory<ChatCubit>(() => ChatCubit());
 
   // //friend list
   // getIt.registerLazySingleton<GetFriendsApiService>(() => GetFriendsApiService(dio));

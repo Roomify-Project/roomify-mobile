@@ -60,7 +60,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
               child: AnimatedEmptyList(
                 title: "No Posts Found",
                 subtitle: "Start by creating your first post",
-                lottieAnimationPath: 'assets/animation/empty_list.json',
+                lottieAnimationPath: 'assets/animation/empity_list.json',
               ),
             );
           }

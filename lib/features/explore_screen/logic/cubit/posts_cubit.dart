@@ -105,6 +105,7 @@ class PostsCubit extends Cubit<PostsStates> {
 
         // Update posts list
         getPostsResponse!.posts.insert(0, newPost); // Add to beginning of list
+        isExpandedList = List.generate(getPostsResponse!.posts.length, (index) => false);
 
         emit(AddPostSuccessState(right));
       },
