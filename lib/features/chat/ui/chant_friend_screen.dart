@@ -1,58 +1,70 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/theming/colors.dart';
+import 'package:rommify_app/features/chat/data/model/get_message_model.dart';
+import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
+import 'package:rommify_app/features/chat/logic/cubit/chat_states.dart';
 
 import '../../../core/theming/styles.dart';
 
 class ChatFriendScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsManager.colorPrimary,
-      appBar: AppBar(
-        backgroundColor: ColorsManager.colorPrimary,
-        elevation: 0,
-        leading: Padding(
-          padding:  EdgeInsets.only(left: 12.w),
-          child: const CircleAvatar(
-            radius: 12,
-            backgroundImage: AssetImage('assets/profile_image.jpg'),
-          ),
-        ),
-        title: Padding(
-          padding:  EdgeInsets.only(left: 1.w),
-          child: Text('Antoneos',style: TextStyles.font19WhiteBold.copyWith(fontWeight: FontWeight.w700),),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return MessageBubble(
-                  message: messages[index]['text'],
-                  isMe: messages[index]['isMe'],
-                  time: messages[index]['time'],
-                );
-              },
+    return BlocProvider(
+      create: (BuildContext context) =>ChatCubit(),
+      child: BlocBuilder<ChatCubit,ChatStates>(
+        builder: (BuildContext context, state) {
+          final chatCubit=ChatCubit.get(context);
+          return Scaffold(
+            backgroundColor: ColorsManager.colorPrimary,
+            appBar: AppBar(
+              backgroundColor: ColorsManager.colorPrimary,
+              elevation: 0,
+              leading: Padding(
+                padding:  EdgeInsets.only(left: 12.w),
+                child: const CircleAvatar(
+                  radius: 12,
+                  // backgroundImage: AssetImage('assets/profile_image.jpg'),
+                ),
+              ),
+              title: Padding(
+                padding:  EdgeInsets.only(left: 1.w),
+                child: Text('Antoneos',style: TextStyles.font19WhiteBold.copyWith(fontWeight: FontWeight.w700),),
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {},
+                ),
+              ],
             ),
-          ),
-          _buildMessageComposer(),
-        ],
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    itemCount:  chatCubit.getMessagesResponse.length??0,
+                    itemBuilder: (context, index) {
+                      return MessageBubble(
+                        message: chatCubit.getMessagesResponse[index].text??"",
+                        isMe: true,
+                        time: '15'
+                      );
+                    },
+                  ),
+                ),
+                _buildMessageComposer(chatCubit: chatCubit),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildMessageComposer() {
+  Widget _buildMessageComposer({required ChatCubit chatCubit}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
@@ -86,24 +98,31 @@ class ChatFriendScreen extends StatelessWidget {
                         ),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.zero,
+
                       ),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.sp,
                       ),
+                      controller: chatCubit.messageController,
                     ),
                   ),
-                  Container(
-                    width: 35.w,
-                    height: 35.h,
-                    decoration: BoxDecoration(
-                      color: Colors.purple.shade800,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 20.sp,
+                  InkWell(
+                    onTap: () {
+                      chatCubit.sendMessage(getMessageResponse:GetMessageResponse(text: chatCubit.messageController.text,));
+                    },
+                    child: Container(
+                      width: 35.w,
+                      height: 35.h,
+                      decoration: BoxDecoration(
+                        color: Colors.purple.shade800,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
                     ),
                   ),
                 ],

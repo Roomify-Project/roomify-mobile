@@ -65,11 +65,22 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               CircleWidget(),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 20.h,
                   ),
-                  Stack(alignment: Alignment.topRight, children: [
+                  SizedBox(height: 30.h,),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding:  EdgeInsets.only(left: 16.w),
+                      child: Text(postCubit.getPostResponse?.description??"",style: TextStyles.font18WhiteRegular,),
+                    ),
+                  ),
+                  SizedBox(height: 5.h,),
+                  Stack(
+                      alignment: Alignment.topRight, children: [
                     Container(
                         width: double.infinity.w,
                         height: 300.h,
