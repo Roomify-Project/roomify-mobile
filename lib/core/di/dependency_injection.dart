@@ -5,6 +5,9 @@ import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
+import 'package:rommify_app/features/profile/data/apis/profile_api_service.dart';
+import 'package:rommify_app/features/profile/data/repos/profile_repo.dart';
+import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
 
 import '../../features/forget_password/data/apis/forget_api_service.dart';
 import '../../features/forget_password/data/repo/forget_repo.dart';
@@ -43,6 +46,12 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<ForgetPasswordApiService>(() => ForgetPasswordApiService(dio: dio));
   getIt.registerLazySingleton<ForgetPasswordRepo>(() => ForgetPasswordRepo(getIt()));
   getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit(getIt()));
+
+
+  //// profile/////
+  getIt.registerLazySingleton<ProfileApiService>(() => ProfileApiService(dio: dio));
+  getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepo(getIt()));
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt()));
 
   ///// chat
   getIt.registerFactory<ChatCubit>(() => ChatCubit());

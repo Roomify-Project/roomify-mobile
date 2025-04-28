@@ -3,9 +3,9 @@ class ApiConstants {
   static const String apiBaseUrl = "http://roomify0.runasp.net";
   static const String signalRUrl = "http://roomify0.runasp.net/Chat";
 
-  static const String loginModel = '/api/Auth/login';
-  static const String getAllPostsModel = '/api/PortfolioPost/';
-  static String getUserPostsModel({required String id}){
+  static const String loginUrl = '/api/Auth/login';
+  static const String getAllPostsUrl = '/api/PortfolioPost/';
+  static String getUserPostsUrl({required String id}){
     return "/api/PortfolioPost/by-user/$id";
   }
   static String getPost({required String id}){
@@ -17,10 +17,18 @@ class ApiConstants {
   static String deletePost({required String postId}){
       return "/api/PortfolioPost/$postId";
   }
-  static const String signUpModel = '/api/Auth/register';
-  static const String verifyOtpModel = '/api/Auth/confirm-email';
-  static const String forgetPasswordModel = '/api/Auth/forget-password';
-  static const String resetPasswordModel = '/api/Auth/reset-password';
+  static const String signUpUrl = '/api/Auth/register';
+  static const String verifyOtpUrl = '/api/Auth/confirm-email';
+  static const String forgetPasswordUrl = '/api/Auth/forget-password';
+  static const String resetPasswordUrl = '/api/Auth/reset-password';
+  static  String addFollowUrl({required String followId}){
+   return '/api/follow/$followId';
+}
+
+  static  String getIsFollowingUrl({required String followId}){
+    return '/api/follow/is-following/$followId';
+  }
+
 }
 
 

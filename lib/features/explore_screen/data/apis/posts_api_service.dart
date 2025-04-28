@@ -11,11 +11,11 @@ class PostsApiService {
   final Dio dio;
   PostsApiService({required this.dio});
   Future<Response> getAllPost() async {
-   final response= await dio.get(ApiConstants.getAllPostsModel);
+   final response= await dio.get(ApiConstants.getAllPostsUrl);
      return  response;
   }
   Future<Response> getPostsUser({required String id}) async {
-    final response= await dio.get(ApiConstants.getUserPostsModel(id: id));
+    final response= await dio.get(ApiConstants.getUserPostsUrl(id: id));
     return  response;
   }
   Future<Response> getPost({required String postId}) async {
