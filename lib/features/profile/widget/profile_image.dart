@@ -1,35 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:rommify_app/features/profile/widget/show_image_dialog.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({Key? key}) : super(key: key);
+  final ProfileCubit profileCubit;
+  const ProfileImage({Key? key, required this.profileCubit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          const CircleAvatar(
-            radius: 67,
-            backgroundColor: Colors.grey,
-            backgroundImage: AssetImage('assets/images/1O0A0210.jpg'),
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        GestureDetector(
+          onTap: () {
+            showPickImageSnackBar(context,profileCubit);
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+               CircleAvatar(
+                radius: 67,
+                backgroundColor: Colors.grey,
+                backgroundImage:profileCubit.imageFile!=null?FileImage(profileCubit.imageFile!,):
+                const AssetImage('assets/images/1O0A0210.jpg'),
+              ),
+              Container(
+                width: 134,
+                height: 134,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+            ],
           ),
-          Container(
-            width: 134,
-            height: 134,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+        ),
+        profileCubit.imageFile!=null?
+        Padding(
+          padding: const EdgeInsets.only(top: 10,right: 5),
+          child: Container(
+            width: 24.w,
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.edit,
               color: Colors.white,
-              size: 40,
+            ),
+            child: InkWell(
+              onTap: () {
+                profileCubit.clearImage();
+              },
+              child: const Center(
+                child: Icon(
+                  Icons.close,
+                  color: Colors.black,
+                ),
+              ),
             ),
           ),
-        ],
-      ),
+        ):const SizedBox(),
+      ],
     );
   }
 }

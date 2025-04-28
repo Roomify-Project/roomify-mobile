@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
+import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
 import '../../../../core/networking/api_error_handler.dart';
 import '../apis/profile_api_service.dart';
+import '../models/update_profile_response.dart';
 
 class ProfileRepo {
   final ProfileApiService _apiService;
@@ -12,10 +14,8 @@ class ProfileRepo {
   {required String followId}) async {
     try {
       final response = await _apiService.addFollow( followId: followId);
-      print("OTP Response data: ${response.data}");
-      return Right("Followed successfully.");
+      return const Right("Followed successfully.");
     } catch (error) {
-      print("VerifyOTP Error: $error");
       return Left(ErrorHandler.handle(error));
     }
   }
@@ -23,10 +23,17 @@ class ProfileRepo {
       {required String followId}) async {
     try {
       final response = await _apiService.checkIsFollow(followId: followId);
-      print("OTP Response data: ${response.data}");
       return  Right(response);
     } catch (error) {
-      print("VerifyOTP Error: $error");
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, UpdateProfileResponse>> updateProfile(
+      {required String updateProfileId,required UpdateProfileBody updateProfileBody}) async {
+    try {
+      final response = await _apiService.updateProfile(updateProfileBody: updateProfileBody, profileId: updateProfileId);
+      return  Right(UpdateProfileResponse.fromJson(response.data));
+    } catch (error) {
       return Left(ErrorHandler.handle(error));
     }
   }

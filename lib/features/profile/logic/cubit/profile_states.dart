@@ -23,3 +23,14 @@ class GetIsFollowingErrorState extends ProfileStates {
   GetIsFollowingErrorState({required this.message});
 }
 class ChangeDropDownState extends ProfileStates {}
+
+
+//// UPDATE PROFILE///////////
+class UpdateProfileLoadingState extends ProfileStates {}
+class UpdateProfileSuccessState extends ProfileStates {
+}
+class UpdateProfileErrorState extends ProfileStates {
+  final String message;
+  UpdateProfileErrorState({required this.message});
+}
+class UploadImageState extends ProfileStates{}

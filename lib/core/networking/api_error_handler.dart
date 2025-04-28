@@ -120,7 +120,6 @@ class ErrorHandler implements Exception {
       apiErrorModel = _handleError(error);
     } else {
       print("not diooooo");
-
       apiErrorModel = DataSource.DEFAULT.getFailure();
     }
   }

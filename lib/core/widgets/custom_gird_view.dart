@@ -56,7 +56,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
             return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
-                message: "No data available",
+                message: state.message,
                 lottieAnimationPath: 'assets/animation/error.json',
                 onRetry: _loadUserPosts,
               ),
