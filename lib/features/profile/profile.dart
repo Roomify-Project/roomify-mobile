@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
+import 'package:rommify_app/core/widgets/flutter_show_toast.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.dart';
+import 'package:rommify_app/features/profile/data/repos/profile_repo.dart';
 import 'package:rommify_app/features/profile/edit_profile_screen.dart';
+import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:rommify_app/features/profile/logic/cubit/profile_states.dart';
 
+import '../../core/di/dependency_injection.dart';
+import '../../core/theming/styles.dart';
 import '../../core/widgets/custom_gird_view.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -18,114 +25,232 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? selectedIcon;
   bool showAddMore = false;
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsManager.mainColor,
-      body: Stack(
-        children: [
-          CircleWidget(),
+    return BlocProvider(
+      create: (BuildContext context)=>ProfileCubit(getIt.get<ProfileRepo>())..checkISFollowing(followId: 'd433b91e-e08b-401f-dc61-08dd8352692d'),
+      child: BlocConsumer<ProfileCubit,ProfileStates>(
+        listener: (BuildContext context, Object? state) {
+          if(state is AddFollowSuccessState){
+            flutterShowToast(message: state.message, toastCase: ToastCase.success);
+          }
+          else if(state is AddFollowErrorState){
+            flutterShowToast(message: state.message, toastCase: ToastCase.error);
 
-          Padding(
-            padding: const EdgeInsets.only(top: 60),
-            child: Column(
+          }
+
+        },
+        builder: (BuildContext context, state) { 
+          final profileCubit=ProfileCubit.get(context);
+          return Scaffold(
+            backgroundColor: ColorsManager.mainColor,
+            body: Stack(
               children: [
-                // Image and info row
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage('assets/images/1O0A0210.jpg'),
-                    ),
-                    SizedBox(width: 35),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Abanoub Maged",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Interior Designer",
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          "@abanoub185",
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
+                CircleWidget(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 60),
+                  child: Column(
+                    children: [
+                      // Image and info row
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage('assets/images/1O0A0210.jpg'),
+                          ),
+                          SizedBox(width: 35),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Abanoub Maged",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Interior Designer",
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              ),
+                              Text(
+                                "@abanoub185",
+                                style: TextStyle(color: Colors.white70, fontSize: 12),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Text("1.3k followers",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                  SizedBox(width: 20),
+                                  Text("45 following",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
+                      profileCubit.isFollowing!=null? Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+                        child: Row(
                           children: [
-                            Text("1.3k followers",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14)),
-                            SizedBox(width: 20),
-                            Text("45 following",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14)),
+                            Expanded(
+                              child: !profileCubit.isFollowing!
+                                  ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorsManager.colorSecondry,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  profileCubit.addFollow(followId: 'd433b91e-e08b-401f-dc61-08dd8352692d');
+                                },
+                                child: Text(
+                                  'Follow',
+                                  style: TextStyles.font16WhiteInter,
+                                ),
+                              )
+                                  : Column(
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: ColorsManager.colorSecondry,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      profileCubit.changeDropDown();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Following',
+                                          style: TextStyles.font16WhiteInter.copyWith(color: Colors.green),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          profileCubit.isDropdownOpen
+                                              ? Icons.keyboard_arrow_up
+                                              : Icons.keyboard_arrow_down,
+                                          color: Colors.green,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (profileCubit.isDropdownOpen)
+                                    Container(
+                                      width: 170.w,
+                                      height: 40.h,
+                                      margin: const EdgeInsets.only(top: 1),
+                                      decoration: BoxDecoration(
+                                        color: ColorsManager.colorSecondry,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () {
+                                            profileCubit.changeDropDown();
+                                          },
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: Center(
+                                            child: Text(
+                                                "Unfollow",
+                                                style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorsManager.colorSecondry,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  'Message',
+                                  style: TextStyles.font16WhiteInter,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                // Interactive icons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildIcon(Icons.add, 'Add', () {
-                      context.pushNamed(Routes.addPost);
-                    }),
-                    SizedBox(width: 30.w),
-                    _buildIcon(Icons.favorite, 'favorite', () {}),
-                    SizedBox(width: 30.w),
-                    _buildIcon(Icons.history, 'history', () {}),
-                    SizedBox(width: 30.w),
-                    _buildIcon(Icons.bookmark, 'bookmark', () {}),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                // Image Grid - Modified mainAxisSpacing to 0
-                 const Expanded(
-                  child: CustomGridViewProfile(),
-                ),
-              ],
-            ),
-          ),
-          // Settings icon at the top
-          Positioned(
-            top: 25.h,
-            right: 10.w,
-            child: Row(
-              children: [
-                InkWell(
-                  child: Icon(
-                    Icons.email_outlined,
-                    color: Colors.white,
-                    size: 28.sp,
+                      )
+                          :
+                      const SizedBox(),
+                      SizedBox(height: 18.h),
+
+                      // Interactive icons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildIcon(Icons.add, 'Add', () {
+                            context.pushNamed(Routes.addPost);
+                          }),
+                          SizedBox(width: 30.w),
+                          _buildIcon(Icons.favorite, 'favorite', () {}),
+                          SizedBox(width: 30.w),
+                          _buildIcon(Icons.history, 'history', () {}),
+                          SizedBox(width: 30.w),
+                          _buildIcon(Icons.bookmark, 'bookmark', () {}),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
+                      // Image Grid - Modified mainAxisSpacing to 0
+                      const Expanded(
+                        child: CustomGridViewProfile(),
+                      ),
+                    ],
                   ),
-                  onTap: () {
-                    context.pushNamed(Routes.chatsScreen);
-                  },
                 ),
-                GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EditProfileScreen()));
-                    },
-                    child:
-                        Icon(Icons.settings, color: Colors.white, size: 28.sp)),
+                Positioned(
+                  top: 25.h,
+                  right: 10.w,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        child: Icon(
+                          Icons.email_outlined,
+                          color: Colors.white,
+                          size: 28.sp,
+                        ),
+                        onTap: () {
+                          context.pushNamed(Routes.chatsScreen);
+                        },
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const EditProfileScreen()));
+                          },
+                          child:
+                          Icon(Icons.settings, color: Colors.white, size: 28.sp)),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+          );
+        }
       ),
     );
   }
@@ -174,7 +299,13 @@ class ImageCard extends StatelessWidget {
             //   fit: BoxFit.cover,
             // ),
           ),
-          child: CustomCachedNetworkImage(imageUrl: imageUrl,width: 169,height: 128,fit: BoxFit.cover,borderRadius: 10,),
+          child: CustomCachedNetworkImage(
+            imageUrl: imageUrl,
+            width: 169,
+            height: 128,
+            fit: BoxFit.cover,
+            borderRadius: 10,
+          ),
         ),
         Positioned(
           top: 8,
@@ -193,22 +324,20 @@ class ImageCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (isExpanded)
-                   Row(
+                  Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.bookmark_border,
                           color: ColorsManager.colorPrimary, size: 20),
-                       SizedBox(width: 10.w),
+                      SizedBox(width: 10.w),
                       const Icon(Icons.favorite_border,
-                          color:  ColorsManager.colorPrimary, size: 20),
+                          color: ColorsManager.colorPrimary, size: 20),
                       SizedBox(width: 10.w),
                       InkWell(
-                          onTap: () {
-
-                          },
-                          child: Icon(Icons.download, color:  ColorsManager.colorPrimary, size: 20)),
+                          onTap: () {},
+                          child: Icon(Icons.download,
+                              color: ColorsManager.colorPrimary, size: 20)),
                       SizedBox(width: 10.w),
-
                     ],
                   ),
                 Container(
@@ -219,9 +348,9 @@ class ImageCard extends StatelessWidget {
                       width: 2,
                     ),
                   ),
-                  child:  const Icon(
+                  child: const Icon(
                     Icons.more_horiz,
-                    color:  ColorsManager.colorPrimary,
+                    color: ColorsManager.colorPrimary,
                     size: 14,
                   ),
                 )
