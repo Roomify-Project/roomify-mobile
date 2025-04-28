@@ -25,233 +25,254 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? selectedIcon;
   bool showAddMore = false;
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context)=>ProfileCubit(getIt.get<ProfileRepo>())..checkISFollowing(followId: 'd433b91e-e08b-401f-dc61-08dd8352692d'),
-      child: BlocConsumer<ProfileCubit,ProfileStates>(
-        listener: (BuildContext context, Object? state) {
-          if(state is AddFollowSuccessState){
-            flutterShowToast(message: state.message, toastCase: ToastCase.success);
-          }
-          else if(state is AddFollowErrorState){
-            flutterShowToast(message: state.message, toastCase: ToastCase.error);
-
-          }
-
-        },
-        builder: (BuildContext context, state) { 
-          final profileCubit=ProfileCubit.get(context);
-          return Scaffold(
-            backgroundColor: ColorsManager.mainColor,
-            body: Stack(
-              children: [
-                CircleWidget(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 60),
-                  child: Column(
-                    children: [
-                      // Image and info row
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: AssetImage('assets/images/1O0A0210.jpg'),
-                          ),
-                          SizedBox(width: 35),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Abanoub Maged",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Interior Designer",
-                                style: TextStyle(color: Colors.white, fontSize: 14),
-                              ),
-                              Text(
-                                "@abanoub185",
-                                style: TextStyle(color: Colors.white70, fontSize: 12),
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Text("1.3k followers",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14)),
-                                  SizedBox(width: 20),
-                                  Text("45 following",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      profileCubit.isFollowing!=null? Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.0.w),
-                        child: Row(
+      create: (BuildContext context) => ProfileCubit(getIt.get<ProfileRepo>())
+        ..checkISFollowing(followId: 'd433b91e-e08b-401f-dc61-08dd8352692d'),
+      child: BlocConsumer<ProfileCubit, ProfileStates>(
+          listener: (BuildContext context, Object? state) {
+        if (state is AddFollowSuccessState) {
+          flutterShowToast(
+              message: state.message, toastCase: ToastCase.success);
+        } else if (state is AddFollowErrorState) {
+          flutterShowToast(message: state.message, toastCase: ToastCase.error);
+        }
+      }, builder: (BuildContext context, state) {
+        final profileCubit = ProfileCubit.get(context);
+        return Scaffold(
+          backgroundColor: ColorsManager.mainColor,
+          body: Stack(
+            children: [
+              CircleWidget(),
+              Padding(
+                padding: const EdgeInsets.only(top: 60),
+                child: Column(
+                  children: [
+                    // Image and info row
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/images/1O0A0210.jpg'),
+                        ),
+                        SizedBox(width: 35),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: !profileCubit.isFollowing!
-                                  ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorsManager.colorSecondry,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                            Text(
+                              "Abanoub Maged",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Interior Designer",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            Text(
+                              "@abanoub185",
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 12),
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text("1.3k followers",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14)),
+                                SizedBox(width: 20),
+                                Text("45 following",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    profileCubit.isFollowing != null
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: !profileCubit.isFollowing!
+                                      ? ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                ColorsManager.colorSecondry,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            profileCubit.addFollow(
+                                                followId:
+                                                    'd433b91e-e08b-401f-dc61-08dd8352692d');
+                                          },
+                                          child: Text(
+                                            'Follow',
+                                            style: TextStyles.font16WhiteInter,
+                                          ),
+                                        )
+                                      : Column(
+                                          children: [
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    ColorsManager.colorSecondry,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                profileCubit.changeDropDown();
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'Following',
+                                                    style: TextStyles
+                                                        .font16WhiteInter
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.green),
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Icon(
+                                                    profileCubit.isDropdownOpen
+                                                        ? Icons
+                                                            .keyboard_arrow_up
+                                                        : Icons
+                                                            .keyboard_arrow_down,
+                                                    color: Colors.green,
+                                                    size: 20,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (profileCubit.isDropdownOpen)
+                                              Container(
+                                                width: 170.w,
+                                                height: 40.h,
+                                                margin: const EdgeInsets.only(
+                                                    top: 1),
+                                                decoration: BoxDecoration(
+                                                  color: ColorsManager
+                                                      .colorSecondry,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      profileCubit
+                                                          .changeDropDown();
+                                                    },
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    child: Center(
+                                                      child: Text("Unfollow",
+                                                          style: TextStyles
+                                                              .font16WhiteInter
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .red)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
                                 ),
-                                onPressed: () {
-                                  profileCubit.addFollow(followId: 'd433b91e-e08b-401f-dc61-08dd8352692d');
-                                },
-                                child: Text(
-                                  'Follow',
-                                  style: TextStyles.font16WhiteInter,
-                                ),
-                              )
-                                  : Column(
-                                children: [
-                                  ElevatedButton(
+                                SizedBox(width: 10.w),
+                                Expanded(
+                                  child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: ColorsManager.colorSecondry,
+                                      backgroundColor:
+                                          ColorsManager.colorSecondry,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: () {
-                                      profileCubit.changeDropDown();
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Following',
-                                          style: TextStyles.font16WhiteInter.copyWith(color: Colors.green),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Icon(
-                                          profileCubit.isDropdownOpen
-                                              ? Icons.keyboard_arrow_up
-                                              : Icons.keyboard_arrow_down,
-                                          color: Colors.green,
-                                          size: 20,
-                                        ),
-                                      ],
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Message',
+                                      style: TextStyles.font16WhiteInter,
                                     ),
                                   ),
-                                  if (profileCubit.isDropdownOpen)
-                                    Container(
-                                      width: 170.w,
-                                      height: 40.h,
-                                      margin: const EdgeInsets.only(top: 1),
-                                      decoration: BoxDecoration(
-                                        color: ColorsManager.colorSecondry,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            profileCubit.changeDropDown();
-                                          },
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: Center(
-                                            child: Text(
-                                                "Unfollow",
-                                                style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorsManager.colorSecondry,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
                                 ),
-                                onPressed: () {},
-                                child: Text(
-                                  'Message',
-                                  style: TextStyles.font16WhiteInter,
-                                ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                          :
-                      const SizedBox(),
-                      SizedBox(height: 18.h),
+                          )
+                        : const SizedBox(),
+                    SizedBox(height: 18.h),
 
-                      // Interactive icons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildIcon(Icons.add, 'Add', () {
-                            context.pushNamed(Routes.addPost);
-                          }),
-                          SizedBox(width: 30.w),
-                          _buildIcon(Icons.favorite, 'favorite', () {}),
-                          SizedBox(width: 30.w),
-                          _buildIcon(Icons.history, 'history', () {}),
-                          SizedBox(width: 30.w),
-                          _buildIcon(Icons.bookmark, 'bookmark', () {}),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      // Image Grid - Modified mainAxisSpacing to 0
-                      const Expanded(
-                        child: CustomGridViewProfile(),
-                      ),
-                    ],
-                  ),
+                    // Interactive icons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildIcon(Icons.add, 'Add', () {
+                          context.pushNamed(Routes.addPost);
+                        }),
+                        SizedBox(width: 30.w),
+                        _buildIcon(Icons.favorite, 'favorite', () {}),
+                        SizedBox(width: 30.w),
+                        _buildIcon(Icons.history, 'history', () {}),
+                        SizedBox(width: 30.w),
+                        _buildIcon(Icons.bookmark, 'bookmark', () {}),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    // Image Grid - Modified mainAxisSpacing to 0
+                    const Expanded(
+                      child: CustomGridViewProfile(),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  top: 25.h,
-                  right: 10.w,
-                  child: Row(
-                    children: [
-                      InkWell(
-                        child: Icon(
-                          Icons.email_outlined,
-                          color: Colors.white,
-                          size: 28.sp,
-                        ),
+              ),
+              Positioned(
+                top: 25.h,
+                right: 10.w,
+                child: Row(
+                  children: [
+                    InkWell(
+                      child: Icon(
+                        Icons.email_outlined,
+                        color: Colors.white,
+                        size: 28.sp,
+                      ),
+                      onTap: () {
+                        context.pushNamed(Routes.chatsScreen);
+                      },
+                    ),
+                    GestureDetector(
                         onTap: () {
-                          context.pushNamed(Routes.chatsScreen);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                        EditProfileScreen(profileCubit:profileCubit ,)));
                         },
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const EditProfileScreen()));
-                          },
-                          child:
-                          Icon(Icons.settings, color: Colors.white, size: 28.sp)),
-                    ],
-                  ),
+                        child: Icon(Icons.settings,
+                            color: Colors.white, size: 28.sp)),
+                  ],
                 ),
-              ],
-            ),
-          );
-        }
-      ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 

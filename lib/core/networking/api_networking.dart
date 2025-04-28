@@ -28,7 +28,9 @@ class ApiConstants {
   static  String getIsFollowingUrl({required String followId}){
     return '/api/follow/is-following/$followId';
   }
-
+  static  String profileId({required String profileId}){
+    return '/api/users/$profileId';
+  }
 }
 
 
