@@ -1,12 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/routing/app_router.dart';
+import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../data/models/update_profile_body.dart';
 import '../../data/repos/profile_repo.dart';
 import 'profile_states.dart';
@@ -21,7 +30,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
   bool isDropdownOpen = false;
   UpdateProfileResponse? updateProfileResponse;
   bool? isFollowing;
-
+  GetProfileDataModel? getProfileDataModel;
   TextEditingController fullNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -35,15 +44,31 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
     response.fold(
       (left) {
+        print("followww errrorr ${left.apiErrorModel.title}");
         isFollowing = !isFollowing!;
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
       (right) {
-        emit(AddFollowSuccessState(message: right));
+        emit(AddFollowSuccessState(message: right.message));
       },
     );
   }
+  void unFollow({required String followId}) async {
+    isFollowing = !isFollowing!;
+    // emit(AddFollowSuccessState(message: ""));
+    final response = _profileRepo.unFollow(followId: followId);
 
+    response.fold(
+          (left) {
+        print("followww errrorr ${left.apiErrorModel.title}");
+        isFollowing = !isFollowing!;
+        emit(AddFollowErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        emit(AddFollowSuccessState(message: right.message));
+      },
+    );
+  }
   void checkISFollowing({required String followId}) async {
     final response = _profileRepo.checkIsFollowing(followId: followId);
 
@@ -53,6 +78,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
       (right) {
         isFollowing = right.data;
+        print("is folllllow${isFollowing}");
 
         emit(GetIsFollowingSuccessState());
       },
@@ -89,7 +115,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
             fullName: fullNameController.text,
             bio: bioController.text,
             email: emailController.text,
-            profilePicture: imageFile));
+            ), imageProfile: imageFile);
 
     response.fold(
       (left) {
@@ -97,8 +123,41 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
       (right) {
         updateProfileResponse = right;
+        getProfileDataModel=GetProfileDataModel(id: right.id,
+            userName: right.userName, fullName: right.fullName,
+            bio: right.bio,
+            email: right.email, emailConfirmed:right.emailConfirmed,phoneNumber: right.phoneNumber,role:getProfileDataModel!.role );
         emit(UpdateProfileSuccessState());
       },
     );
   }
+
+  void getUserProfileData({required String profileId}) async {
+    emit(GetUserDataProfileLoadingState());
+    final response = _profileRepo.getProfileData(profileId: profileId);
+
+    response.fold(
+          (left) {
+
+        emit(GetUserDataProfileErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+            getProfileDataModel=right;
+            fullNameController.text=right.fullName;
+            bioController.text=right.bio;
+            userNameController.text=right.userName;
+            emailController.text=right.email;
+            phoneNumberController.text=right.phoneNumber??"Phone Number";
+
+        emit(GetUserDataProfileSuccessState());
+      },
+    );
+  }
+  Future<void> logOut({required BuildContext context}) async {
+    await SharedPrefHelper.clearData();
+    context.pushNamedAndRemoveUntil(Routes.loginScreen, predicate: (Route<dynamic> route) =>false);
+    print("tokennnn ${SharedPrefHelper.getString('token')}");
+  }
+
+
 }

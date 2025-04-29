@@ -24,7 +24,8 @@ class PostsCubit extends Cubit<PostsStates> {
     final response = await _postsRepo.getAllPosts();
     response.fold(
       (left) {
-        emit(GetAllPostsErrorState(message: left.apiErrorModel.title ?? ""));
+        print("leftttt ${ left.apiErrorModel.title}");
+        emit(GetAllPostsErrorState(message: left.apiErrorModel.title));
       },
       (right) {
         getAllPostsResponse = right;

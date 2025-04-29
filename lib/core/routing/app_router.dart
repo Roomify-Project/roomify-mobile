@@ -7,6 +7,7 @@ import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
 import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
 import 'package:rommify_app/features/main_screen/ui/main_screen.dart';
 import 'package:rommify_app/features/profile/add_post.dart';
+import 'package:rommify_app/features/profile/profile.dart';
 import 'package:rommify_app/features/sign_up/ui/sign_up_screen.dart';
 
 import '../../features/forget_password/ui/forget_password.dart';
@@ -30,6 +31,11 @@ class AppRouter {
       case Routes.forgetPassword: // Changed from forgetPassword
         return MaterialPageRoute(
           builder: (_) => const ForgetPasswordDialog(), // New screen
+        );
+      case Routes.profile: // Cha
+        final arguments = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (_) =>  ProfileScreen(profileId: arguments?['profileId'] as String??""), // New screen
         );
       case Routes.createRoomScreen:
         return MaterialPageRoute(

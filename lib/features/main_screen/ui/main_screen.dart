@@ -10,6 +10,7 @@ import 'package:rommify_app/core/widgets/flutter_show_toast.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 
+import '../../../core/helpers/shared_pref_helper.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/widgets/custom_chached_network_image.dart';
 import '../../create_room_screen/ui/widget/circle_widget.dart';
@@ -71,6 +72,23 @@ class _MainScreenState extends State<MainScreen> {
                     height: 20.h,
                   ),
                   SizedBox(height: 30.h,),
+                  // Row(
+                  //   children: [
+                  //     Text(
+                  //       "antoneos",
+                  //       style: TextStyles.font12WhiteRegular
+                  //           .copyWith(fontWeight: FontWeight.w700),
+                  //     ),
+                  //     Container(
+                  //       width: 24.w,
+                  //       height: 24.h,
+                  //       decoration: const BoxDecoration(
+                  //         shape: BoxShape.circle,
+                  //       ),
+                  //       child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse)),
+                  //     )
+                  //   ],
+                  // ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -92,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
                           imageUrl: postCubit.getPostResponse?.imagePath,
                           fit: BoxFit.cover,
                         )),
-                  postCubit.getPostResponse!.applicationUserId==SharedPrefKey.userId?  PopupMenuButton(
+                  postCubit.getPostResponse!.applicationUserId==SharedPrefHelper.getString(SharedPrefKey.userId)?  PopupMenuButton(
                       color:const Color(0xFF2D1B2E),
                       icon: const Icon(Icons.more_vert), // أيقونة النقاط الثلاث
                       itemBuilder: (context) => [

@@ -24,11 +24,18 @@ class ApiConstants {
   static  String addFollowUrl({required String followId}){
    return '/api/follow/$followId';
 }
+  static  String deleteFollowUrl({required String followId}){
+    return '/api/follow/$followId';
+  }
+
 
   static  String getIsFollowingUrl({required String followId}){
     return '/api/follow/is-following/$followId';
   }
   static  String profileId({required String profileId}){
+    return '/api/users/$profileId';
+  }
+  static  String getProfileData({required String profileId}){
     return '/api/users/$profileId';
   }
 }

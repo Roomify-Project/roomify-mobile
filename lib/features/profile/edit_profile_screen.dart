@@ -12,6 +12,8 @@ import 'package:rommify_app/features/profile/widget/custom_dialog_widget.dart';
 import 'package:rommify_app/features/profile/widget/custom_text_field.dart';
 import 'package:rommify_app/features/profile/widget/profile_image.dart';
 
+import '../../core/helpers/shared_pref_helper.dart';
+
 class EditProfileScreen extends StatelessWidget {
   final ProfileCubit profileCubit;
 
@@ -136,7 +138,7 @@ class EditProfileScreen extends StatelessWidget {
                     text: 'SAVE CHANGES',
                     onPressed: () {
                       profileCubit.updateProfile(
-                          updateProfileId:SharedPrefKey.userId);
+                          updateProfileId:SharedPrefHelper.getString(SharedPrefKey.userId));
                     },
                     color: const Color(0xff320c39),
                     width: 147,
@@ -144,7 +146,9 @@ class EditProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                     await profileCubit.logOut(context: context);
+                    },
                     child: const Text(
                       'LOG OUT',
                       style: TextStyle(

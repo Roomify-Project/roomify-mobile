@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/core/routing/routes.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
@@ -14,7 +15,8 @@ import 'custom_error.dart';
 import 'custom_shimmer.dart';
 
 class CustomGridViewProfile extends StatefulWidget {
-  const CustomGridViewProfile({super.key});
+  final String profileId;
+  const CustomGridViewProfile({super.key, required this.profileId});
 
   @override
   State<CustomGridViewProfile> createState() => _CustomGridViewProfileState();
@@ -31,7 +33,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
   }
 
   void _loadUserPosts() {
-    PostsCubit.get(context).getUserPosts(id: SharedPrefKey.userId);
+    PostsCubit.get(context).getUserPosts(id: SharedPrefHelper.getString(SharedPrefKey.userId));
   }
 
   @override
@@ -53,6 +55,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
 
           // Error State
           if (state is GetUserPostsErrorState) {
+            print("stateeeeee ${state.message}");
             return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
@@ -65,10 +68,10 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
 
           // Empty Posts State
           if (posts == null || posts.isEmpty) {
-            return const Center(
+            return  Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
-                subtitle: "Start by creating your first post",
+                subtitle: widget.profileId==SharedPrefHelper.getString(SharedPrefKey.userId)?"Start by creating your first post":"",
                 lottieAnimationPath: 'assets/animation/empity_list.json',
               ),
             );
