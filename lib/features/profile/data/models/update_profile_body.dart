@@ -33,7 +33,7 @@ class UpdateProfileBody {
       'fullName': fullName,
       'bio': bio,
       'email': email,
-      'profilePicture':  profilePicture!=null?MultipartFile.fromFile(profilePicture?.path??"", filename: 'upload.jpg'):"",
+      'profilePicture': profilePicture,
     };
   }
 }

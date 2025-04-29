@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
@@ -20,6 +22,18 @@ class ProfileApiService {
     }
   }
 
+
+  Future<Response> unFollow({required String followId}) async {
+    try {
+      final response = await dio.delete(
+        ApiConstants.deleteFollowUrl(followId: followId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> checkIsFollow({required String followId}) async {
     try {
       final response = await dio.get(
@@ -30,18 +44,35 @@ class ProfileApiService {
       rethrow;
     }
   }
-  Future<Response> updateProfile({required UpdateProfileBody updateProfileBody,required String profileId}) async {
+  Future<Response> updateProfile({required UpdateProfileBody updateProfileBody,required String profileId,required File? imageProfile}) async {
     try {
-      // final formData = FormData.fromMap({
-      //   'userName': updateProfileBody.userName,
-      //   'fullName': updateProfileBody.fullName,
-      //   'bio': updateProfileBody.bio,
-      //   'email': updateProfileBody.email,
-      //   'profilePicture': await MultipartFile.fromFile(updateProfileBody.profilePicture?.path??"", filename: 'upload.jpg'),
-      // });
+      final formData = FormData.fromMap({
+        'userName': updateProfileBody.userName,
+        'fullName': updateProfileBody.fullName,
+        'bio': updateProfileBody.bio,
+        'email': updateProfileBody.email,
+        'profilePicture':"",
+      });
       final response = await dio.put(
         ApiConstants.profileId(profileId: profileId),
-        data: updateProfileBody.toJson(),
+        data: {
+          'userName': updateProfileBody.userName,
+          'fullName': updateProfileBody.fullName,
+          'bio': updateProfileBody.bio,
+          'email': updateProfileBody.email,
+          'profilePicture':"",
+        },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> getUserProfileData({required String profileId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getProfileData( profileId: profileId),
       );
       return response;
     } catch (e) {

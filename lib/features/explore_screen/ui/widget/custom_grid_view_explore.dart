@@ -44,6 +44,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           if (state is GetAllPostsErrorState) {
+            print("stateeeee ${state.message}");
             return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
@@ -86,7 +87,10 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
                   },
                 child: ImageCard(
                   imageUrl: posts[index].imagePath,
-                  profileImageUrl: 'assets/images/1O0A0210.jpg',
+                  profileImageUrl: posts[index].imagePath,
+                  onPressed: () {
+                    context.pushNamed(Routes.profile,arguments: {'profileId':posts[index].applicationUserId});
+                  },
                   onExpand: () {
                     setState(() {
                       isExpandedList[index] = !isExpandedList[index];

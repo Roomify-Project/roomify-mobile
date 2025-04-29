@@ -5,5 +5,5 @@ bool isLogin=false;
 class SharedPrefKey
 {
   static const String token='token';
-  static String userId=SharedPrefHelper.getString('userId');
+  static String userId='userId';
 }

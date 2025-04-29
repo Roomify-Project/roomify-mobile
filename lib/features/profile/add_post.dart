@@ -10,6 +10,7 @@ import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dar
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 
 import '../../core/helpers/constans.dart';
+import '../../core/helpers/shared_pref_helper.dart';
 
 class AddPostPage extends StatelessWidget {
   @override
@@ -145,7 +146,7 @@ class AddPostPage extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           // Add post functionality here
-                          postCubit.addPost(userId: SharedPrefKey.userId);
+                          postCubit.addPost(userId:SharedPrefHelper.getString(SharedPrefKey.userId));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2D1B2E),

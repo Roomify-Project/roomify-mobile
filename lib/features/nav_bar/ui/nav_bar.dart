@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
 
 import 'package:rommify_app/features/profile/profile.dart';
+
+import '../../../core/helpers/shared_pref_helper.dart';
+import '../../../core/widgets/check_server_connection.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -15,11 +19,18 @@ class NavBarScreen extends StatefulWidget {
 class _NavBarScreenState extends State<NavBarScreen> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+     CheckServerConnection.checkServerConnection();
+
+    super.initState();
+  }
   // قائمة الشاشات التي سيتم التنقل بينها
   final List<Widget> _screens = [
     const ExploreScreen(),
     const CreateRoomScreen(),
-     ProfileScreen(),
+     ProfileScreen(profileId: SharedPrefHelper.getString(SharedPrefKey.userId),),
   ];
 
   @override

@@ -10,4 +10,6 @@ class Routes {
   static const String addPost = '/addPost';
   static const String loginScreen = '/loginScreen';
   static const String forgetPassword = '/forgetPassword';
+  static const String profile = '/profile';
+
 }

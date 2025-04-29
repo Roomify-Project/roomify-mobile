@@ -34,3 +34,13 @@ class UpdateProfileErrorState extends ProfileStates {
   UpdateProfileErrorState({required this.message});
 }
 class UploadImageState extends ProfileStates{}
+
+
+//// Get PROFILE///////////
+class GetUserDataProfileLoadingState extends ProfileStates {}
+class GetUserDataProfileSuccessState extends ProfileStates {
+}
+class GetUserDataProfileErrorState extends ProfileStates {
+  final String message;
+  GetUserDataProfileErrorState({required this.message});
+}
