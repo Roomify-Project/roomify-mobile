@@ -288,6 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         SharedPrefHelper.getString(SharedPrefKey.userId)?
                                     _buildIcon(Icons.add, 'Add', () {
                                       context.pushNamed(Routes.addPost);
+
                                     }):const SizedBox(),
                                     SizedBox(width: 30.w),
                                     _buildIcon(
