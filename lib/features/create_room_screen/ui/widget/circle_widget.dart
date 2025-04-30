@@ -9,21 +9,21 @@ class CircleWidget extends StatefulWidget {
 class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _xAnimation, _yAnimation;
+  late Animation<Color?> _colorAnimation;
   late int _currentStep;
 
-  // Define colors with opacity
   final List<Color> colors = [
-    Color(0xFFCC46A4),  // CC46A4
-    Color(0xFFCCC146),  // CCC146
-    Color(0xFFCC4646),  // CC4646
-    Color(0xFF9EACCE),  // 9EACCE
+    Color(0xFFCC46A4), // موف غامق
+    Color(0xFFCCC146), // أصفر
+    Color(0xFFCC4646), // برتقالي
+    Color(0xFFD48ACF), // موف فاتح
   ];
 
   final List<Offset> _path = [
-    Offset(0.5, 1.0),  // Bottom
-    Offset(0.0, 0.5),  // Left
-    Offset(0.5, 0.0),  // Top
-    Offset(1.0, 0.5),  // Right
+    Offset(0.5, 1.0),
+    Offset(0.0, 0.5),
+    Offset(0.5, 0.0),
+    Offset(1.0, 0.5),
   ];
 
   @override
@@ -38,7 +38,7 @@ class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderSt
     final size = MediaQuery.of(context).size;
 
     _controller = AnimationController(
-      duration: Duration(seconds: 7),  // Duration of the animation
+      duration: Duration(seconds: 7),
       vsync: this,
     )..addListener(() {
       if (mounted) {
@@ -46,6 +46,12 @@ class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderSt
       }
     });
 
+    _updateAnimations(size);
+
+    _controller.forward();
+  }
+
+  void _updateAnimations(Size size) {
     _xAnimation = Tween<double>(
       begin: _path[_currentStep].dx * size.width,
       end: _path[(_currentStep + 1) % 4].dx * size.width,
@@ -56,19 +62,16 @@ class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderSt
       end: _path[(_currentStep + 1) % 4].dy * size.height,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
-    _controller.forward();
+    _colorAnimation = ColorTween(
+      begin: colors[_currentStep],
+      end: colors[(_currentStep + 1) % 4],
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  Color getColorForPosition() {
-    final currentColor = colors[_currentStep];
-    final nextColor = colors[(_currentStep + 1) % 4];
-    return Color.lerp(currentColor, nextColor, _controller.value) ?? currentColor;
   }
 
   @override
@@ -81,17 +84,7 @@ class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderSt
             setState(() {
               _currentStep = (_currentStep + 1) % 4;
               final size = MediaQuery.of(context).size;
-
-              _xAnimation = Tween<double>(
-                begin: _path[_currentStep].dx * size.width,
-                end: _path[(_currentStep + 1) % 4].dx * size.width,
-              ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
-
-              _yAnimation = Tween<double>(
-                begin: _path[_currentStep].dy * size.height,
-                end: _path[(_currentStep + 1) % 4].dy * size.height,
-              ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
-
+              _updateAnimations(size);
               _controller.reset();
               _controller.forward();
             });
@@ -103,7 +96,7 @@ class _CircleWidgetState extends State<CircleWidget> with SingleTickerProviderSt
           painter: MovingShapePainter(
             _xAnimation.value,
             _yAnimation.value,
-            getColorForPosition(),
+            _colorAnimation.value ?? colors[_currentStep],
           ),
         );
       },
@@ -120,21 +113,20 @@ class MovingShapePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Apply blur effect
-    canvas.saveLayer(null, Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15));
+    canvas.saveLayer(null, Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 30, sigmaY: 30));
 
     final Paint paint = Paint()
       ..shader = RadialGradient(
         colors: [
-          color.withOpacity(0.5),  // 50% opacity
-          color.withOpacity(0.25),
+          color.withOpacity(0.8),
+          color.withOpacity(0.4),
           Colors.transparent,
         ],
-        stops: [0.3, 0.6, 1.0],
-      ).createShader(Rect.fromCircle(center: Offset(x, y), radius: 120))  // Increased radius to 120
+        stops: [0.3, 0.5, 1.0],
+      ).createShader(Rect.fromCircle(center: Offset(x, y), radius: 150))
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(Offset(x, y), 120, paint);  // Increased radius to 120
+    canvas.drawCircle(Offset(x, y), 150, paint);
     canvas.restore();
   }
 

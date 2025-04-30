@@ -67,7 +67,7 @@ class LogInScreen extends StatelessWidget {
                             child: const AnimatedText(text: 'Log In'),
                           ),
                           SizedBox(height: 20.h),
-                          const SingupRichText(),
+                           SingupRichText(onLoginTap: () => context.pushNamed(Routes.signUpScreen)),
                           SizedBox(height: 67.h),
                           Center(child: GoogleIcon()),
                           SizedBox(height: 47.42.h),

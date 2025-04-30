@@ -20,7 +20,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     // Get the cubit directly from the context
     final signUpCubit = context.read<SignUpCubit>();
-    
+
     return BlocListener<SignUpCubit, SignUpStates>(
       listener: (context, state) {
         if (state is OtpLoadingState) {

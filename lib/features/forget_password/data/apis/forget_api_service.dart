@@ -13,7 +13,7 @@ class ForgetPasswordApiService {
   }) async {
     try {
       final response = await dio.post(
-        ApiConstants.forgetPasswordModel,
+        ApiConstants.forgetPasswordUrl,
         data: requestBody.toJson()
       );
       return response;
@@ -27,7 +27,7 @@ class ForgetPasswordApiService {
   }) async {
     try {
       final response = await dio.post(
-        ApiConstants.verifyOtpModel,
+        ApiConstants.verifyOtpUrl,
         data: otpRequestBody.toJson()
       );
       return response;
@@ -41,7 +41,7 @@ class ForgetPasswordApiService {
   }) async {
     try {
       final response = await dio.post(
-        ApiConstants.resetPasswordModel,
+        ApiConstants.resetPasswordUrl,
         data: requestBody.toJson()
       );
       return response;
