@@ -7,7 +7,7 @@ class LoginApiService {
   Future<Response> login({
     required LoginRequestBody loginRequestBody
 }) async {
-   final response= await dio.post(ApiConstants.loginModel,data: {
+   final response= await dio.post(ApiConstants.loginUrl,data: {
      'email':loginRequestBody.email,
      'password':loginRequestBody.password,
    });

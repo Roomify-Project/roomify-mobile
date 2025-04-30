@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import '../helpers/shared_pref_helper.dart';
@@ -41,12 +42,32 @@ class DioFactory {
   }
 
   static void addDioInterceptor() {
-    dio?.interceptors.add(
+    dio?.interceptors.addAll([
       PrettyDioLogger(
         requestBody: true,
         requestHeader: true,
         responseHeader: true,
       ),
-    );
+      InterceptorsWrapper(
+        onError: (DioException error, ErrorInterceptorHandler handler) async {
+          if (error.response?.statusCode == 401 || error.response?.statusCode == 403) {
+            await _handleUnauthorized();
+          }
+          else{
+            print("errrorr ${error.response!.statusCode}");
+          }
+          return handler.next(error);
+        },
+      ),
+    ]);
   }
+
+  static Future<void> _handleUnauthorized() async {
+    // امسح التوكن أو اي بيانات محفوظة
+    await SharedPrefHelper.clearData();
+
+    // روح على صفحة اللوجين
+    print("logggggg out");
+  }
+
 }

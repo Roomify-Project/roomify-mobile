@@ -7,12 +7,15 @@ import 'package:rommify_app/main_rommify.dart';
 
 import 'core/di/dependency_injection.dart';
 import 'core/helpers/shared_pref_helper.dart';
+import 'core/widgets/check_server_connection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await SharedPrefHelper.init();
   await setupGetIt();
+  await CheckServerConnection.checkServerConnection();
+
   configLoading();
   runApp( RoomifyApp(appRouter: AppRouter(),));
 }

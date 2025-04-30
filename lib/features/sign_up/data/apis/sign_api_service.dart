@@ -11,7 +11,7 @@ class SignUpApiService {
   }) async {
     try {
       final response = await dio.post(
-        ApiConstants.signUpModel, 
+        ApiConstants.signUpUrl,
         data: signUpRequestBody.toJson()
       );
       return response;
@@ -26,7 +26,7 @@ class SignUpApiService {
   }) async {
     try {
       final response = await dio.post(
-        ApiConstants.verifyOtpModel, 
+        ApiConstants.verifyOtpUrl,
         data: otpRequestBody.toJson()
       );
       return response;
