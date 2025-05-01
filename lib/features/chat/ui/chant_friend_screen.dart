@@ -2,234 +2,119 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/di/dependency_injection.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
+import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/core/theming/colors.dart';
+import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
+import 'package:rommify_app/core/widgets/custom_shimmer.dart';
 import 'package:rommify_app/features/chat/data/model/get_message_model.dart';
+import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_states.dart';
+import 'package:rommify_app/features/chat/ui/widget/build_message_widet.dart';
 
 import '../../../core/theming/styles.dart';
+import '../../../core/widgets/custom_error.dart';
+import '../../profile/data/models/get_profile_data.dart';
 
 class ChatFriendScreen extends StatelessWidget {
+  final GetProfileDataModel getProfileDataModel;
+
+  const ChatFriendScreen({super.key, required this.getProfileDataModel});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>ChatCubit(),
-      child: BlocBuilder<ChatCubit,ChatStates>(
+      create: (BuildContext context) => ChatCubit(getIt.get<ChatRepo>())..getMessages(receiverId: getProfileDataModel.id),
+      child: BlocBuilder<ChatCubit, ChatStates>(
         builder: (BuildContext context, state) {
-          final chatCubit=ChatCubit.get(context);
-          return Scaffold(
-            backgroundColor: ColorsManager.colorPrimary,
-            appBar: AppBar(
+          final chatCubit = ChatCubit.get(context);
+          if(state is GetMessagesLoadingStates){
+            return Scaffold(
               backgroundColor: ColorsManager.colorPrimary,
-              elevation: 0,
-              leading: Padding(
-                padding:  EdgeInsets.only(left: 12.w),
-                child: const CircleAvatar(
-                  radius: 12,
-                  // backgroundImage: AssetImage('assets/profile_image.jpg'),
-                ),
+              body: Padding(
+                padding:  EdgeInsets.only(top: 30.h),
+                child: const CustomShimmerEffect(),
               ),
-              title: Padding(
-                padding:  EdgeInsets.only(left: 1.w),
-                child: Text('Antoneos',style: TextStyles.font19WhiteBold.copyWith(fontWeight: FontWeight.w700),),
+            );
+          }
+          if(state is GetMessagesErrorStates){
+            return Center(
+              child: AnimatedErrorWidget(
+                title: "Loading Error",
+                message: state.error,
+                lottieAnimationPath:
+                'assets/animation/error.json',
+                onRetry: () {
+                  chatCubit.getMessages(
+                      receiverId: getProfileDataModel.id);
+                },
               ),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(16),
-                    itemCount:  chatCubit.getMessagesResponse.length??0,
-                    itemBuilder: (context, index) {
-                      return MessageBubble(
-                        message: chatCubit.getMessagesResponse[index].text??"",
-                        isMe: true,
-                        time: '15'
-                      );
-                    },
+            );
+          }
+          if(chatCubit.getMessagesResponse!=null) {
+            return Scaffold(
+              backgroundColor: ColorsManager.colorPrimary,
+              appBar: AppBar(
+                backgroundColor: ColorsManager.colorPrimary,
+                elevation: 0,
+                leading: Padding(
+                  padding: EdgeInsets.only(left: 12.w),
+                  child: CircleAvatar(
+                    radius: 12,
+                    // backgroundImage: AssetImage('assets/profile_image.jpg'),
+                    child: ClipOval(
+                      child: CustomCachedNetworkImage(
+                          imageUrl: getProfileDataModel.profilePicture),
+                    ),
                   ),
                 ),
-                _buildMessageComposer(chatCubit: chatCubit),
-              ],
-            ),
-          );
+                title: Padding(
+                  padding: EdgeInsets.only(left: 1.w),
+                  child: Text(getProfileDataModel.userName ?? "",
+                    style: TextStyles.font19WhiteBold.copyWith(
+                        fontWeight: FontWeight.w700),),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      controller: chatCubit.scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: chatCubit.getMessagesResponse?.messages
+                          .length ??
+                          0,
+                      itemBuilder: (context, index) {
+                        return MessageBubble(
+                          message: chatCubit.getMessagesResponse
+                              ?.messages[index]
+                              .content ?? "",
+                          isMe: chatCubit.getMessagesResponse?.messages[index]
+                              .senderId == SharedPrefHelper.getString(
+                              SharedPrefKey.userId),
+                          time: chatCubit.getMessagesResponse?.messages[index]
+                              .sentAt ?? "", chatCubit: chatCubit, messageId: chatCubit.getMessagesResponse!.messages[index].messageId,
+                        );
+                      },
+                    ),
+                  ),
+                  buildMessageComposer(chatCubit: chatCubit,
+                      getProfileDataModel: getProfileDataModel),
+                ],
+              ),
+            );
+          }
+          return const SizedBox();
         },
       ),
     );
   }
-
-  Widget _buildMessageComposer({required ChatCubit chatCubit}) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: ColorsManager.colorPrimary,
-        border: Border(
-          top: BorderSide(
-            color: Colors.purple.shade800,
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              height: 45.h,
-              decoration: BoxDecoration(
-                color: Colors.purple.shade900,
-                borderRadius: BorderRadius.circular(25.r),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Type...',
-                        hintStyle: TextStyle(
-                          color: Colors.white54,
-                          fontSize: 14.sp,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                      ),
-                      controller: chatCubit.messageController,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      chatCubit.sendMessage(getMessageResponse:GetMessageResponse(text: chatCubit.messageController.text,));
-                    },
-                    child: Container(
-                      width: 35.w,
-                      height: 35.h,
-                      decoration: BoxDecoration(
-                        color: Colors.purple.shade800,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Container(
-            width: 45.w,
-            height: 45.h,
-            decoration: BoxDecoration(
-              color: Colors.purple.shade900,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.attach_file,
-              color: Colors.white,
-              size: 20.sp,
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Container(
-            width: 45.w,
-            height: 45.h,
-            decoration: BoxDecoration(
-              color: Colors.purple.shade900,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.mic,
-              color: Colors.white,
-              size: 20.sp,
-            ),
-          ),
-        ],
-      ),
-    );
-  }}
-
-class MessageBubble extends StatelessWidget {
-  final String message;
-  final bool isMe;
-  final String time;
-
-  MessageBubble({
-    required this.message,
-    required this.isMe,
-    required this.time,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: Column(
-        crossAxisAlignment:
-        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 8.w,bottom: 8.h,top: 8.h,right: 45.w),
-            decoration: BoxDecoration(
-              color: isMe ? Colors.purple[700] : Colors.grey[800],
-              borderRadius:isMe?
-              BorderRadius.only(topRight: Radius.circular(7.r),bottomLeft: Radius.circular(7.r),bottomRight: Radius.circular(7.r)):
-              BorderRadius.only(topLeft: Radius.circular(7.r),bottomLeft: Radius.circular(7.r),bottomRight: Radius.circular(7.r))
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message,
-                  style:  TextStyles.font16WhiteInter.copyWith(fontWeight: FontWeight.w700),
-                ),
-                SizedBox(height: 5.h),
-                Text(
-                  time,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 6.3.sp,
-                    fontWeight: FontWeight.w400
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // IconButton(
-          //   icon: Icon(Icons.favorite_border, size: 16),
-          //   color: Colors.white54,
-          //   onPressed: () {},
-          // ),
-        ],
-      ),
-    );
-  }
 }
-
-// Sample messages data
-final List<Map<String, dynamic>> messages = [
-  {
-    'text': 'Hi bro, how are you?',
-    'isMe': false,
-    'time': '09:30 AM',
-  },
-  {
-    'text': 'Hi bro, how are you?',
-    'isMe': true,
-    'time': '09:31 AM',
-  },
-  // Add more messages as needed
-];

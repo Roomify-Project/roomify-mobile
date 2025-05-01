@@ -1,10 +1,46 @@
 class GetMessageResponse {
-  // int? id;
-  String? text;
-  // String? senderId;
-  // bool? isSent;
-  // String? createdAt;
+  final List<GetMessageResponseData> messages;
 
-  GetMessageResponse({required this.text});
+  GetMessageResponse({required this.messages});
 
+  factory GetMessageResponse.fromJson(List<dynamic> json) {
+    List<GetMessageResponseData> messages = json.map((item) => GetMessageResponseData.fromJson(item)).toList();
+    return GetMessageResponse(messages: messages);
+  }
+
+  List<Map<String, dynamic>> toJson() {
+    return messages.map((message) => message.toJson()).toList();
+  }
+}
+
+class GetMessageResponseData {
+  final String messageId;
+  final String senderId;
+  final String content;
+  final String sentAt;
+
+  GetMessageResponseData({
+    required this.messageId,
+    required this.senderId,
+    required this.content,
+    required this.sentAt,
+  });
+
+  factory GetMessageResponseData.fromJson(Map<String, dynamic> json) {
+    return GetMessageResponseData(
+      messageId: json['messageId'] as String,
+      senderId: json['senderId'] as String,
+      content: json['content'] as String,
+      sentAt: json['sentAt'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'messageId': messageId,
+      'senderId': senderId,
+      'content': content,
+      'sentAt': sentAt,
+    };
+  }
 }

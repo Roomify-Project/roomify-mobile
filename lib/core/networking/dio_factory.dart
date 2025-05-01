@@ -54,7 +54,7 @@ class DioFactory {
             await _handleUnauthorized();
           }
           else{
-            print("errrorr ${error.response!.statusCode}");
+            print("errrorr ${error.response?.statusCode}");
           }
           return handler.next(error);
         },
