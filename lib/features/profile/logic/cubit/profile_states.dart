@@ -44,3 +44,12 @@ class GetUserDataProfileErrorState extends ProfileStates {
   final String message;
   GetUserDataProfileErrorState({required this.message});
 }
+
+//// get follow count///
+class GetFollowCountLoadingState extends ProfileStates {}
+class GetFollowCountSuccessState extends ProfileStates {
+}
+class GetFollowCountErrorState extends ProfileStates {
+  final String message;
+  GetFollowCountErrorState({required this.message});
+}

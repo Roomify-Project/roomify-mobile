@@ -61,8 +61,9 @@ class AppRouter {
           builder: (_) =>   ChatsScreen(),
         );
       case Routes.chatsFriendsScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) =>   ChatFriendScreen(),
+          builder: (_) =>   ChatFriendScreen(getProfileDataModel: arguments?['getProfileDataModel'],),
         );
       case Routes.addPost:
         return MaterialPageRoute(
