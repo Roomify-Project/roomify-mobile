@@ -80,4 +80,16 @@ class ProfileApiService {
     }
   }
 
+  Future<Response> getFollowCount({required String followId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getFollowCount(followId: followId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 }
