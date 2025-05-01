@@ -17,6 +17,7 @@ class ApiConstants {
   static String deletePost({required String postId}){
       return "/api/PortfolioPost/$postId";
   }
+  static String sendMessage="/api/Chat/sendMessage";
   static const String signUpUrl = '/api/Auth/register';
   static const String verifyOtpUrl = '/api/Auth/confirm-email';
   static const String forgetPasswordUrl = '/api/Auth/forget-password';
@@ -37,6 +38,13 @@ class ApiConstants {
   }
   static  String getProfileData({required String profileId}){
     return '/api/users/$profileId';
+  }
+  static  String getMessage({required String receiverId}){
+    return '/api/Chat/getMessages/$receiverId';
+  }
+
+  static  String getFollowCount({required String followId}){
+    return '/api/follow/counts/$followId';
   }
 }
 

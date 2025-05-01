@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocProvider(
       create: (BuildContext context) => ProfileCubit(getIt.get<ProfileRepo>())
         ..checkISFollowing(followId: widget.profileId)
-        ..getUserProfileData(profileId: widget.profileId),
+        ..getUserProfileData(profileId: widget.profileId)..getFollowCount(followId: widget.profileId),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
           listener: (BuildContext context, Object? state) {
         if (state is AddFollowSuccessState) {
@@ -109,19 +109,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               fontSize: 12.sp),
                                         ),
                                         SizedBox(height: 8.h),
-                                        const Row(
+                                        profileCubit.getFollowCountModel!=null?
+                                        Row(
                                           children: [
-                                            Text("1.3k followers",
+                                            Text("${profileCubit.getFollowCountModel!.followers} followers",
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14)),
-                                            SizedBox(width: 20),
-                                            Text("45 following",
+                                                    fontSize: 14.sp)),
+                                            SizedBox(width: 20.w),
+                                            Text("${profileCubit.getFollowCountModel!.followers} following",
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14)),
+                                                    fontSize: 14.sp)),
                                           ],
-                                        ),
+                                        ):const SizedBox(),
                                       ],
                                     ),
                                   ],
@@ -263,7 +264,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                         8),
                                                           ),
                                                         ),
-                                                        onPressed: () {},
+                                                        onPressed: () {
+                                                          context.pushNamed(Routes.chatsFriendsScreen,arguments: {'getProfileDataModel':profileCubit.getProfileDataModel});
+                                                        },
                                                         child: Text(
                                                           'Message',
                                                           style: TextStyles

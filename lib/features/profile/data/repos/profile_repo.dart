@@ -5,6 +5,7 @@ import 'package:either_dart/either.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
 import '../../../../core/networking/api_error_handler.dart';
 import '../apis/profile_api_service.dart';
+import '../models/get_follow_count_model.dart';
 import '../models/get_profile_data.dart';
 import '../models/un_follow_model.dart';
 import '../models/update_profile_response.dart';
@@ -57,6 +58,15 @@ class ProfileRepo {
       return Right(GetProfileDataModel.fromJson(response.data));
     } catch (error) {
       print("errorrr ${error}");
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, GetFollowCountModel>> getFollowCount(
+      {required String followId}) async {
+    try {
+      final response = await _apiService.getFollowCount(followId: followId);
+      return  Right(GetFollowCountModel.fromJson(response.data));
+    } catch (error) {
       return Left(ErrorHandler.handle(error));
     }
   }
