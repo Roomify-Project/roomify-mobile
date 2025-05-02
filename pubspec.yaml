@@ -52,7 +52,8 @@ dependencies:
   cached_network_image: ^3.4.1
   image_picker: ^1.1.2
   flutter_otp_text_field: ^1.5.1+1
-
+  intl: ^0.20.2
+  connectivity_plus: ^6.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
