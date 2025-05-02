@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
@@ -7,13 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
-import 'package:rommify_app/core/routing/app_router.dart';
 import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/profile/data/models/get_follow_count_model.dart';
 import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../data/models/update_profile_body.dart';
@@ -36,6 +33,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  GetFollowCountModel? getFollowCountModel;
 
   void addFollow({required String followId}) async {
     isFollowing = !isFollowing!;
@@ -53,22 +51,24 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
     );
   }
+
   void unFollow({required String followId}) async {
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
     final response = _profileRepo.unFollow(followId: followId);
 
     response.fold(
-          (left) {
+      (left) {
         print("followww errrorr ${left.apiErrorModel.title}");
         isFollowing = !isFollowing!;
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
-          (right) {
+      (right) {
         emit(AddFollowSuccessState(message: right.message));
       },
     );
   }
+
   void checkISFollowing({required String followId}) async {
     final response = _profileRepo.checkIsFollowing(followId: followId);
 
@@ -111,11 +111,12 @@ class ProfileCubit extends Cubit<ProfileStates> {
     final response = _profileRepo.updateProfile(
         updateProfileId: updateProfileId,
         updateProfileBody: UpdateProfileBody(
-            userName: userNameController.text,
-            fullName: fullNameController.text,
-            bio: bioController.text,
-            email: emailController.text,
-            ), imageProfile: imageFile);
+          userName: userNameController.text,
+          fullName: fullNameController.text,
+          bio: bioController.text,
+          email: emailController.text,
+        ),
+        imageProfile: imageFile);
 
     response.fold(
       (left) {
@@ -123,10 +124,15 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
       (right) {
         updateProfileResponse = right;
-        getProfileDataModel=GetProfileDataModel(id: right.id,
-            userName: right.userName, fullName: right.fullName,
+        getProfileDataModel = GetProfileDataModel(
+            id: right.id,
+            userName: right.userName,
+            fullName: right.fullName,
             bio: right.bio,
-            email: right.email, emailConfirmed:right.emailConfirmed,phoneNumber: right.phoneNumber,role:getProfileDataModel!.role );
+            email: right.email,
+            emailConfirmed: right.emailConfirmed,
+            phoneNumber: right.phoneNumber,
+            role: getProfileDataModel!.role);
         emit(UpdateProfileSuccessState());
       },
     );
@@ -137,27 +143,43 @@ class ProfileCubit extends Cubit<ProfileStates> {
     final response = _profileRepo.getProfileData(profileId: profileId);
 
     response.fold(
-          (left) {
-
+      (left) {
         emit(GetUserDataProfileErrorState(message: left.apiErrorModel.title));
       },
-          (right) {
-            getProfileDataModel=right;
-            fullNameController.text=right.fullName;
-            bioController.text=right.bio;
-            userNameController.text=right.userName;
-            emailController.text=right.email;
-            phoneNumberController.text=right.phoneNumber??"Phone Number";
+      (right) {
+        getProfileDataModel = right;
+        fullNameController.text = right.fullName;
+        bioController.text = right.bio;
+        userNameController.text = right.userName;
+        emailController.text = right.email;
+        phoneNumberController.text = right.phoneNumber ?? "Phone Number";
 
         emit(GetUserDataProfileSuccessState());
       },
     );
   }
-  Future<void> logOut({required BuildContext context}) async {
-    await SharedPrefHelper.clearData();
-    context.pushNamedAndRemoveUntil(Routes.loginScreen, predicate: (Route<dynamic> route) =>false);
-    print("tokennnn ${SharedPrefHelper.getString('token')}");
+
+  void getFollowCount({required String followId}) async {
+    emit(GetFollowCountLoadingState());
+    final response = _profileRepo.getFollowCount(followId: followId);
+
+    response.fold(
+      (left) {
+        emit(GetFollowCountErrorState(message: left.apiErrorModel.title));
+      },
+      (right) {
+        getFollowCountModel = right;
+        print("is folllllow${isFollowing}");
+
+        emit(GetFollowCountSuccessState());
+      },
+    );
   }
 
-
+  Future<void> logOut({required BuildContext context}) async {
+    await SharedPrefHelper.clearData();
+    context.pushNamedAndRemoveUntil(Routes.loginScreen,
+        predicate: (Route<dynamic> route) => false);
+    print("tokennnn ${SharedPrefHelper.getString('token')}");
+  }
 }
