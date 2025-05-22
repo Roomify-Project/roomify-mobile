@@ -453,7 +453,7 @@ class ImageCard extends StatelessWidget {
                       SizedBox(width: 10.w),
                       InkWell(
                           onTap: () {},
-                          child: Icon(Icons.download,
+                          child: const Icon(Icons.download,
                               color: ColorsManager.colorPrimary, size: 20)),
                       SizedBox(width: 10.w),
                     ],

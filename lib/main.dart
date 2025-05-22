@@ -17,7 +17,7 @@ void main() async {
   await CheckServerConnection.checkServerConnection();
 
   configLoading();
-  runApp( RoomifyApp(appRouter: AppRouter(),));
+  runApp(RoomifyApp(appRouter: AppRouter(),));
 }
 void configLoading() {
   EasyLoading.instance

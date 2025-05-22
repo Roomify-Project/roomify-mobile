@@ -46,6 +46,12 @@ class ApiConstants {
   static  String getFollowCount({required String followId}){
     return '/api/follow/counts/$followId';
   }
+
+  static String getCommentPost({required String postId}){
+    return "/api/Comments/post/$postId";
+  }
+  static String addComment="/api/Comments/";
+
 }
 
 

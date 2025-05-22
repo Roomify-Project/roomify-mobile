@@ -102,12 +102,15 @@ class ChatFriendScreen extends StatelessWidget {
                               SharedPrefKey.userId),
                           time: chatCubit.getMessagesResponse?.messages[index]
                               .sentAt ?? "", chatCubit: chatCubit, messageId: chatCubit.getMessagesResponse!.messages[index].messageId,
+                          image: chatCubit.getMessagesResponse?.messages[index].attachmentUrl??"",
+
                         );
                       },
                     ),
                   ),
                   buildMessageComposer(chatCubit: chatCubit,
-                      getProfileDataModel: getProfileDataModel),
+                      getProfileDataModel: getProfileDataModel, context: context),
+
                 ],
               ),
             );

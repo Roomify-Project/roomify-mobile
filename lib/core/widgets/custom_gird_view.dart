@@ -48,7 +48,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
         builder: (BuildContext context, state) {
           // Loading State
           if (state is GetUsePostsLoadingState) {
-            return const CustomShimmerEffect();
+            return const Center(child: CustomShimmerEffect());
           }
 
           final posts = postsCubit.getPostsResponse?.posts;

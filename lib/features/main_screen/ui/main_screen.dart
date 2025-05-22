@@ -14,6 +14,7 @@ import '../../../core/helpers/shared_pref_helper.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/widgets/custom_chached_network_image.dart';
 import '../../create_room_screen/ui/widget/circle_widget.dart';
+import '../widget/comment_list_view.dart';
 
 class MainScreen extends StatefulWidget {
   final String postId;
@@ -96,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                       child: Text(postCubit.getPostResponse?.description??"",style: TextStyles.font18WhiteRegular,),
                     ),
                   ),
-                  SizedBox(height: 5.h,),
+                  SizedBox(height: 20.h,),
                   Stack(
                       alignment: Alignment.topRight, children: [
                     Container(
@@ -159,82 +160,13 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     height: 29.h,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 47.w),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 30.r,
-                          backgroundImage: const NetworkImage(
-                              'https://th.bing.com/th/id/OIP.9nl2eFOD4SKNC_FIn0bSqQHaFj?rs=1&pid=ImgDetMain'),
-                        ),
-                        SizedBox(
-                          width: 10.w,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "antoneos",
-                              style: TextStyles.font12WhiteRegular
-                                  .copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              "Interior Designer",
-                              style: TextStyles.font12WhiteRegular.copyWith(
-                                  fontWeight: FontWeight.w400, fontSize: 10),
-                            ),
-                            Text(
-                              "@aliellebi123",
-                              style: TextStyles.font12WhiteRegular.copyWith(
-                                  fontWeight: FontWeight.w400, fontSize: 8),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Container(
-                    width: 267.w,
-                    // تم تعديل العرض ليطابق الصورة
-                    height: 67.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF767676).withOpacity(0.29),
-                      // تم إضافة شفافية 29%
-                      borderRadius: BorderRadius.circular(24.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF767676).withOpacity(0.25),
-                          // تم تعديل لون الظل
-                          blurRadius: 25,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Center(
-                      child: Text(
-                        "ارحم وسيب حاجة ليي بعدك 🔥", // النص من الصورة
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
+                   Expanded(child: CommentListView(postId: widget.postId,)),
+                  SizedBox(height: 10.h,),
                   Container(
                     width: 376.w,
                     height: 84.h,
-                    // تم تعديل الارتفاع ليطابق الصورة
                     decoration: BoxDecoration(
                       color: const Color(0xFFA9631D).withOpacity(0.29),
-                      // تم إضافة شفافية 29%
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
@@ -246,30 +178,43 @@ class _MainScreenState extends State<MainScreen> {
                       ],
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Comment.....",
-                          style: TextStyle(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      controller: postCubit.commentController,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 16.sp,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "Comment.....",
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.7),
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: InputBorder.none,
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            postCubit.addComment(postId: widget.postId);
+                          },
+                          child: Icon(
+                            Icons.send,
                             color: Colors.white.withOpacity(0.7),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
+                            size: 24.w,
                           ),
                         ),
-                        Icon(
-                          Icons.send,
-                          color: Colors.white.withOpacity(0.7),
-                          size: 24.w,
-                        ),
-                      ],
+                      ),
+                      cursorColor: Colors.white,
                     ),
                   ),
+                  // const Spacer(),
+
                   SizedBox(
                     height: 20.h,
                   ),
                 ],
               ),
+
             ],
           );
         },
