@@ -8,13 +8,23 @@ import '../model/send_message_body.dart';
 class ChatApiService {
   final Dio dio;
   ChatApiService({required this.dio});
-  Future<Response> sendMessage({required SendChatMessageBody sendChatMessage}) async {
-   final response= await dio.post(ApiConstants.sendMessage,
-       data:{
-     'SenderId':sendChatMessage.senderId,
-     'ReceiverId':sendChatMessage.receiverId,
-     'Message':sendChatMessage.message,
-   });
+  Future<Response> sendMessage({required SendChatMessageBody sendChatMessage,required File? image}) async {
+    final formData = FormData.fromMap({
+      'senderId': sendChatMessage.senderId,
+      'receiverId': sendChatMessage.receiverId,
+      'message': sendChatMessage.message,
+      if(image!=null)
+      'file': await MultipartFile.fromFile(image.path, filename: 'upload.jpg'),
+    });
+    final response= await dio.post(
+       ApiConstants.sendMessage,
+       data:formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      ),
+   );
      return  response;
   }
 

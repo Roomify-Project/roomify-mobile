@@ -1,3 +1,5 @@
+import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
+
 import '../../data/models/add_post_nodel.dart';
 
 abstract class PostsStates{}
@@ -30,6 +32,15 @@ class GetPostErrorState extends PostsStates{
   GetPostErrorState({required this.message});
 }
 
+
+//get comment ////
+class GetCommentLoadingState extends PostsStates{}
+class  GetCommentSuccessState extends PostsStates{}
+class GetCommentErrorState extends PostsStates{
+  final String message;
+
+  GetCommentErrorState({required this.message});
+}
 //// add post
 class AddPostLoadingState extends PostsStates{}
 class  AddPostSuccessState extends PostsStates{
@@ -54,6 +65,20 @@ class DeletePostErrorState extends PostsStates{
 
   DeletePostErrorState({required this.message});
 }
+
+//// add comment
+class AddCommentLoadingState extends PostsStates{}
+class  AddCommentSuccessState extends PostsStates{
+  final CommentData commentData;
+  AddCommentSuccessState(this.commentData);
+}
+class AddCommentErrorState extends PostsStates{
+  final String message;
+
+  AddCommentErrorState({required this.message});
+}
+
 /// upload image
 class UploadImageStata extends PostsStates{}
 
+class ChangeTimeState extends PostsStates{}

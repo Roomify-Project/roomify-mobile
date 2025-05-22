@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/core/networking/dio_factory.dart';
+import 'package:rommify_app/features/explore_screen/data/models/add_comment_body.dart';
 import 'package:rommify_app/features/log_in/data/models/login_request_body.dart';
 
 import '../models/get_posts_response.dart';
@@ -35,6 +36,31 @@ class PostsApiService {
   }
   Future<Response> deletePost({required String postId}) async {
     final response= await dio.delete(ApiConstants.getPost(id: postId));
+    return  response;
+  }
+  Future<Response> getCommentPost({required String postId}) async {
+    final response= await dio.get(ApiConstants.getCommentPost(postId:postId),);
+    return  response;
+  }
+
+  Future<Response> addComment({required AddCommentBody addCommentBody,required String userId
+  }) async {
+    // final formData = FormData.fromMap({
+    //   'content':addCommentBody.content,
+    //   'PortfolioPostId': addCommentBody.portfolioPostId,
+    //   // لو فيه ملف:
+    //   // 'image': await MultipartFile.fromFile('path/to/image.jpg', filename: 'image.jpg'),
+    // });
+    final response= await dio.post(
+        ApiConstants.addComment,data: {
+      'content':addCommentBody.content,
+      'PortfolioPostId': addCommentBody.portfolioPostId,
+    },
+      queryParameters: {
+          'userId':userId,
+      }
+
+    );
     return  response;
   }
 }

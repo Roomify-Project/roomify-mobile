@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/chat/data/model/send_message_body.dart';
@@ -41,27 +43,52 @@ class ChatCubit extends Cubit<ChatStates> {
 
   int i = 0;
   DateTime currentDateTime = DateTime.now();
+  File? imageFile;
 
+  void pickImage({required ImageSource source}) async {
+    final picked = await ImagePicker().pickImage(source: source);
+    if (picked != null) {
+      imageFile = File(picked.path);
+      emit(UploadImageState());
+    }
+  }
+
+  void clearImage() async {
+    imageFile = null;
+    emit(UploadImageState());
+  }
   void sendMessage({required String receiverId, String? messageNotSent}) async {
+    if(messageController.text.isEmpty&&imageFile==null){
+      return;
+    }
+
     GetMessageResponseData getMessageResponse = GetMessageResponseData(
         messageId: (i++).toString(),
         senderId: SharedPrefHelper.getString(SharedPrefKey.userId),
         content: messageNotSent ?? messageController.text,
-        sentAt: currentDateTime.toString());
+        sentAt: currentDateTime.toString(), attachmentUrl: imageFile);
+    print("imaggeeee ${getMessageResponse.attachmentUrl}");
 
     checkSendMessage[getMessageResponse.messageId] = false;
     messageNotSend[getMessageResponse.messageId] = messageController.text;
     // print(getMessageResponse.text);
     if (messageNotSent == null) {
       getMessagesResponse?.messages.add(getMessageResponse);
+      messageController.clear();
+      clearImage();
+      emit(UploadMessageState());
     }
     scrollToBottom();
     final response = await _chatRepo.sendMessage(
         sendChatMessageBody: SendChatMessageBody(
             senderId: await SharedPrefHelper.getString(SharedPrefKey.userId),
             receiverId: receiverId,
-            message: getMessageResponse.content));
-    messageController.clear();
+            message:
+            getMessageResponse.content,
+        ), image: imageFile,
+
+    );
+
 
     response.fold(
           (left) {
@@ -93,7 +120,6 @@ class ChatCubit extends Cubit<ChatStates> {
         checkInternet(receiverId: receiverId);
         listenToData();
         scrollToBottom();
-
         emit(GetMessagesSuccessStates());
       },
     );
@@ -104,14 +130,16 @@ class ChatCubit extends Cubit<ChatStates> {
     _subscriptionString = friendChatStreamString?.listen(
           (getMessageResponse) {
         // final getMessage = GetMessageResponse.fromJson(getMessageResponse);
-        print("dataaaa $getMessageResponse");
+        print("dataaaa ${getMessageResponse}");
         getMessagesResponse?.messages.add(GetMessageResponseData(
             messageId: (i++).toString(),
             senderId: getMessagesResponse!.messages.first.senderId,
             content: getMessageResponse,
-            sentAt: currentDateTime.toString()));
+            sentAt: currentDateTime.toString(), attachmentUrl: getMessageResponse));
         scrollToBottom();
-        emit(GetMessagesSuccessStates());
+        if (!isClosed) {
+          emit(GetMessagesSuccessStates());
+        }
       },
     );
   }

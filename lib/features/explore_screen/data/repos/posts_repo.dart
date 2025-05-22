@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:either_dart/either.dart';
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
+import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_posts_response.dart';
 
 import '../../../../core/networking/api_error_handler.dart';
+import '../models/add_comment_body.dart';
 import '../models/add_post_nodel.dart';
 import '../models/get_post_model.dart';
 
@@ -55,6 +57,23 @@ class PostsRepo {
     try {
       final response = await _postsApiService.deletePost(postId: postId);
       return Right(AddPostResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler,GetCommentResponse>> getCommentPost({required String postId}) async {
+    try {
+      final response = await _postsApiService.getCommentPost(postId: postId);
+      return Right(GetCommentResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler,CommentData>> addComment({required AddCommentBody addCommentBody,required String userId
+  }) async {
+    try {
+      final response = await _postsApiService.addComment(addCommentBody: addCommentBody, userId: userId);
+      return Right(CommentData.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

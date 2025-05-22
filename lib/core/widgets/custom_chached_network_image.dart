@@ -64,7 +64,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
       ),
-      child: const Image(image: NetworkImage('https://tse2.mm.bing.net/th/id/OIP.b-VXMyLRKFeTc9B0RNFAXwHaHa?rs=1&pid=ImgDetMain'))
+      child: const Icon(Icons.error,size: 50,)
     );
   }
 }

@@ -3,6 +3,7 @@ class SendChatMessageBody {
   final String receiverId;
   final String message;
 
+
   SendChatMessageBody({
     required this.senderId,
     required this.receiverId,
@@ -11,17 +12,17 @@ class SendChatMessageBody {
 
   factory SendChatMessageBody.fromJson(Map<String, dynamic> json) {
     return SendChatMessageBody(
-      senderId: json['SenderId'],
-      receiverId: json['ReceiverId'],
-      message: json['Message'],
+      senderId: json['senderId'],
+      receiverId: json['receiverId'],
+      message: json['message'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'SenderId': senderId,
-      'ReceiverId': receiverId,
-      'Message': message,
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'message': message,
     };
   }
 }
