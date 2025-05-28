@@ -99,6 +99,7 @@ class RoomTypeScreen extends StatelessWidget {
     return InkWell(
       onTap: () {
         GenerateCubit.get(context).setRoomType(titleRoomType: backendValue);
+        GenerateCubit.get(context).setImageType(image: imagePath);
       },
       child: Column(
         children: [
