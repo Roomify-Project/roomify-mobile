@@ -33,27 +33,53 @@ class DesignStyle extends StatelessWidget {
             ),
             // Transparent background
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
-              Container(
-                width: 35.w,
-                height: 35.h,
-                decoration:  BoxDecoration(
-                    color: ColorsManager.colorContainer,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: ColorsManager.colorCircle,
-                      width: 3,
-                    )
+              generateCubit.imageStyle!=''?
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                      width: 80.w,
+                      height: 90.h,
+                      decoration: BoxDecoration(
+                        color: ColorsManager.colorContainer,
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(8.r),
+                          bottomLeft: Radius.circular(12.r),
+                          topRight: Radius.circular(8.r),
+                        ),
+                      ),
+                      child: Image.asset(generateCubit.imageStyle,fit: BoxFit.fill,)
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: SvgPicture.asset('assets/images/pin.svg',color:  ColorsManager.colorCircle,height: 12.h,width: 12.w,),
+              ):const Spacer(),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 35.w,
+                      height: 35.h,
+                      decoration:  BoxDecoration(
+                          color: ColorsManager.colorContainer,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: ColorsManager.colorCircle,
+                            width: 3,
+                          )
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SvgPicture.asset('assets/images/pin.svg',color:  ColorsManager.colorCircle,height: 12.h,width: 12.w,),
+                      ),
+                    ),
+                    Text("Design style",style: TextStyle(fontSize: 10.sp,fontWeight: FontWeight.w400,color: Colors.white),)
+                  ],
                 ),
               ),
-              Text("Design style",style: TextStyle(fontSize: 10.sp,fontWeight: FontWeight.w400,color: Colors.white),)
+              const Spacer(),
             ],
           )
       ),

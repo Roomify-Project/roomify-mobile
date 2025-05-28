@@ -57,6 +57,52 @@ class UploadRoomDialog extends StatelessWidget {
                     // Room dimensions input section
                     Row(
                       children: [
+                        generateCubit.imageFile!=null?
+                        Padding(
+                          padding:  EdgeInsets.only(right: 20.w),
+                          child: Container(
+                              width: 123.w,
+                              height: 109.h,
+                              decoration: BoxDecoration(
+                                color: ColorsManager.colorContainer,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(24.r),
+                                  bottomLeft: Radius.circular(24.r),
+                                ),
+                              ),
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Image.file(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  generateCubit.imageFile!,fit: BoxFit.fill,
+                                ),
+                                Padding(
+                                  padding:  EdgeInsets.only(bottom: 80.h,right: 2.w),
+                                  child: Container(
+                                    width: 24.w,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        generateCubit.clearImage();
+                                      },
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ):SizedBox(),
                         Container(
                           width: 123.w,
                           height: 109.h,
@@ -72,7 +118,6 @@ class UploadRoomDialog extends StatelessWidget {
                               showPickImageSnackBarGenerate(context, generateCubit);
                             },
                             child:
-                            generateCubit.imageFile==null?
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -82,45 +127,17 @@ class UploadRoomDialog extends StatelessWidget {
                                   height: 36.h,
                                   color: Colors.white,
                                 ),
-      
+
                                 SizedBox(height: 6.h),
                                 const Text(
                                   'room image',
                                   style: TextStyle(color: Colors.white, fontSize: 12),
                                 ),
                               ],
-                            ):
-                            Image.file(
-                              generateCubit.imageFile!,fit: BoxFit.cover,
-                            ),
+                            )
+
                           ),
                         ),
-      
-                        // Expanded(
-                        //   child: Row(
-                        //     children: [
-                        //       SizedBox(
-                        //         width: 8.w,
-                        //       ),
-                        //       SizedBox(
-                        //         height: 109.h,
-                        //         child: Column(
-                        //           children: [
-                        //             // Length field
-                        //             const CustomRoomSizesTextForm(),
-                        //             SizedBox(height: 8.h),
-                        //             // Width field
-                        //             const CustomRoomSizesTextForm(),
-                        //             SizedBox(height: 8.h),
-                        //             const CustomRoomSizesTextForm(),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //       SizedBox(width: 8.w),
-                        //       UnitDropdown(),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
       

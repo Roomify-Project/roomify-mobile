@@ -63,7 +63,7 @@ class DesignStyleScreen extends StatelessWidget {
                           _buildStyleCard('ShabbyChic', 'shabby chic', 'assets/images/ShabbyChic.jpg', context),
                           _buildStyleCard('Victorian', 'victorian', 'assets/images/Victorian.jpg', context),
                           _buildStyleCard('Farmhouse', 'farmhouse', 'assets/images/Farmhouse.jpg', context),
-                          _buildStyleCard('Eclectic', 'eclectic', 'assets/images/eclectic.png', context),
+                          _buildStyleCard('Eclectic', 'eclectic', 'assets/images/Eclectic.jpg', context),
                         ],
                       ),
                     ),
@@ -101,6 +101,7 @@ class DesignStyleScreen extends StatelessWidget {
     return InkWell(
       onTap: () {
         GenerateCubit.get(context).setDesignStyle(designRoomType: backendValue);
+        GenerateCubit.get(context).setImageStyle(image: imagePath);
       },
       child: Column(
         children: [

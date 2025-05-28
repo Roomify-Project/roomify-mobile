@@ -29,6 +29,9 @@ class GenerateCubit extends Cubit<GenerateStates> {
   File? imageFile;
   String roomType="";
   String roomStyle="";
+  String imageStyle='';
+  String imageType='';
+
   String descriptionText="";
   final generateController=TextEditingController();
   GeneratedImagesResponse ?generatedImagesResponse;
@@ -53,7 +56,16 @@ class GenerateCubit extends Cubit<GenerateStates> {
     roomStyle=designRoomType;
     emit(ChangeRoomDesignState());
   }
+  void setImageStyle({required String image}){
+    imageStyle=image;
+    emit(ChangeRoomDesignState());
 
+  }
+  void setImageType({required String image}){
+    imageType=image;
+    emit(ChangeRoomDesignState());
+
+  }
   void generate({required BuildContext context}) async {
     if (imageFile == null) {
       emit(GenerateValidationErrorState(message: "Please upload an image."));
