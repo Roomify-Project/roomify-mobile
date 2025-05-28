@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:rommify_app/core/routing/app_router.dart';
 import 'package:rommify_app/main_rommify.dart';
@@ -19,6 +23,21 @@ void main() async {
   await SharedPrefHelper.init();
   await setupGetIt();
   await CheckServerConnection.checkServerConnection();
+  Permission permission;
+
+  if (Platform.isAndroid) {
+    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+    if (deviceInfo.version.sdkInt >= 33) {
+      // Android 13+ uses granular media permissions
+      permission = Permission.photos;
+    } else {
+      // Android 12 and below
+      permission = Permission.storage;
+    }
+  } else {
+    // iOS
+    permission = Permission.photos;
+  }
 
   configLoading();
   runApp(RoomifyApp(appRouter: AppRouter(),));

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomCachedNetworkImage extends StatelessWidget {
@@ -10,6 +11,8 @@ class CustomCachedNetworkImage extends StatelessWidget {
   final double borderRadius;
   final Widget? errorWidget;
   final Widget? loadingWidget;
+  final bool? isDefault;
+
 
   const CustomCachedNetworkImage({
     Key? key,
@@ -19,7 +22,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
     this.fit,
     this.borderRadius = 0.0,
     this.errorWidget,
-    this.loadingWidget,
+    this.loadingWidget, this.isDefault,
   }) : super(key: key);
 
   @override
@@ -58,13 +61,28 @@ class CustomCachedNetworkImage extends StatelessWidget {
   Widget _buildErrorWidget() {
     if (errorWidget != null) return errorWidget!;
 
-    return Container(
-      width: width,
-      height: height,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
+    return Center(
+      child:isDefault??false?
+      Container(
+          width: width,
+          height: height,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: CachedNetworkImage(
+            imageUrl: Constants.defaultImagePerson,
+            fit: fit ?? BoxFit.cover,
+               width: width,
+            height: height,)
+      ):
+      Container(
+        width: width,
+        height: height,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(Icons.error,size: 50,)
       ),
-      child: const Icon(Icons.error,size: 50,)
     );
   }
 }

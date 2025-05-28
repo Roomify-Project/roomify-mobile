@@ -1,37 +1,42 @@
 class AddPostResponse {
   final String message;
-  final String imageUrl;
+  final String imagePath;
   final String id;
-  final String applicationUserId;
-  final String description;
+  final User user;
 
   AddPostResponse({
     required this.message,
-    required this.imageUrl,
+    required this.imagePath,
     required this.id,
-    required this.applicationUserId,
-    required this.description,
+    required this.user,
   });
 
-  // Factory constructor to create Post from JSON
   factory AddPostResponse.fromJson(Map<String, dynamic> json) {
     return AddPostResponse(
-      message: json['message'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
-      id: json['id'] ?? '',
-      applicationUserId: json['applicationUserId'] ?? '',
-      description: json['description'] ?? '',
+      message: json['message'],
+      imagePath: json['imagePath'],
+      id: json['id'],
+      user: User.fromJson(json['user']),
     );
   }
+}
 
-  // Method to convert Post to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'imageUrl': imageUrl,
-      'id': id,
-      'applicationUserId': applicationUserId,
-      'description': description,
-    };
+class User {
+  final String id;
+  final String userName;
+  final String? profilePicture;
+
+  User({
+    required this.id,
+    required this.userName,
+    this.profilePicture,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      userName: json['userName'],
+      profilePicture: json['profilePicture'],
+    );
   }
 }

@@ -54,6 +54,12 @@ dependencies:
   flutter_otp_text_field: ^1.5.1+1
   intl: ^0.20.2
   emoji_picker_flutter: ^4.3.0
+  path_provider: ^2.1.5
+  path: ^1.9.0
+  device_info_plus: ^9.1.0
+
+  permission_handler: ^11.3.1
+  image_gallery_saver: ^2.0.3
   connectivity_plus: ^6.1.4
 dev_dependencies:
   flutter_test:

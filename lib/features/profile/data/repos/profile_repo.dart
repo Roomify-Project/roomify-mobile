@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
+import 'package:rommify_app/features/explore_screen/data/models/save_design_response.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
 import '../../../../core/networking/api_error_handler.dart';
 import '../apis/profile_api_service.dart';
 import '../models/get_follow_count_model.dart';
+import '../models/get_history_design.dart';
 import '../models/get_profile_data.dart';
+import '../models/saved_design_model.dart';
 import '../models/un_follow_model.dart';
 import '../models/update_profile_response.dart';
 
@@ -66,6 +69,24 @@ class ProfileRepo {
     try {
       final response = await _apiService.getFollowCount(followId: followId);
       return  Right(GetFollowCountModel.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, SavedDesignsResponse>> getSavedDesign(
+      {required String userId}) async {
+    try {
+      final response = await _apiService.getSavedDesign(userId: userId);
+      return  Right(SavedDesignsResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, ImageHistoryResponse>> getHistory(
+      {required String userId}) async {
+    try {
+      final response = await _apiService.getHistory(userId: userId);
+      return  Right(ImageHistoryResponse.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

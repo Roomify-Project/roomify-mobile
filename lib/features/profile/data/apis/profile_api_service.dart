@@ -90,6 +90,25 @@ class ProfileApiService {
       rethrow;
     }
   }
-
+  Future<Response> getHistory({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getHistory(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<Response> getSavedDesign({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getSavedDesign(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
 }

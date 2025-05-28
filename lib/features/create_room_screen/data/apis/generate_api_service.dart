@@ -29,4 +29,27 @@ class GenerateApiService {
     return  response;
   }
 
+
+  Future<Response> generateMore({required GenerateBodyModel generateBody
+  }) async {
+    final formData = FormData.fromMap({
+      'descriptionText': generateBody.descriptionText ,
+      'originalImageUrl':generateBody.roomImage,
+      'roomStyle':generateBody.roomStyle,
+      'roomType':generateBody.roomType,
+      'userId':generateBody.userId
+      // لو فيه ملف:
+      // 'image': await MultipartFile.fromFile('path/to/image.jpg', filename: 'image.jpg'),
+    });
+    final response= await dio.post(ApiConstants.generateMore,data: formData,
+      //   options: Options(
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // )
+    );
+    return  response;
+  }
+
+
 }

@@ -41,47 +41,51 @@ class GenerateRoomScreen extends StatelessWidget {
                             ),
                           )
                         : generateCubit.generatedImagesResponse != null
-                            ?  Column(
-                                children: [
-                                  Expanded(
-                                    child: GridView.builder(
-                                      itemCount: generateCubit.generatedImagesResponse!.generatedImageUrls.length,
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, // عمودين
-                                        crossAxisSpacing: 12,
-                                        mainAxisSpacing: 12,
-                                        childAspectRatio: 1, // تخلي كل صورة مربعة
-                                      ),
-                                      itemBuilder: (context, index) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: CustomCachedNetworkImage(imageUrl: generateCubit.generatedImagesResponse!.generatedImageUrls[index])
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // TODO: Add more functionality
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.purple,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
+                            ?  Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: GridView.builder(
+                                        itemCount: generateCubit.generatedImagesResponse!.generatedImageUrls.length,
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2, // عمودين
+                                          crossAxisSpacing: 12,
+                                          mainAxisSpacing: 12,
+                                          childAspectRatio: 1, // تخلي كل صورة مربعة
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: 14),
-                                      ),
-                                      child: const Text(
-                                        'More',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        itemBuilder: (context, index) {
+                                          return ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: CustomCachedNetworkImage(imageUrl: generateCubit.generatedImagesResponse!.generatedImageUrls[index])
+                                          );
+                                        },
                                       ),
                                     ),
-                                  )
-                                ],
-                              )
+                                    const SizedBox(height: 12),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // TODO: Add more functionality
+                                          generateCubit.generateMore();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.purple,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                        ),
+                                        child: const Text(
+                                          'More',
+                                          style: TextStyle(color: Colors.white, fontSize: 16),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                            )
                             : const SizedBox(),
               ],
             );

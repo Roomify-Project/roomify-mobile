@@ -2,6 +2,9 @@
 import 'dart:io';
 
 import 'package:either_dart/either.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_posts_response.dart';
@@ -11,6 +14,7 @@ import '../models/add_comment_body.dart';
 import '../models/add_post_nodel.dart';
 import '../models/delete_comment_response.dart';
 import '../models/get_post_model.dart';
+import '../models/save_design_response.dart';
 
 
 class PostsRepo {
@@ -99,5 +103,29 @@ class PostsRepo {
     }
   }
 
+  Future<Either<ErrorHandler,String>> download({required String imageUrl
+  }) async {
+    try {
+      final response = await _postsApiService.download(imageUrl: imageUrl);
 
+
+      return const Right("download success");
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+
+
+  Future<Either<ErrorHandler,SavedDesignResponse>> saveDesign({required String imageUrl,
+    required String userId
+  }) async {
+    try {
+      final response = await _postsApiService.saveDesign(imageUrl: imageUrl, userId: userId);
+
+
+      return  Right(SavedDesignResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
 }

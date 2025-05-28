@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/custom_error.dart';
 import 'package:rommify_app/core/widgets/custom_shimmer.dart';
@@ -12,6 +14,7 @@ import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dar
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 
 import '../../../core/helpers/shared_pref_helper.dart';
+import '../../../core/routing/routes.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/widgets/custom_chached_network_image.dart';
 import '../../create_room_screen/ui/widget/circle_widget.dart';
@@ -31,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     PostsCubit.get(context).getPost(postId: widget.postId);
+    // PostsCubit.get(context).getElapsedTime(PostsCubit.get(context).getPostResponse!.createdAt, widget.postId);
 
     super.initState();
   }
@@ -98,30 +102,54 @@ class _MainScreenState extends State<MainScreen> {
                       SizedBox(
                         height: 30.h,
                       ),
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       "antoneos",
-                      //       style: TextStyles.font12WhiteRegular
-                      //           .copyWith(fontWeight: FontWeight.w700),
-                      //     ),
-                      //     Container(
-                      //       width: 24.w,
-                      //       height: 24.h,
-                      //       decoration: const BoxDecoration(
-                      //         shape: BoxShape.circle,
-                      //       ),
-                      //       child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse)),
-                      //     )
-                      //   ],
-                      // ),
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(Routes.profile,arguments: {'profileId':postCubit.getPostResponse!.applicationUserId});
+
+                        },
+                        child: Padding(
+                          padding:  EdgeInsets.only(left: 8.w,),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 60, // أو الحجم اللي يناسبك
+                                height: 60,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse?.ownerProfilePicture??"",fit: BoxFit.cover,)),
+                              ),
+                              SizedBox(width: 16.w,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    postCubit.getPostResponse?.ownerUserName??"",
+                                    style: TextStyles.font18WhiteRegular
+                                        .copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    postCubit.timeMap[postCubit.getPostResponse!.id]??"",
+                                    style: TextStyles.font12WhiteRegular
+                                        .copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.h,),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
                           padding: EdgeInsets.only(left: 16.w),
-                          child: Text(
-                            postCubit.getPostResponse?.description ?? "",
-                            style: TextStyles.font18WhiteRegular,
+                          child: Center(
+                            child: Text(
+                              postCubit.getPostResponse?.description ?? "",
+                              style: TextStyles.font18WhiteRegular,
+                            ),
                           ),
                         ),
                       ),
@@ -130,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       Stack(alignment: Alignment.topRight, children: [
                         Container(
-                            width: double.infinity.w,
+                            // width: double.infinity.w,
                             height: 300.h,
                             decoration: BoxDecoration(
                               color: Colors.grey,

@@ -90,7 +90,7 @@ class GenerateCubit extends Cubit<GenerateStates> {
         userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
         roomType: roomType,
         roomStyle: roomStyle,
-        descriptionText: generateController.text,
+        descriptionText: generateController.text, roomImage: '',
       ),
     );
 
@@ -100,8 +100,35 @@ class GenerateCubit extends Cubit<GenerateStates> {
       },
           (right) {
             generatedImagesResponse=right;
-        emit(GenerateSuccessState(right));
+        emit(GenerateSuccessState());
       },
     );
   }
+
+
+  void generateMore() async {
+    emit(GenerateLoadingState());
+    final response = await _generateRepo.generateMore(
+      generateBodyModel: GenerateBodyModel(
+        userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+        roomType: roomType,
+        roomStyle: roomStyle,
+        descriptionText: generateController.text, roomImage: generatedImagesResponse?.originalRoomImage??"",
+      ),
+    );
+
+    response.fold(
+          (left) {
+        emit(GenerateErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+            for(var image in right.generatedImageUrls){
+              generatedImagesResponse!.generatedImageUrls.add(image);
+            }
+        emit(GenerateSuccessState());
+      },
+    );
+  }
+
+
 }

@@ -57,7 +57,15 @@ class ApiConstants {
   }
 
   static String generate="/api/RoomImage/generate-design";
-
+  static String generateMore="/api/RoomImage/generate-more";
+  static String download="/api/RoomImage/download";
+  static String saveDesign="/api/RoomImage/save-design";
+  static  String getHistory({required String userId}){
+    return '/api/RoomImage/history/$userId';
+  }
+  static  String getSavedDesign({required String userId}){
+    return '/api/RoomImage/saved-designs/$userId';
+  }
 }
 
 

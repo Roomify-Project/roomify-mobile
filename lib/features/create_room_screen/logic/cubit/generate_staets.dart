@@ -3,14 +3,13 @@
 
 import '../../data/models/generate_body.dart';
 import '../../data/models/generate_image_response.dart';
+import '../../data/models/generate_more_response.dart';
 
 abstract class GenerateStates{}
 class GenerateInitialState extends GenerateStates{}
 //// add post
 class GenerateLoadingState extends GenerateStates{}
 class  GenerateSuccessState extends GenerateStates{
-  final GeneratedImagesResponse generatedImagesResponse;
-  GenerateSuccessState(this.generatedImagesResponse);
 }
 class GenerateErrorState extends GenerateStates{
   final String message;
@@ -29,3 +28,4 @@ class GenerateValidationErrorState extends GenerateStates {
 
 /// upload image
 class UploadImageGenerateState extends GenerateStates{}
+
