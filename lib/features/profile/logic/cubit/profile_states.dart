@@ -58,3 +58,21 @@ class GetFollowCountErrorState extends ProfileStates {
   final String message;
   GetFollowCountErrorState({required this.message});
 }
+
+class GetSavedLoadingState extends ProfileStates {}
+class GetSavedSuccessState extends ProfileStates {
+}
+class GetSavedErrorState extends ProfileStates {
+  final String message;
+  GetSavedErrorState({required this.message});
+}
+
+class GetHistoryLoadingState extends ProfileStates {}
+class GetHistorySuccessState extends ProfileStates {
+}
+class GetHistoryErrorState extends ProfileStates {
+  final String message;
+  GetHistoryErrorState({required this.message});
+}
+class ToggleProfile extends ProfileStates {
+}

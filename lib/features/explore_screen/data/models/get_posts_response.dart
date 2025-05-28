@@ -19,13 +19,16 @@ class GetPostsResponseData {
   final String description;
   final String createdAt;
   final String applicationUserId;
+  final String? ownerUserName;
+  final String? ownerProfilePicture;
 
-  GetPostsResponseData({
+  GetPostsResponseData( {
     required this.id,
     required this.imagePath,
     required this.description,
     required this.createdAt,
     required this.applicationUserId,
+    this.ownerUserName, this.ownerProfilePicture,
   });
 
   factory GetPostsResponseData.fromJson(Map<String, dynamic> json) {
@@ -35,6 +38,8 @@ class GetPostsResponseData {
       description: json['description'] ?? '',
       createdAt: json['createdAt'] ?? '',
       applicationUserId: json['applicationUserId'] ?? '',
+      ownerUserName: json['ownerUserName'],
+      ownerProfilePicture: json['ownerProfilePicture'],
     );
   }
 

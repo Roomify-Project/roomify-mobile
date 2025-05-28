@@ -7,6 +7,7 @@ import '../../../../core/networking/api_error_handler.dart';
 import '../apis/generate_api_service.dart';
 import '../models/generate_body.dart';
 import '../models/generate_image_response.dart';
+import '../models/generate_more_response.dart';
 class GenerateRepo {
   final GenerateApiService _generateApiService;
 
@@ -22,6 +23,15 @@ class GenerateRepo {
     }
   }
 
+  Future<Either<ErrorHandler,GenerateMoreImageResponse>> generateMore({required GenerateBodyModel generateBodyModel
+  }) async {
+    try {
+      final response = await _generateApiService.generateMore(generateBody: generateBodyModel);
+      return Right(GenerateMoreImageResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
 
 
 }

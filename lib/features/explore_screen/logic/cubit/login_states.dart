@@ -112,3 +112,23 @@ class EditState extends PostsStates{}
 
 class ChangeTimeState extends PostsStates{}
 class ChangeEmojiState extends PostsStates{}
+class TogelState extends PostsStates{}
+class DownloadLoadingState extends PostsStates{}
+class  DownloadSuccessState extends PostsStates{
+}
+class DownloadErrorState extends PostsStates{
+  final String message;
+
+  DownloadErrorState({required this.message});
+}
+
+class SaveDesignLoadingState extends PostsStates{}
+class  SaveDesignSuccessState extends PostsStates{
+}
+class SaveDesignErrorState extends PostsStates{
+  final String message;
+
+  SaveDesignErrorState({required this.message});
+}
+
+

@@ -9,6 +9,7 @@ import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/explore_screen/data/models/add_comment_body.dart';
 
+import '../../../create_room_screen/data/models/image_icon_state.dart';
 import '../../data/models/get_omment_model.dart';
 import '../../data/models/get_post_model.dart';
 import '../../data/models/get_posts_response.dart';
@@ -38,6 +39,8 @@ class PostsCubit extends Cubit<PostsStates> {
       },
       (right) {
         getAllPostsResponse = right;
+        isExpandedListExploreScreen = List.generate(right.posts.length, (index) => false);
+
         emit(GetAllPostsSuccessState());
       },
     );
@@ -62,6 +65,8 @@ class PostsCubit extends Cubit<PostsStates> {
       },
     );
   }
+  List<bool> isExpandedListExploreScreen = [];
+
 
   void getPost({required String postId}) async {
     emit(GetPostLoadingState());
@@ -72,6 +77,7 @@ class PostsCubit extends Cubit<PostsStates> {
       },
       (right) {
         getPostResponse = right;
+        getElapsedTime(getPostResponse!.createdAt, getPostResponse!.id);
         emit(GetPostSuccessState());
       },
     );
@@ -107,11 +113,12 @@ class PostsCubit extends Cubit<PostsStates> {
       (right) {
         final newPost = GetPostsResponseData(
           id: right.id,
-          imagePath: right.imageUrl,
-          description: right.description,
+          imagePath: right.imagePath,
+          description: right.message,
           createdAt: DateTime.now().toIso8601String(),
           // Better date format
-          applicationUserId: right.applicationUserId,
+          applicationUserId: right.user.id,
+            // ownerUserName:right.user.userName,ownerProfilePicture: right.user.profilePicture
         );
 
         // Update posts list
@@ -333,6 +340,73 @@ class PostsCubit extends Cubit<PostsStates> {
     print("emojeeee ${emojiShowing}");
     emit(ChangeEmojiState());
   }
+   bool isBookmarked=false;
+   bool isFavorited=false;
+   bool isDownloaded=false;
+  void toggleBookmark() {
+    isBookmarked=!isBookmarked;
+    isFavorited=false;
+    isDownloaded=false;
+    emit(TogelState());
+  }
 
+  void toggleFavorite() {
+    isFavorited=!isFavorited;
+    isDownloaded=false;
+    isBookmarked=false;
+    emit(TogelState());
+
+  }
+
+  void toggleDownload() {
+    isDownloaded=!isDownloaded;
+    isBookmarked=false;
+    isFavorited=false;
+
+    emit(TogelState());
+
+  }
+  void download({required String imageUrl}) async {
+    emit(DownloadLoadingState());
+    final response = await _postsRepo.download(imageUrl: imageUrl
+    );
+
+    response.fold(
+          (left) {
+            isDownloaded=!isDownloaded;
+            print("errorrrrr ${left.apiErrorModel.title}");
+
+            emit(DownloadErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+            isDownloaded=false;
+            print("sucesssssssssss downloaddd");
+
+        emit(DownloadSuccessState());
+      },
+    );
+    
+}
+  void saveDesign({required String imageUrl}) async {
+    emit(SaveDesignLoadingState());
+    final response = await _postsRepo.saveDesign(imageUrl: imageUrl, userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+    );
+
+    response.fold(
+          (left) {
+        isFavorited=!isFavorited;
+        print("errorrrrr ${left.apiErrorModel.title}");
+
+        emit(SaveDesignErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+        isFavorited=false;
+        print("sucesssssssssss downloaddd");
+
+        emit(SaveDesignSuccessState());
+      },
+    );
+
+  }
 
 }

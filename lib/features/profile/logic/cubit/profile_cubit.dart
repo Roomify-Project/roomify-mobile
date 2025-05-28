@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/explore_screen/data/models/save_design_response.dart';
 import 'package:rommify_app/features/profile/data/models/get_follow_count_model.dart';
 import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
+import '../../data/models/get_history_design.dart';
+import '../../data/models/saved_design_model.dart';
 import '../../data/models/update_profile_body.dart';
 import '../../data/repos/profile_repo.dart';
 import 'profile_states.dart';
@@ -34,7 +38,8 @@ class ProfileCubit extends Cubit<ProfileStates> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   GetFollowCountModel? getFollowCountModel;
-
+  SavedDesignsResponse? savedDesignResponse;
+  ImageHistoryResponse? imageHistoryResponse;
   void addFollow({required String followId}) async {
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
@@ -174,6 +179,50 @@ class ProfileCubit extends Cubit<ProfileStates> {
         print("is folllllow${isFollowing}");
 
         emit(GetFollowCountSuccessState());
+      },
+    );
+  }
+  int item=-1;
+  void toggleProfile(int index){
+    item=index;
+    emit(ToggleProfile());
+  }
+  List<bool> isExpandedListHistory = [];
+  List<bool> isExpandedListSaved = [];
+  void getSavedDesign() async {
+    emit(GetSavedLoadingState());
+    final response = _profileRepo.getSavedDesign(userId: await SharedPrefHelper.getString(SharedPrefKey.userId));
+
+    response.fold(
+          (left) {
+        emit(GetSavedErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+            savedDesignResponse=right;
+            isExpandedListSaved =
+                List.generate(right.savedDesigns.length, (index) => false);
+        print("is folllllow${isFollowing}");
+
+        emit(GetSavedSuccessState());
+      },
+    );
+  }
+
+
+  void getHistory() async {
+    emit(GetHistoryLoadingState());
+    final response = _profileRepo.getHistory(userId: await SharedPrefHelper.getString(SharedPrefKey.userId));
+
+    response.fold(
+          (left) {
+        emit(GetHistoryErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+
+            imageHistoryResponse=right;
+            isExpandedListHistory =
+                List.generate(right.history.length, (index) => false);
+        emit(GetHistorySuccessState());
       },
     );
   }
