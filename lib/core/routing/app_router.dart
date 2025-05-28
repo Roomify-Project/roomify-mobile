@@ -42,8 +42,10 @@ class AppRouter {
           builder: (_) => const CreateRoomScreen(),
         );
       case Routes.generateRoomScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
         return MaterialPageRoute(
-          builder: (_) =>  const GenerateRoomScreen(),
+          builder: (_) =>   GenerateRoomScreen(generateCubit: arguments?['generateCubit'],),
         );
       case Routes.exploreScreen:
         return MaterialPageRoute(

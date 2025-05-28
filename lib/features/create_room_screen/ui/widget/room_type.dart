@@ -4,9 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rommify_app/features/room_types_screen/ui/room_types.dart';
 import '../../../../core/theming/colors.dart';
+import '../../logic/cubit/generate_cubit.dart';
 
 class RoomType extends StatelessWidget {
-  const RoomType({super.key});
+  final GenerateCubit generateCubit;
+
+  const RoomType({super.key, required this.generateCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class RoomType extends StatelessWidget {
         showDialog(
           context: context,
           barrierColor: Colors.transparent,
-          builder: (context) => const RoomTypeScreen(),
+          builder: (context) =>  RoomTypeScreen(generateCubit: generateCubit,),
         );
       },
       child: Container(

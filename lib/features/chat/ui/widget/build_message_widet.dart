@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,150 +16,237 @@ import '../../logic/cubit/chat_cubit.dart';
 
 Widget buildMessageComposer({required ChatCubit chatCubit,
   required GetProfileDataModel getProfileDataModel, required BuildContext context}) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 15.h),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: ColorsManager.colorPrimary,
-        border: Border(
-          top: BorderSide(
-            color: Colors.purple.shade800,
-            width: 0.5,
+  return WillPopScope(
+    onWillPop: () async{
+      if (chatCubit.emojiShowing) {
+        chatCubit.changeEmojiState();
+        return false;
+      }
+      return true;
+    },
+    child: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 15.h),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: ColorsManager.colorPrimary,
+              border: Border(
+                top: BorderSide(
+                  color: Colors.purple.shade800,
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        height: 45.h,
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade900,
+                          borderRadius: BorderRadius.circular(25.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Type...',
+                                  hintStyle: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 14.sp,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.sp,
+                                ),
+                                controller: chatCubit.messageController,
+                                onTap: () {
+                                  // إخفاء الإيموجي لما يدوس على النص
+                                  if (chatCubit.emojiShowing) {
+                                    chatCubit.changeEmojiState();
+                                  }
+                                },
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                chatCubit.sendMessage(receiverId: getProfileDataModel.id);
+                              },
+                              child: Container(
+                                width: 35.w,
+                                height: 35.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.purple.shade800,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 20.sp,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    InkWell(
+                      onTap: () {
+                        showPickImageSnackBarChat(context, chatCubit);
+                      },
+                      child: Container(
+                        width: 45.w,
+                        height: 45.h,
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade900,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Icon(
+                          Icons.attach_file,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    InkWell(
+                      onTap: () {
+                        chatCubit.changeEmojiState();
+                      },
+                      child: Container(
+                        width: 45.w,
+                        height: 45.h,
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade900,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Icon(
+                          chatCubit.emojiShowing
+                              ? Icons.keyboard
+                              : Icons.emoji_emotions_outlined,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                chatCubit.imageFile != null ?
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16))
+                        ),
+                        width: 100.w,
+                        height: 100.h,
+                        child: Image.file(chatCubit.imageFile!, fit: BoxFit.cover,),
+                      ),
+                    ),
+                    chatCubit.imageFile != null
+                        ? Container(
+                      width: 18.w,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          chatCubit.clearImage();
+                        },
+                        child: const Center(
+                          child: Icon(
+                            size: 15,
+                            Icons.close,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    )
+                        : const SizedBox(),
+                  ],
+                ) : SizedBox(),
+              ],
+            ),
           ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  height: 45.h,
-                  decoration: BoxDecoration(
-                    color: Colors.purple.shade900,
-                    borderRadius: BorderRadius.circular(25.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Type...',
-                            hintStyle: TextStyle(
-                              color: Colors.white54,
-                              fontSize: 14.sp,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.sp,
-                          ),
-                          controller: chatCubit.messageController,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          chatCubit.sendMessage(receiverId: getProfileDataModel
-                              .id);
-                        },
-                        child: Container(
-                          width: 35.w,
-                          height: 35.h,
-                          decoration: BoxDecoration(
-                            color: Colors.purple.shade800,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.send,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                        ),
-                      ),
-                    ],
+    
+        // الإيموجي المحسنة
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          height: chatCubit.emojiShowing ? 300 : 0,
+          child: chatCubit.emojiShowing
+              ? EmojiPicker(
+            textEditingController: chatCubit.messageController,
+            config: Config(
+              checkPlatformCompatibility: true,
+              emojiViewConfig: const EmojiViewConfig(
+                backgroundColor: ColorsManager.colorPrimary,
+                columns: 7,
+                emojiSizeMax: 28, // حجم أكبر شوية
+                verticalSpacing: 2,
+                horizontalSpacing: 2,
+                gridPadding: EdgeInsets.all(4),
+                buttonMode: ButtonMode.MATERIAL,
+                // تحسين الأداء
+                loadingIndicator: Center(
+                  child: CircularProgressIndicator(
+                    color: ColorsManager.colorSecondry,
+                    strokeWidth: 2,
                   ),
                 ),
+                recentsLimit: 28, // أقل عدد
+                replaceEmojiOnLimitExceed: true,
               ),
-              SizedBox(width: 8.w),
-              InkWell(
-                onTap: () {
-                  showPickImageSnackBarChat(context, chatCubit);
-                },
-                child: Container(
-                  width: 45.w,
-                  height: 45.h,
-                  decoration: BoxDecoration(
-                    color: Colors.purple.shade900,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.attach_file,
-                    color: Colors.white,
-                    size: 20.sp,
-                  ),
-                ),
+              skinToneConfig: const SkinToneConfig(
+                indicatorColor: ColorsManager.colorSecondry,
+                dialogBackgroundColor: ColorsManager.colorSecondry,
+                enabled: true,
               ),
-              SizedBox(width: 8.w),
-              Container(
-                width: 45.w,
-                height: 45.h,
-                decoration: BoxDecoration(
-                  color: Colors.purple.shade900,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  Icons.mic,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
+              categoryViewConfig: CategoryViewConfig(
+                indicatorColor: ColorsManager.colorSecondry,
+                iconColorSelected: ColorsManager.colorSecondry,
+                backgroundColor: ColorsManager.colorPrimary,
+                iconColor: Colors.grey,
+                tabIndicatorAnimDuration: Duration(milliseconds: 200),
+                dividerColor: Colors.grey.shade300,
+                recentTabBehavior: RecentTabBehavior.RECENT,
               ),
-            ],
-          ),
-          chatCubit.imageFile != null ?
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(16))
-                  ),
-                  width: 100.w,
-                  height: 100.h,
-                  child: Image.file(chatCubit.imageFile!, fit: BoxFit.cover,),
-                ),
+              bottomActionBarConfig: const BottomActionBarConfig(
+                backgroundColor: ColorsManager.colorSecondry,
+                buttonColor: Colors.white,
+                buttonIconColor: ColorsManager.white,
+                showBackspaceButton: false,
+                showSearchViewButton: false, // إخفاء البحث للسرعة
               ),
-              chatCubit.imageFile != null
-                  ? Container(
-                    width: 18.w,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        chatCubit.clearImage();
-                      },
-                      child: const Center(
-                        child: Icon(
-                          size: 15,
-                          Icons.close,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
-                  : const SizedBox(),
-            ],
-          ) : SizedBox()
-        ],
-      ),
+              searchViewConfig: const SearchViewConfig(
+                backgroundColor: ColorsManager.colorPrimary
+                ,
+                // buttonColor: ColorsManager.colorSecondry,
+                buttonIconColor: Colors.white,
+                hintText: 'Search emoji...',
+              ),
+            ),
+          )
+              : SizedBox.shrink(),
+        ),
+    
+        SizedBox(height: 20.h),
+      ],
     ),
   );
 }

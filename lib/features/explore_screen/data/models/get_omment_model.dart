@@ -59,4 +59,26 @@ class CommentData {
       'portfolioPostId': portfolioPostId,
     };
   }
+
+  CommentData copyWith({
+    String? id,
+    String? content,
+    String? createdAt,
+    String? updatedAt,
+    String? userId,
+    String? userName,
+    String? userProfilePicture,
+    String? portfolioPostId,
+  }) {
+    return CommentData(
+      id: id ?? this.id,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userProfilePicture: userProfilePicture ?? this.userProfilePicture,
+      portfolioPostId: portfolioPostId ?? this.portfolioPostId,
+    );
+  }
 }

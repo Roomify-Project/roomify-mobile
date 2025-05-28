@@ -1,16 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
+import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
+import 'package:rommify_app/features/main_screen/widget/show_update_dialog.dart';
 
 import '../../../core/helpers/constans.dart';
+import '../../../core/routing/routes.dart';
 import '../../../core/theming/styles.dart';
 
 class CommentItem extends StatefulWidget {
-
   final CommentData getCommentData;
+
   const CommentItem({super.key, required this.getCommentData});
 
   @override
@@ -20,13 +23,24 @@ class CommentItem extends StatefulWidget {
 class _CommentItemState extends State<CommentItem> {
   @override
   void initState() {
-    // TODO: implement initState
-    PostsCubit.get(context).getElapsedTime(widget.getCommentData.createdAt, widget.getCommentData.id);
+    PostsCubit.get(context).getElapsedTime(
+        widget.getCommentData.createdAt, widget.getCommentData.id);
+    // _editController =
+    //     TextEditingController(text: widget.getCommentData.content);
+    PostsCubit.get(context).focusNode = FocusNode();
     super.initState();
   }
   @override
+  void dispose() {
+    // _editController.dispose();
+    PostsCubit.get(context).focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("iddd ${PostsCubit.get(context).timeMap[widget.getCommentData.id]}");
+    final postCubit = PostsCubit.get(context);
+    print("iddd ${postCubit.timeMap[widget.getCommentData.id]}");
     return Column(
       children: [
         Padding(
@@ -37,89 +51,183 @@ class _CommentItemState extends State<CommentItem> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 25.r,
-                    child: ClipOval(child: CustomCachedNetworkImage(imageUrl: widget.getCommentData.userProfilePicture??Constants.defaultImagePerson)),
-                  ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        // width: 267.w,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF767676).withOpacity(0.29),
-                          // تم إضافة شفافية 29%
-                          borderRadius: BorderRadius.circular(24.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF767676).withOpacity(0.25),
-                              // تم تعديل لون الظل
-                              blurRadius: 25,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Padding(
-                          padding:  EdgeInsets.only(right: 48.w,top: 10.h,bottom: 16.h,left: 16.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // SizedBox(height: 10.h,),
-                              Text(
-                                widget.getCommentData.userName,
-                                style: TextStyles.font12WhiteRegular
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                              // SizedBox(height: 16.h,),
-                              Text(
-                                widget.getCommentData.content, // النص من الصورة
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
+                  InkWell(
+                    onTap: () {
+                      context.pushNamed(Routes.profile,arguments: {'profileId':widget.getCommentData.userId});
+
+                    },
+                    child: CircleAvatar(
+                      radius: 25.r,
+                      // radius: postCubit.isEditingMap[widget.getCommentData.id]??false ? 18.r : 25.r,
+                      child: ClipOval(
+                        child: CustomCachedNetworkImage(
+                          height: double.infinity,
+                          width: double.infinity,
+                          imageUrl: widget.getCommentData.userProfilePicture??
+                              Constants.defaultImagePerson,
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      SizedBox(height: 2.h,),
-                      Text(
-                        PostsCubit.get(context).timeMap[widget.getCommentData.id]??"",
-                        style: TextStyles.font12GreyLight,
-                      )
-
-                    ],
+                    ),
                   ),
-                  // const Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     // Text(
-                  //     //   "Interior Designer",
-                  //     //   style: TextStyles.font12WhiteRegular.copyWith(
-                  //     //       fontWeight: FontWeight.w400, fontSize: 10),
-                  //     // ),
-                  //     // Text(
-                  //     //   "@aliellebi123",
-                  //     //   style: TextStyles.font12WhiteRegular.copyWith(
-                  //     //       fontWeight: FontWeight.w400, fontSize: 8),
-                  //     // ),
-                  //   ],
-                  // ),
+                  SizedBox(width: postCubit.isEditingMap[widget.getCommentData.id]??false ? 8.w : 10.w),
+                  // تقليل المسافة أثناء التعديل
+                  Expanded(
+                    child: GestureDetector(
+                      onLongPress: () async {
+                        if(await SharedPrefHelper.getString(SharedPrefKey.userId)==widget.getCommentData.userId) {
+                          showOptionsBottomSheet(postCubit: postCubit,
+                              context: context,
+                              commentId: widget.getCommentData.id);
+                        }
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF767676).withOpacity(0.29),
+                              borderRadius: BorderRadius.circular(24.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xFF767676).withOpacity(0.25),
+                                  blurRadius: 25,
+                                  spreadRadius: 0,
+                                  offset: const Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                right: postCubit.isEditingMap[widget.getCommentData.id]??false ? 16.w : 48.w,
+                                // تقليل الـ padding أثناء التعديل
+                                top: 10.h,
+                                bottom: 16.h,
+                                left: 16.w,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.getCommentData.userName,
+                                    style:
+                                        TextStyles.font12WhiteRegular.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  if (postCubit.isEditingMap[widget.getCommentData.id]??false) ...[
+                                    TextFormField(
+                                      controller: postCubit.updateCommentController=TextEditingController(text: widget.getCommentData.content)
+                                      ,
+                                      focusNode: postCubit.focusNode,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                      maxLines: null,
+                                      onFieldSubmitted: (_) => {
+                                      postCubit.updateComment(
+                                      commentId:
+                                      widget.getCommentData.id)
+                                      },
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap:() {
+                                            postCubit.updateComment(
+                                                commentId:
+                                                    widget.getCommentData.id);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w,
+                                              vertical: 4.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                            ),
+                                            child: Text(
+                                              'Save',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        GestureDetector(
+                                          onTap: (){
+                                            postCubit.cancelEdit(commentId: widget.getCommentData.id);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w,
+                                              vertical: 4.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                            ),
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ] else ...[
+                                    Text(
+                                      widget.getCommentData.content,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            PostsCubit.get(context)
+                                    .timeMap[widget.getCommentData.id] ??
+                                "",
+                            style: TextStyles.font12GreyLight,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-
             ],
           ),
         ),
-        // SizedBox(
-        //   height: 5.h,
-        // ),
       ],
     );
   }

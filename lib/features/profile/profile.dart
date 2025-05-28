@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,7 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocProvider(
       create: (BuildContext context) => ProfileCubit(getIt.get<ProfileRepo>())
         ..checkISFollowing(followId: widget.profileId)
-        ..getUserProfileData(profileId: widget.profileId)..getFollowCount(followId: widget.profileId),
+        ..getUserProfileData(profileId: widget.profileId)
+        ..getFollowCount(followId: widget.profileId),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
           listener: (BuildContext context, Object? state) {
         if (state is AddFollowSuccessState) {
@@ -66,70 +66,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Column(
                               children: [
                                 // Image and info row
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 90,
-                                      height: 90,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
+                                Padding(
+                                  padding:  EdgeInsets.only(left: 24.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 90,
+                                        height: 90,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: ClipOval(
+                                            child: CustomCachedNetworkImage(
+                                                imageUrl: profileCubit
+                                                                .getProfileDataModel
+                                                                ?.profilePicture ==
+                                                            null ||
+                                                        profileCubit
+                                                                .getProfileDataModel!
+                                                                .profilePicture ==
+                                                            ""
+                                                    ? Constants.defaultImagePerson
+                                                    : profileCubit
+                                                        .getProfileDataModel!
+                                                        .profilePicture)),
                                       ),
-                                      child: ClipOval(
-                                          child: CustomCachedNetworkImage(
-                                              imageUrl: profileCubit
-                                                  .getProfileDataModel!
-                                                  .profilePicture)),
-                                    ),
-                                    SizedBox(width: 20.w),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          profileCubit
-                                              .getProfileDataModel!.userName,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22.sp,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          profileCubit
-                                              .getProfileDataModel!.role,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14.sp),
-                                        ),
-                                        Text(
-                                          profileCubit
-                                              .getProfileDataModel!.email,
-                                          style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 12.sp),
-                                        ),
-                                        SizedBox(height: 8.h),
-                                        profileCubit.getFollowCountModel!=null?
-                                        Row(
-                                          children: [
-                                            Text("${profileCubit.getFollowCountModel!.followers} followers",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14.sp)),
-                                            SizedBox(width: 20.w),
-                                            Text("${profileCubit.getFollowCountModel!.followers} following",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14.sp)),
-                                          ],
-                                        ):const SizedBox(),
-                                      ],
-                                    ),
-                                  ],
+                                      SizedBox(width: 20.w),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            profileCubit
+                                                .getProfileDataModel!.userName,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            profileCubit
+                                                .getProfileDataModel!.role,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14.sp),
+                                          ),
+                                          Text(
+                                            profileCubit
+                                                .getProfileDataModel!.email,
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 12.sp),
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          profileCubit.getFollowCountModel != null
+                                              ? Row(
+                                                  children: [
+                                                    Text(
+                                                        "${profileCubit.getFollowCountModel!.followers} followers",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14.sp)),
+                                                    SizedBox(width: 20.w),
+                                                    Text(
+                                                        "${profileCubit.getFollowCountModel!.followers} following",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14.sp)),
+                                                  ],
+                                                )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(height: 20.h),
                                 profileCubit.getProfileDataModel!.id !=
-                                    SharedPrefHelper.getString(SharedPrefKey.userId)
+                                        SharedPrefHelper.getString(
+                                            SharedPrefKey.userId)
                                     ? profileCubit.isFollowing != null
                                         ? Column(
                                             children: [
@@ -159,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                       () {
                                                                     profileCubit.addFollow(
                                                                         followId:
-                                                                        widget.profileId);
+                                                                            widget.profileId);
                                                                   },
                                                                   child: Text(
                                                                     'Follow',
@@ -265,7 +281,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           ),
                                                         ),
                                                         onPressed: () {
-                                                          context.pushNamed(Routes.chatsFriendsScreen,arguments: {'getProfileDataModel':profileCubit.getProfileDataModel});
+                                                          context.pushNamed(
+                                                              Routes
+                                                                  .chatsFriendsScreen,
+                                                              arguments: {
+                                                                'getProfileDataModel':
+                                                                    profileCubit
+                                                                        .getProfileDataModel
+                                                              });
                                                         },
                                                         child: Text(
                                                           'Message',
@@ -288,11 +311,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     profileCubit.getProfileDataModel!.id ==
-                                        SharedPrefHelper.getString(SharedPrefKey.userId)?
-                                    _buildIcon(Icons.add, 'Add', () {
-                                      context.pushNamed(Routes.addPost);
-
-                                    }):const SizedBox(),
+                                            SharedPrefHelper.getString(
+                                                SharedPrefKey.userId)
+                                        ? _buildIcon(Icons.add, 'Add', () {
+                                            context.pushNamed(Routes.addPost);
+                                          })
+                                        : const SizedBox(),
                                     SizedBox(width: 30.w),
                                     _buildIcon(
                                         Icons.favorite, 'favorite', () {}),
@@ -305,44 +329,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 SizedBox(height: 20.h),
                                 // Image Grid - Modified mainAxisSpacing to 0
-                                 Expanded(
-                                  child: CustomGridViewProfile(profileId: widget.profileId,),
+                                Expanded(
+                                  child: CustomGridViewProfile(
+                                    profileId: widget.profileId,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           profileCubit.getProfileDataModel!.id ==
-                              SharedPrefHelper.getString(SharedPrefKey.userId)?
-                          Positioned(
-                            top: 25.h,
-                            right: 10.w,
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  child: Icon(
-                                    Icons.email_outlined,
-                                    color: Colors.white,
-                                    size: 28.sp,
+                                  SharedPrefHelper.getString(
+                                      SharedPrefKey.userId)
+                              ? Positioned(
+                                  top: 25.h,
+                                  right: 10.w,
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        child: Icon(
+                                          Icons.email_outlined,
+                                          color: Colors.white,
+                                          size: 28.sp,
+                                        ),
+                                        onTap: () {
+                                          context.pushNamed(Routes.chatsScreen);
+                                        },
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EditProfileScreen(
+                                                          profileCubit:
+                                                              profileCubit,
+                                                        )));
+                                          },
+                                          child: Icon(Icons.settings,
+                                              color: Colors.white,
+                                              size: 28.sp)),
+                                    ],
                                   ),
-                                  onTap: () {
-                                    context.pushNamed(Routes.chatsScreen);
-                                  },
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditProfileScreen(
-                                                    profileCubit: profileCubit,
-                                                  )));
-                                    },
-                                    child: Icon(Icons.settings,
-                                        color: Colors.white, size: 28.sp)),
-                              ],
-                            ),
-                          ):const SizedBox(),
+                                )
+                              : const SizedBox(),
                         ],
                       )
                     : state is GetUserDataProfileErrorState
@@ -359,9 +389,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           )
                         : const Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Center(child: CustomShimmerEffect()),
-            ));
+                            padding: EdgeInsets.only(top: 50),
+                            child: Center(child: CustomShimmerEffect()),
+                          ));
       }),
     );
   }
@@ -390,12 +420,14 @@ class ImageCard extends StatelessWidget {
   final VoidCallback onExpand;
   final bool isExpanded;
   final Function()? onPressed;
+
   const ImageCard({
     super.key,
     required this.imageUrl,
     required this.profileImageUrl,
     required this.onExpand,
-    required this.isExpanded,  this.onPressed,
+    required this.isExpanded,
+    this.onPressed,
   });
 
   @override
@@ -429,7 +461,8 @@ class ImageCard extends StatelessWidget {
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
-                child: ClipOval(child: CustomCachedNetworkImage(imageUrl: profileImageUrl)),
+              child: ClipOval(
+                  child: CustomCachedNetworkImage(imageUrl: profileImageUrl)),
             ),
           ),
         ),

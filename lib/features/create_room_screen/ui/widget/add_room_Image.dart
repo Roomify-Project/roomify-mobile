@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/features/create_room_screen/logic/cubit/generate_cubit.dart';
 import 'package:rommify_app/features/create_room_screen/ui/widget/upload_room_dialog.dart';
 import '../../../../core/theming/colors.dart';
 
 class AddRoomImage extends StatelessWidget {
-  const AddRoomImage({super.key});
+  final GenerateCubit generateCubit;
+  const AddRoomImage({super.key, required this.generateCubit});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => UploadRoomDialog(),
+          builder: (context) =>  UploadRoomDialog(generateCubit: generateCubit,),
         );
       },
       child: Container(

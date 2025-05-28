@@ -10,6 +10,10 @@ import 'core/helpers/shared_pref_helper.dart';
 import 'core/widgets/check_server_connection.dart';
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrintStack(label: '⚠️ Widget context warning stack trace:', stackTrace: details.stack);
+  };
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await SharedPrefHelper.init();
