@@ -33,9 +33,7 @@ class ApiConstants {
   static  String getIsFollowingUrl({required String followId}){
     return '/api/follow/is-following/$followId';
   }
-  static  String profileId({required String profileId}){
-    return '/api/users/$profileId';
-  }
+  static const String updateProfile='/api/Users/update-profile';
   static  String getProfileData({required String profileId}){
     return '/api/users/$profileId';
   }
@@ -51,6 +49,14 @@ class ApiConstants {
     return "/api/Comments/post/$postId";
   }
   static String addComment="/api/Comments/";
+  static String updateComment({required String commentId}){
+    return "/api/Comments/$commentId";
+  }
+  static String deleteComment({required String commentId}){
+    return "/api/Comments/$commentId";
+  }
+
+  static String generate="/api/RoomImage/generate-design";
 
 }
 

@@ -1,3 +1,5 @@
+import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
+
 abstract class ProfileStates {}
 
 class ProfileInitialState extends ProfileStates {}
@@ -28,6 +30,9 @@ class ChangeDropDownState extends ProfileStates {}
 //// UPDATE PROFILE///////////
 class UpdateProfileLoadingState extends ProfileStates {}
 class UpdateProfileSuccessState extends ProfileStates {
+  final UpdateProfileResponse updateProfileResponse;
+
+  UpdateProfileSuccessState({required this.updateProfileResponse});
 }
 class UpdateProfileErrorState extends ProfileStates {
   final String message;

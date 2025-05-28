@@ -78,14 +78,18 @@ class ChatCubit extends Cubit<ChatStates> {
       clearImage();
       emit(UploadMessageState());
     }
-    scrollToBottom();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (scrollController.hasClients) {
+    //     scrollToBottom();
+    //   }
+    // });
     final response = await _chatRepo.sendMessage(
         sendChatMessageBody: SendChatMessageBody(
             senderId: await SharedPrefHelper.getString(SharedPrefKey.userId),
             receiverId: receiverId,
             message:
             getMessageResponse.content,
-        ), image: imageFile,
+        ), image: getMessageResponse.attachmentUrl,
 
     );
 
@@ -119,7 +123,7 @@ class ChatCubit extends Cubit<ChatStates> {
         }
         checkInternet(receiverId: receiverId);
         listenToData();
-        scrollToBottom();
+
         emit(GetMessagesSuccessStates());
       },
     );
@@ -127,16 +131,12 @@ class ChatCubit extends Cubit<ChatStates> {
 
   Future<void> listenToData() async {
     print("listeennnn");
-    _subscriptionString = friendChatStreamString?.listen(
-          (getMessageResponse) {
+    _subscription = friendChatStream?.listen(
+          (getMessageListenResponse) {
         // final getMessage = GetMessageResponse.fromJson(getMessageResponse);
-        print("dataaaa ${getMessageResponse}");
-        getMessagesResponse?.messages.add(GetMessageResponseData(
-            messageId: (i++).toString(),
-            senderId: getMessagesResponse!.messages.first.senderId,
-            content: getMessageResponse,
-            sentAt: currentDateTime.toString(), attachmentUrl: getMessageResponse));
-        scrollToBottom();
+        print("dataaaa ${getMessageListenResponse}");
+        final getMessage = GetMessageResponseData.fromJson(getMessageListenResponse);
+        getMessagesResponse!.messages.add(getMessage);
         if (!isClosed) {
           emit(GetMessagesSuccessStates());
         }
@@ -148,6 +148,7 @@ class ChatCubit extends Cubit<ChatStates> {
 
   void changeEmojiState() {
     emojiShowing = !emojiShowing;
+    print("emojeeee ${emojiShowing}");
     emit(ChangeEmojiState());
   }
 
@@ -155,6 +156,7 @@ class ChatCubit extends Cubit<ChatStates> {
   Future<void> close() {
     _subscription?.cancel();
     messageController.dispose();
+    scrollController.dispose();
     return super.close();
   }
 
@@ -185,41 +187,49 @@ class ChatCubit extends Cubit<ChatStates> {
   }
 
 
-  void scrollToBottom() {
-    // Verify the controller is attached to a scroll view first
-    if (!scrollController.hasClients) {
-      // If controller isn't ready, retry after a short delay
-      Future.delayed(const Duration(milliseconds: 50), scrollToBottom);
-      return;
-    }
+  // void scrollToBottom() {
+  //   scrollController.animateTo(
+  //     scrollController.position.maxScrollExtent,
+  //     duration: Duration(milliseconds: 300),
+  //     curve: Curves.easeOut,
+  //   );
+  // }
 
-    // Log for debugging
-    print("Scrolling to bottom");
-
-    // Function to perform the actual scroll
-    void performScroll() {
-      if (!scrollController.hasClients) return;
-
-      // Calculate maximum scroll extent plus extra buffer
-      final maxScroll = scrollController.position.maxScrollExtent;
-      final targetPosition = maxScroll + 100;
-
-      scrollController.animateTo(
-        targetPosition,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
-
-    // Initial scroll
-    performScroll();
-
-    // Wait for layout to complete and any new content to render
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      performScroll();
-
-      // One final scroll after a delay to ensure images and content are loaded
-      Future.delayed(const Duration(milliseconds: 500), performScroll);
-    });
-  }
+  // void scrollToBottom() {
+  //   // Verify the controller is attached to a scroll view first
+  //   if (!scrollController.hasClients) {
+  //     // If controller isn't ready, retry after a short delay
+  //     Future.delayed(const Duration(milliseconds: 50), scrollToBottom);
+  //     return;
+  //   }
+  //
+  //   // Log for debugging
+  //   print("Scrolling to bottom");
+  //
+  //   // Function to perform the actual scroll
+  //   void performScroll() {
+  //     if (!scrollController.hasClients) return;
+  //
+  //     // Calculate maximum scroll extent plus extra buffer
+  //     final maxScroll = scrollController.position.maxScrollExtent;
+  //     final targetPosition = maxScroll + 100;
+  //
+  //     scrollController.animateTo(
+  //       targetPosition,
+  //       duration: const Duration(milliseconds: 300),
+  //       curve: Curves.easeOut,
+  //     );
+  //   }
+  //
+  //   // Initial scroll
+  //   performScroll();
+  //
+  //   // Wait for layout to complete and any new content to render
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     performScroll();
+  //
+  //     // One final scroll after a delay to ensure images and content are loaded
+  //     Future.delayed(const Duration(milliseconds: 500), performScroll);
+  //   });
+  // }
 }

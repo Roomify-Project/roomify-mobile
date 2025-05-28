@@ -30,33 +30,70 @@ class _CommentListViewState extends State<CommentListView> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PostsCubit,PostsStates>(
-      buildWhen: (previous, current) => current is GetCommentSuccessState||current is GetCommentErrorState||current is GetCommentLoadingState|| current is AddCommentSuccessState||current is ChangeTimeState,
-      listenWhen: (previous, current) => current is AddCommentLoadingState || current is AddCommentErrorState ||  current is AddCommentSuccessState,
+    return BlocConsumer<PostsCubit, PostsStates>(
+      buildWhen: (previous, current) =>
+          current is GetCommentSuccessState ||
+          current is GetCommentErrorState ||
+          current is GetCommentLoadingState ||
+          current is AddCommentSuccessState ||
+          current is ChangeTimeState ||
+          current is EditState ||
+          current is UpdateCommentSuccessState ||
+          current is DeleteCommentSuccessState,
+      listenWhen: (previous, current) =>
+          current is AddCommentLoadingState ||
+          current is AddCommentErrorState ||
+          current is AddCommentSuccessState ||
+          current is UpdateCommentLoadingState ||
+          current is UpdateCommentSuccessState ||
+          current is UpdateCommentErrorState ||
+          current is DeleteCommentLoadingState ||
+          current is DeleteCommentSuccessState ||
+          current is DeleteCommentErrorState,
       listener: (BuildContext context, state) {
-        if(state is AddCommentLoadingState){
+        if (state is AddCommentLoadingState ||
+            state is UpdateCommentLoadingState ||
+            state is DeleteCommentLoadingState) {
           EasyLoading.show();
-        }
-        else if(state is AddCommentErrorState){
+        } else if (state is AddCommentErrorState) {
           EasyLoading.dismiss();
           flutterShowToast(message: state.message, toastCase: ToastCase.error);
-        }
-        else if(state is AddCommentSuccessState){
+        } else if (state is UpdateCommentErrorState) {
           EasyLoading.dismiss();
-          flutterShowToast(message: "comment sent successfully", toastCase: ToastCase.success);
-
+          flutterShowToast(message: state.message, toastCase: ToastCase.error);
+        } else if (state is DeleteCommentErrorState) {
+          EasyLoading.dismiss();
+          flutterShowToast(message: state.message, toastCase: ToastCase.error);
+        } else if (state is AddCommentSuccessState) {
+          EasyLoading.dismiss();
+          flutterShowToast(
+              message: "comment sent successfully",
+              toastCase: ToastCase.success);
+        } else if (state is UpdateCommentSuccessState) {
+          EasyLoading.dismiss();
+          flutterShowToast(
+              message: "comment updated successfully",
+              toastCase: ToastCase.success);
+        } else if (state is DeleteCommentSuccessState) {
+          EasyLoading.dismiss();
+          flutterShowToast(
+              message: state.deleteCommentResponse.message,
+              toastCase: ToastCase.success);
         }
       },
       builder: (BuildContext context, state) {
-        final comments=PostsCubit.get(context).getCommentResponse?.comments;
+        final comments = PostsCubit.get(context).getCommentResponse?.comments;
         return ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               if (state is GetCommentLoadingState) {
                 return const CustomShimmerEffect();
               }
-              if(state is GetCommentErrorState){
+              if (state is GetCommentErrorState) {
                 Center(
                   child: AnimatedErrorWidget(
                     title: "Loading Error",
@@ -67,22 +104,28 @@ class _CommentListViewState extends State<CommentListView> {
                 );
               }
               if (comments == null || comments.isEmpty) {
-                return  Center(
+                return const Center(
                   child: AnimatedEmptyList(
-                    title: "No Posts Found",
-                    subtitle: comments![index].userId==SharedPrefHelper.getString(SharedPrefKey.userId)?"Start by creating your first Comment":"",
+                    title: "No Comments Found",
+                    subtitle:  "Start by creating your first Comment",
+                        // : "",
+                    // comments![index].userId ==
+                    //                             SharedPrefHelper.getString(SharedPrefKey.userId)
+                    //                         ?
                     lottieAnimationPath: 'assets/animation/empity_list.json',
                   ),
                 );
               }
-              return  CommentItem(getCommentData:PostsCubit.get(context).getCommentResponse!.comments[index],);
+              return CommentItem(
+                getCommentData:
+                    PostsCubit.get(context).getCommentResponse!.comments[index],
+              );
             },
             separatorBuilder: (context, index) => SizedBox(
-              height: 20.h,
-            ),
-            itemCount: comments?.length??0);
+                  height: 20.h,
+                ),
+            itemCount: comments?.length ?? 0);
       },
-
     );
   }
 }

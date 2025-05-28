@@ -63,4 +63,24 @@ class PostsApiService {
     );
     return  response;
   }
+
+  Future<Response> updateComment({required String userId,required String commentId,  required String content,
+  }) async {
+
+    final response= await dio.put(ApiConstants.updateComment( commentId: commentId),data: {
+      'content': content,
+    },queryParameters: {
+      'userId':userId,
+    });
+    return  response;
+  }
+  Future<Response> deleteComment({required String userId,required String commentId
+  }) async {
+
+    final response= await dio.delete(ApiConstants.deleteComment( commentId: commentId),
+        queryParameters: {
+      'userId':userId,
+    });
+    return  response;
+  }
 }

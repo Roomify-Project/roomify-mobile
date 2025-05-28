@@ -118,6 +118,8 @@ class ErrorHandler implements Exception {
     if (error is DioException) {
       print("diooooo");
       apiErrorModel = _handleError(error);
+      if(apiErrorModel.status==401){
+      }
     } else {
       print("not diooooo");
       apiErrorModel = DataSource.DEFAULT.getFailure();

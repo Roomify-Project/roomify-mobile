@@ -26,6 +26,7 @@ class PostsCubit extends Cubit<PostsStates> {
   GetPostResponse? getPostResponse;
   GetCommentResponse? getCommentResponse;
   final commentController = TextEditingController();
+  late TextEditingController updateCommentController;
 
   void getAllPosts() async {
     emit(GetAllPostsLoadingState());
@@ -172,6 +173,7 @@ class PostsCubit extends Cubit<PostsStates> {
           userId: right.userId,
           userName: right.userName,
           portfolioPostId: right.portfolioPostId, id: right.id, createdAt: right.createdAt,
+          userProfilePicture: right.userProfilePicture
         );
 
         // Update posts list
@@ -191,6 +193,69 @@ class PostsCubit extends Cubit<PostsStates> {
   //
   //   timeMap[commentId]= time;
   // }
+
+  void updateComment({required String commentId}) async {
+    emit(UpdateCommentLoadingState());
+    final response = await _postsRepo.updateComment(
+  userId:await SharedPrefHelper.getString(SharedPrefKey.userId,),content:updateCommentController.text,commentId:commentId );
+    response.fold(
+          (left) {
+        emit(UpdateCommentErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+            for (int i = 0; i < getCommentResponse!.comments.length; i++) {
+              if (getCommentResponse!.comments[i].id == right.id) {
+                getCommentResponse!.comments[i] = getCommentResponse!.comments[i].copyWith(
+                  content: right.content,
+                );
+                print("righttt ${right.content}");
+                break;
+              }
+            }
+            isEditingMap[commentId]=false;
+            // emit(EditState());
+            emit(UpdateCommentSuccessState(right));
+      },
+    );
+  }
+
+  void deleteComment({required String commentId}) async {
+    emit(DeleteCommentLoadingState());
+    final response = await _postsRepo.deleteComment(
+        userId:await SharedPrefHelper.getString(SharedPrefKey.userId,),commentId:commentId );
+    response.fold(
+          (left) {
+        emit(DeleteCommentErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+          (right) {
+            getCommentResponse!.comments.removeWhere((element) => element.id==commentId,);
+        // emit(EditState());
+        emit(DeleteCommentSuccessState(right));
+      },
+    );
+  }
+  // late TextEditingController _editController;
+  Map<String,bool> isEditingMap={};
+  late FocusNode focusNode;
+
+  void startEditing({required String commentId}) {
+    isEditingMap[commentId]=true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.requestFocus();
+    });
+    emit(EditState());
+  }
+
+  void cancelEdit({required String commentId}) {
+    // _editController.text = widget.getCommentData.content;
+    isEditingMap[commentId]=false;
+
+    // isEditing = false;
+    focusNode.unfocus();
+      emit(EditState());
+
+  }
+
   Map<String,String> timeMap={};
    void getElapsedTime(dynamic dateTime,String commentId) {
 
@@ -261,6 +326,13 @@ class PostsCubit extends Cubit<PostsStates> {
        emit(ChangeTimeState());
        print("timeeeee ${ timeMap[commentId]}");
    }
+  bool emojiShowing = false;
+
+  void changeEmojiState() {
+    emojiShowing = !emojiShowing;
+    print("emojeeee ${emojiShowing}");
+    emit(ChangeEmojiState());
+  }
 
 
 }

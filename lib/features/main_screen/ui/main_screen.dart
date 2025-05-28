@@ -1,3 +1,4 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -30,195 +31,340 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     PostsCubit.get(context).getPost(postId: widget.postId);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsManager.colorPrimary,
-      body: BlocConsumer<PostsCubit, PostsStates>(
-        buildWhen: (previous, current) =>current is GetPostLoadingState||context is GetPostErrorState || current is GetPostSuccessState ,
-        listenWhen: (previous, current) => current is DeletePostLoadingState||current is DeletePostErrorState || current is DeletePostSuccessState ,
-        listener: (context, state) {
-          if(state is DeletePostLoadingState){
-            EasyLoading.show();
-          }
-          else if(state is DeletePostErrorState){
-            EasyLoading.dismiss();
-            flutterShowToast(message: state.message, toastCase: ToastCase.error);
-          }
-          else if(state is DeletePostSuccessState){
-            EasyLoading.dismiss();
-            flutterShowToast(message: state.message, toastCase: ToastCase.success);
-            Navigator.pop(context);
-          }
-        },
-        builder: (BuildContext context, state) {
-          final postCubit = PostsCubit.get(context);
-          if (state is GetPostLoadingState) {
-            return const CustomShimmerEffect();
-          } else if (state is GetPostErrorState) {
-            return AnimatedErrorWidget(
-              title: state.message,
-            );
-          }
-          return Stack(
-            children: [
-              CircleWidget(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  SizedBox(height: 30.h,),
-                  // Row(
-                  //   children: [
-                  //     Text(
-                  //       "antoneos",
-                  //       style: TextStyles.font12WhiteRegular
-                  //           .copyWith(fontWeight: FontWeight.w700),
-                  //     ),
-                  //     Container(
-                  //       width: 24.w,
-                  //       height: 24.h,
-                  //       decoration: const BoxDecoration(
-                  //         shape: BoxShape.circle,
-                  //       ),
-                  //       child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse)),
-                  //     )
-                  //   ],
-                  // ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding:  EdgeInsets.only(left: 16.w),
-                      child: Text(postCubit.getPostResponse?.description??"",style: TextStyles.font18WhiteRegular,),
-                    ),
-                  ),
-                  SizedBox(height: 20.h,),
-                  Stack(
-                      alignment: Alignment.topRight, children: [
-                    Container(
-                        width: double.infinity.w,
-                        height: 300.h,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadiusDirectional.circular(14.r),
-                        ),
-                        child: CustomCachedNetworkImage(
-                          imageUrl: postCubit.getPostResponse?.imagePath,
-                          fit: BoxFit.cover,
-                        )),
-                  postCubit.getPostResponse!.applicationUserId==SharedPrefHelper.getString(SharedPrefKey.userId)?  PopupMenuButton(
-                      color:const Color(0xFF2D1B2E),
-                      icon: const Icon(Icons.more_vert), // أيقونة النقاط الثلاث
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.white), // أيقونة الحذف
-                              SizedBox(width: 8), // مسافة بين الأيقونة والنص
-                              Text('Delete Post', style: TextStyle(color: Colors.white)),
-                            ],
+    return BlocConsumer<PostsCubit, PostsStates>(
+      buildWhen: (previous, current) =>
+          current is GetPostLoadingState ||
+          context is GetPostErrorState ||
+          current is GetPostSuccessState ||
+          current is ChangeEmojiState,
+      listenWhen: (previous, current) =>
+          current is DeletePostLoadingState ||
+          current is DeletePostErrorState ||
+          current is DeletePostSuccessState,
+      listener: (context, state) {
+        if (state is DeletePostLoadingState) {
+          EasyLoading.show();
+        } else if (state is DeletePostErrorState) {
+          EasyLoading.dismiss();
+          flutterShowToast(message: state.message, toastCase: ToastCase.error);
+        } else if (state is DeletePostSuccessState) {
+          EasyLoading.dismiss();
+          flutterShowToast(
+              message: state.message, toastCase: ToastCase.success);
+          Navigator.pop(context);
+        }
+      },
+      builder: (BuildContext context, state) {
+        final postCubit = PostsCubit.get(context);
+        if (state is GetPostLoadingState) {
+          return Scaffold(
+              backgroundColor: ColorsManager.colorPrimary,
+              body: Center(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 50.h),
+                child: const CustomShimmerEffect(),
+              )));
+        } else if (state is GetPostErrorState) {
+          return AnimatedErrorWidget(
+            title: state.message,
+          );
+        }
+        return Scaffold(
+          backgroundColor: ColorsManager.colorPrimary,
+          body: WillPopScope(
+            onWillPop: () async{
+              if (postCubit.emojiShowing) {
+                postCubit.changeEmojiState();
+                return false;
+              }
+              return true;
+            },
+            child: Stack(
+              children: [
+                CircleWidget(),
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       "antoneos",
+                      //       style: TextStyles.font12WhiteRegular
+                      //           .copyWith(fontWeight: FontWeight.w700),
+                      //     ),
+                      //     Container(
+                      //       width: 24.w,
+                      //       height: 24.h,
+                      //       decoration: const BoxDecoration(
+                      //         shape: BoxShape.circle,
+                      //       ),
+                      //       child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse)),
+                      //     )
+                      //   ],
+                      // ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 16.w),
+                          child: Text(
+                            postCubit.getPostResponse?.description ?? "",
+                            style: TextStyles.font18WhiteRegular,
                           ),
                         ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 'delete') {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor:  const Color(0xFF2D1B2E),
-                                title:  Text('Delete Post',style: TextStyles.font18WhiteRegular,),
-                                content:  Text('Are you sure you want to delete this post?',style: TextStyles.font16WhiteInter),
-                                actions: [
-                                  TextButton(
-                                    child:  const Text('Cancel',style: TextStyle(color: Colors.white),),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      postCubit.deletePost(postId: widget.postId);
-                                    },
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Stack(alignment: Alignment.topRight, children: [
+                        Container(
+                            width: double.infinity.w,
+                            height: 300.h,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(14.r),
+                            ),
+                            child: CustomCachedNetworkImage(
+                              imageUrl: postCubit.getPostResponse?.imagePath,
+                              fit: BoxFit.cover,
+                            )),
+                        postCubit.getPostResponse?.applicationUserId ==
+                                SharedPrefHelper.getString(SharedPrefKey.userId)
+                            ? PopupMenuButton(
+                                color: const Color(0xFF2D1B2E),
+                                icon: const Icon(Icons.more_vert),
+                                // أيقونة النقاط الثلاث
+                                itemBuilder: (context) => [
+                                  const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.delete, color: Colors.white),
+                                        // أيقونة الحذف
+                                        SizedBox(width: 8),
+                                        // مسافة بين الأيقونة والنص
+                                        Text('Delete Post',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ],
+                                    ),
                                   ),
                                 ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ):const SizedBox(),
-                  ]),
-                  SizedBox(
-                    height: 29.h,
-                  ),
-                   Expanded(child: CommentListView(postId: widget.postId,)),
-                  SizedBox(height: 10.h,),
-                  Container(
-                    width: 376.w,
-                    height: 84.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA9631D).withOpacity(0.29),
-                      borderRadius: BorderRadius.circular(24.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFA9631D).withOpacity(0.25),
-                          blurRadius: 25,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    alignment: Alignment.center,
-                    child: TextFormField(
-                      controller: postCubit.commentController,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 16.sp,
+                                onSelected: (value) {
+                                  if (value == 'delete') {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor:
+                                              const Color(0xFF2D1B2E),
+                                          title: Text(
+                                            'Delete Post',
+                                            style: TextStyles.font18WhiteRegular,
+                                          ),
+                                          content: Text(
+                                              'Are you sure you want to delete this post?',
+                                              style: TextStyles.font16WhiteInter),
+                                          actions: [
+                                            TextButton(
+                                              child: const Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('Delete',
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                postCubit.deletePost(
+                                                    postId: widget.postId);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              )
+                            : const SizedBox(),
+                      ]),
+                      SizedBox(
+                        height: 29.h,
                       ),
-                      decoration: InputDecoration(
-                        hintText: "Comment.....",
-                        hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        border: InputBorder.none,
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            postCubit.addComment(postId: widget.postId);
-                          },
-                          child: Icon(
-                            Icons.send,
-                            color: Colors.white.withOpacity(0.7),
-                            size: 24.w,
+                      CommentListView(
+                        postId: widget.postId,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      // const Spacer(),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 5.w),
+                child: Container(
+                  width: double.infinity.w,
+                  height: 84.h,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFA9631D).withOpacity(0.29),
+                    borderRadius: BorderRadius.circular(24.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFA9631D).withOpacity(0.25),
+                        blurRadius: 25,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  alignment: Alignment.center,
+                  child: TextFormField(
+                    controller: postCubit.commentController,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 16.sp,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Comment.....",
+                      hintStyle: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: InputBorder.none,
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        // مهم علشان الـ Row ما ياخدش كل المساحة
+
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              postCubit.changeEmojiState();
+                            },
+                            child: Icon(
+                              postCubit.emojiShowing
+                                  ? Icons.keyboard
+                                  : Icons.emoji_emotions_outlined,
+                              color: Colors.white,
+                              size: 24.sp,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              postCubit.addComment(postId: widget.postId);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white.withOpacity(0.7),
+                              size: 24.w,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    cursorColor: Colors.white,
+                  ),
+                ),
+              ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 250),
+                height: postCubit.emojiShowing ? 300 : 0,
+                child: postCubit.emojiShowing
+                    ? EmojiPicker(
+                        textEditingController: postCubit.commentController,
+                        config: Config(
+                          height: 300,
+                          checkPlatformCompatibility: true,
+                          emojiViewConfig: const EmojiViewConfig(
+                            backgroundColor: ColorsManager.colorPrimary,
+                            columns: 7,
+                            emojiSizeMax: 28,
+                            // حجم أكبر شوية
+                            verticalSpacing: 2,
+                            horizontalSpacing: 2,
+                            gridPadding: EdgeInsets.all(4),
+                            buttonMode: ButtonMode.MATERIAL,
+                            // تحسين الأداء
+                            loadingIndicator: Center(
+                              child: CircularProgressIndicator(
+                                color: ColorsManager.colorSecondry,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                            recentsLimit: 28,
+                            // أقل عدد
+                            replaceEmojiOnLimitExceed: true,
+                          ),
+                          skinToneConfig: const SkinToneConfig(
+                            indicatorColor: ColorsManager.colorSecondry,
+                            dialogBackgroundColor: ColorsManager.colorSecondry,
+                            enabled: true,
+                          ),
+                          categoryViewConfig: CategoryViewConfig(
+                            indicatorColor: ColorsManager.colorSecondry,
+                            iconColorSelected: ColorsManager.colorSecondry,
+                            backgroundColor: ColorsManager.colorPrimary,
+                            iconColor: Colors.grey,
+                            tabIndicatorAnimDuration:
+                                Duration(milliseconds: 200),
+                            dividerColor: Colors.grey.shade300,
+                            recentTabBehavior: RecentTabBehavior.RECENT,
+                          ),
+                          bottomActionBarConfig: const BottomActionBarConfig(
+                            backgroundColor: ColorsManager.colorSecondry,
+                            buttonColor: Colors.white,
+                            buttonIconColor: ColorsManager.white,
+                            showBackspaceButton: false,
+                            showSearchViewButton: false, // إخفاء البحث للسرعة
+                          ),
+                          searchViewConfig: const SearchViewConfig(
+                            backgroundColor: ColorsManager.colorPrimary,
+                            // buttonColor: ColorsManager.colorSecondry,
+                            buttonIconColor: Colors.white,
+                            hintText: 'Search emoji...',
                           ),
                         ),
-                      ),
-                      cursorColor: Colors.white,
-                    ),
-                  ),
-                  // const Spacer(),
-
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                ],
+                      )
+                    : SizedBox.shrink(),
               ),
-
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

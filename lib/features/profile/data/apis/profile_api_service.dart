@@ -47,21 +47,21 @@ class ProfileApiService {
   Future<Response> updateProfile({required UpdateProfileBody updateProfileBody,required String profileId,required File? imageProfile}) async {
     try {
       final formData = FormData.fromMap({
-        'userName': updateProfileBody.userName,
-        'fullName': updateProfileBody.fullName,
-        'bio': updateProfileBody.bio,
-        'email': updateProfileBody.email,
-        'profilePicture':"",
+        'UserName': updateProfileBody.userName,
+        'FullName': updateProfileBody.fullName,
+        'Bio': updateProfileBody.bio,
+        'Email': updateProfileBody.email,
+        if(imageProfile!=null)
+        'ProfileImage':await MultipartFile.fromFile(imageProfile.path, filename: 'upload.jpg'),
       });
       final response = await dio.put(
-        ApiConstants.profileId(profileId: profileId),
-        data: {
-          'userName': updateProfileBody.userName,
-          'fullName': updateProfileBody.fullName,
-          'bio': updateProfileBody.bio,
-          'email': updateProfileBody.email,
-          'profilePicture':"",
-        },
+        ApiConstants.updateProfile,
+        data: formData,
+          options: Options(
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          )
       );
       return response;
     } catch (e) {

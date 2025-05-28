@@ -1,3 +1,5 @@
+import 'package:rommify_app/features/explore_screen/data/models/delete_comment_response.dart';
+import 'package:rommify_app/features/explore_screen/data/models/delete_post_Response.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
 
 import '../../data/models/add_post_nodel.dart';
@@ -78,7 +80,35 @@ class AddCommentErrorState extends PostsStates{
   AddCommentErrorState({required this.message});
 }
 
+//// update comment
+class UpdateCommentLoadingState extends PostsStates{}
+class  UpdateCommentSuccessState extends PostsStates{
+  final CommentData commentData;
+  UpdateCommentSuccessState(this.commentData);
+}
+class UpdateCommentErrorState extends PostsStates{
+  final String message;
+
+  UpdateCommentErrorState({required this.message});
+}
+
+class DeleteCommentLoadingState extends PostsStates{}
+class  DeleteCommentSuccessState extends PostsStates{
+  final DeleteCommentResponse deleteCommentResponse;
+  DeleteCommentSuccessState(this.deleteCommentResponse);
+}
+class DeleteCommentErrorState extends PostsStates{
+  final String message;
+
+  DeleteCommentErrorState({required this.message});
+}
+
+
 /// upload image
 class UploadImageStata extends PostsStates{}
 
+
+class EditState extends PostsStates{}
+
 class ChangeTimeState extends PostsStates{}
+class ChangeEmojiState extends PostsStates{}

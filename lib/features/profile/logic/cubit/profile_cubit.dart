@@ -125,15 +125,17 @@ class ProfileCubit extends Cubit<ProfileStates> {
       (right) {
         updateProfileResponse = right;
         getProfileDataModel = GetProfileDataModel(
-            id: right.id,
-            userName: right.userName,
-            fullName: right.fullName,
-            bio: right.bio,
-            email: right.email,
-            emailConfirmed: right.emailConfirmed,
-            phoneNumber: right.phoneNumber,
-            role: getProfileDataModel!.role);
-        emit(UpdateProfileSuccessState());
+            id: right.user.id,
+            userName: right.user.userName,
+            fullName: right.user.fullName,
+            bio: right.user.bio,
+            email: right.user.email,
+            emailConfirmed: right.user.emailConfirmed,
+            phoneNumber: right.user.phoneNumber,
+            role: getProfileDataModel!.role,
+          profilePicture: right.user.profilePicture,
+        );
+        emit(UpdateProfileSuccessState(updateProfileResponse: right));
       },
     );
   }

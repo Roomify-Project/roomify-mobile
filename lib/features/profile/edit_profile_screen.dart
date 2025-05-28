@@ -46,7 +46,7 @@ class EditProfileScreen extends StatelessWidget {
               }
               else if(state is UpdateProfileSuccessState){
                 EasyLoading.dismiss();
-                flutterShowToast(message: "Update Profile Successfully", toastCase: ToastCase.success);
+                flutterShowToast(message: state.updateProfileResponse.message, toastCase: ToastCase.success);
               }
               else if(state is UpdateProfileErrorState){
                 EasyLoading.dismiss();

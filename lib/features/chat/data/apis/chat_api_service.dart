@@ -9,12 +9,13 @@ class ChatApiService {
   final Dio dio;
   ChatApiService({required this.dio});
   Future<Response> sendMessage({required SendChatMessageBody sendChatMessage,required File? image}) async {
+    print("imageeee ${image}");
     final formData = FormData.fromMap({
       'senderId': sendChatMessage.senderId,
       'receiverId': sendChatMessage.receiverId,
       'message': sendChatMessage.message,
       if(image!=null)
-      'file': await MultipartFile.fromFile(image.path, filename: 'upload.jpg'),
+      'File': await MultipartFile.fromFile(image.path, filename: 'upload.jpg'),
     });
     final response= await dio.post(
        ApiConstants.sendMessage,
