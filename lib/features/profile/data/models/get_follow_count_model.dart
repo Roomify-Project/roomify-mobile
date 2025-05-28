@@ -7,7 +7,6 @@ class GetFollowCountModel {
     required this.following,
   });
 
-  // Factory method to create object from JSON
   factory GetFollowCountModel.fromJson(Map<String, dynamic> json) {
     return GetFollowCountModel(
       followers: json['followers'],
@@ -15,11 +14,21 @@ class GetFollowCountModel {
     );
   }
 
-  // Convert object to JSON
   Map<String, dynamic> toJson() {
     return {
       'followers': followers,
       'following': following,
     };
+  }
+
+  // ✅ copyWith method
+  GetFollowCountModel copyWith({
+    int? followers,
+    int? following,
+  }) {
+    return GetFollowCountModel(
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
+    );
   }
 }

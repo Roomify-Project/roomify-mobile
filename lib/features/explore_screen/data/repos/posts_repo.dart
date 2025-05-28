@@ -13,6 +13,7 @@ import '../../../../core/networking/api_error_handler.dart';
 import '../models/add_comment_body.dart';
 import '../models/add_post_nodel.dart';
 import '../models/delete_comment_response.dart';
+import '../models/delete_post_Response.dart';
 import '../models/get_post_model.dart';
 import '../models/save_design_response.dart';
 
@@ -57,11 +58,11 @@ class PostsRepo {
     }
   }
 
-  Future<Either<ErrorHandler,AddPostResponse>> deletePost({required String postId
+  Future<Either<ErrorHandler,DeletePostResponse>> deletePost({required String postId
   }) async {
     try {
       final response = await _postsApiService.deletePost(postId: postId);
-      return Right(AddPostResponse.fromJson(response.data));
+      return Right(DeletePostResponse.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

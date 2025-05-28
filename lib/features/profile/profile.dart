@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                             fontSize: 14.sp)),
                                                     SizedBox(width: 20.w),
                                                     Text(
-                                                        "${profileCubit.getFollowCountModel!.followers} following",
+                                                        "${profileCubit.getFollowCountModel!.following} following",
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 14.sp)),
@@ -502,7 +502,7 @@ class ImageCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 8,
+              top: 10,
               right: 8,
               child: GestureDetector(
                 onTap: onExpand,

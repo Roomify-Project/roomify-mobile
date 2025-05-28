@@ -49,9 +49,13 @@ class ProfileCubit extends Cubit<ProfileStates> {
       (left) {
         print("followww errrorr ${left.apiErrorModel.title}");
         isFollowing = !isFollowing!;
+
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
       (right) {
+        getFollowCountModel = getFollowCountModel!.copyWith(
+          following: getFollowCountModel!.following + 1,
+        );
         emit(AddFollowSuccessState(message: right.message));
       },
     );
@@ -69,6 +73,9 @@ class ProfileCubit extends Cubit<ProfileStates> {
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
       (right) {
+        getFollowCountModel = getFollowCountModel!.copyWith(
+          following: getFollowCountModel!.following - 1,
+        );
         emit(AddFollowSuccessState(message: right.message));
       },
     );

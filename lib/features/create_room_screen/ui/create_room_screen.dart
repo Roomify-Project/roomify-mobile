@@ -63,6 +63,7 @@ class CreateRoomScreen extends StatelessWidget {
                                         Radius.circular(20.r)), // Rounded corners
                                   ),
                                   child: TextFormField(
+                                    textAlign: TextAlign.center, // Centers the input text
                                     controller:generateCubit.generateController,
                                     style: TextStyles.font14WhiteRegular.copyWith(
                                       fontSize: 16.sp,
@@ -71,6 +72,7 @@ class CreateRoomScreen extends StatelessWidget {
                                     maxLines: null, // يسمح بكتابة أكثر من سطر
                                     decoration: InputDecoration(
                                       hintText:"write description",
+
                                       // "Put this wall clock on the wall of room \n image above the sofa, fit it with light and \n shadow of room image",
                                       hintStyle:
                                       TextStyles.font14WhiteRegular.copyWith(
@@ -90,7 +92,6 @@ class CreateRoomScreen extends StatelessWidget {
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
-                                    textAlign: TextAlign.start,
                                   ),
                                 ),
                                 SizedBox(
