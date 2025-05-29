@@ -12,6 +12,7 @@ import 'core/di/dependency_injection.dart';
 import 'core/helpers/shared_pref_helper.dart';
 import 'core/routing/app_router.dart';
 import 'features/log_in/data/repos/login_repo.dart';
+import 'features/notification/logic/cubit/notiication_cubit.dart';
 
 class RoomifyApp extends StatelessWidget {
   final AppRouter appRouter;
@@ -22,6 +23,9 @@ class RoomifyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // BlocProvider<NotificationCubit>(
+        //   create: (context) => NotificationCubit()..initializeNotifications(),
+        // ),
         BlocProvider(create: (context) => PostsCubit(getIt.get<PostsRepo>()))
       ],
       child: ScreenUtilInit(

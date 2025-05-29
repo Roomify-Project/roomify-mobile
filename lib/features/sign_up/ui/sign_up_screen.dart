@@ -57,7 +57,7 @@ class SignUpScreen extends StatelessWidget {
                         builder: (dialogContext) {
                           return BlocProvider.value(
                             value: currentCubit,
-                            child: OtpScreen(),
+                            child: const OtpScreen(),
                           );
                         },
                       ).then((otpResult) {
@@ -141,6 +141,67 @@ class SignUpScreen extends StatelessWidget {
                               return null;
                             },
                           ),
+                          SizedBox(height: 20.h),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:  EdgeInsets.only(left: 8.w),
+                                  child: const Text(
+                                    'Select Role',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text('Normal User', style: TextStyle(color: Colors.white)),
+                                        value: 'normalUser',
+                                        groupValue: signUpCubit.selectedRole,
+                                        contentPadding: EdgeInsets.zero,
+                                        onChanged: (value) {
+                                          signUpCubit.selectedRole = value ?? "";
+                                          signUpCubit.emit(SignUpRoleChangedState());
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text('Interior Designer', style: TextStyle(color: Colors.white)),
+                                        value: 'InteriorDesigner',
+                                        groupValue: signUpCubit.selectedRole,
+                                        contentPadding: EdgeInsets.zero,
+                                        onChanged: (value) {
+                                          signUpCubit.selectedRole = value ?? "";
+                                          signUpCubit.emit(SignUpRoleChangedState());
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // if (signUpCubit.selectedRole == '')
+                                //   const Padding(
+                                //     padding: EdgeInsets.only(left: 8.0, top: 8.0),
+                                //     child: Text(
+                                //       'Please select a role',
+                                //       style: TextStyle(color: Colors.red, fontSize: 12),
+                                //     ),
+                                //   ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          const SizedBox(height: 20),
+
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 100, bottom: 60),
@@ -149,7 +210,7 @@ class SignUpScreen extends StatelessWidget {
                                 buttonText: "Sign Up",
                                 onPressed: () {
                                   if (signUpCubit.formKey.currentState!
-                                      .validate()) {
+                                      .validate()&&signUpCubit.selectedRole!='') {
                                     signUpCubit.signUp();
                                   }
                                 },

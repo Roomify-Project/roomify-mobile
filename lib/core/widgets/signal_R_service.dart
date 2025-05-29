@@ -10,7 +10,6 @@ class SignalRService {
   static HubConnection? _connection;
   static final StreamController<Map<String, dynamic>> _friendChatController =
   StreamController<Map<String, dynamic>>.broadcast();
-
   static final StreamController<String> _friendChatControllerString =
   StreamController<String>.broadcast();
 

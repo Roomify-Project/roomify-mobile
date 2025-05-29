@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "518546613090",
+    "project_id": "roomify-beb04",
+    "storage_bucket": "roomify-beb04.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518546613090:android:568c078220e54d6f6dc23b",
+        "android_client_info": {
+          "package_name": "com.example.rommify_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn23hbQzYQr71AQW9zyGhJOFpOJAO1poc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
