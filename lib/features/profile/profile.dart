@@ -361,16 +361,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: 10.w,
                                   child: Row(
                                     children: [
-                                      InkWell(
-                                        child: Icon(
-                                          Icons.email_outlined,
-                                          color: Colors.white,
-                                          size: 28.sp,
-                                        ),
-                                        onTap: () {
-                                          context.pushNamed(Routes.chatsScreen);
-                                        },
-                                      ),
+                                      // InkWell(
+                                      //   child: Icon(
+                                      //     Icons.email_outlined,
+                                      //     color: Colors.white,
+                                      //     size: 28.sp,
+                                      //   ),
+                                      //   onTap: () {
+                                      //     context.pushNamed(Routes.chatsScreen);
+                                      //   },
+                                      // ),
                                       GestureDetector(
                                           onTap: () {
                                             Navigator.push(

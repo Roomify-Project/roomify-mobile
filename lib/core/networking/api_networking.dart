@@ -1,7 +1,7 @@
 class ApiConstants {
   // static const String singularServerUrl = "https://syncord.koyeb.app/chat";
   static const String apiBaseUrl = "http://roomify0.runasp.net";
-  static const String signalRUrl = "http://roomify0.runasp.net/Chat";
+    static const String signalRUrl = "http://roomify0.runasp.net/Chat";
 
   static const String loginUrl = '/api/Auth/login';
   static const String getAllPostsUrl = '/api/PortfolioPost/';

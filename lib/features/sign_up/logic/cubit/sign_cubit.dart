@@ -15,6 +15,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String selectedRole='';
   String? registeredEmail;
   final formKey = GlobalKey<FormState>();
 
@@ -24,7 +25,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
         fullName: fullNameController.text,
         userName: userNameController.text,
         email: emailController.text,
-        password: passwordController.text));
+        password: passwordController.text, role: selectedRole));
 
     response.fold(
       (left) {
