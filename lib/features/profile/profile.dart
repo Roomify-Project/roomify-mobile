@@ -342,14 +342,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                 Expanded(
                                     child: profileCubit.item == -1
-                                        ? CustomGridViewProfile(
-                                            profileId: widget.profileId,
-                                          )
+                                        ? Padding(
+                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
+                                          child: CustomGridViewProfile(
+                                              profileId: widget.profileId,
+                                            ),
+                                        )
                                         : profileCubit.item == 0
-                                            ? CustomSavedDesignGridViewProfile(
-                                                profileId: widget.profileId)
-                                            : CustomHistoryDesignGridViewProfile(
-                                                profileId: widget.profileId))
+                                            ? Padding(
+                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
+                                              child: CustomSavedDesignGridViewProfile(
+                                                  profileId: widget.profileId),
+                                            )
+                                            : Padding(
+                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
+                                              child: CustomHistoryDesignGridViewProfile(
+                                                  profileId: widget.profileId),
+                                            ))
                               ],
                             ),
                           ),
@@ -439,6 +448,8 @@ class ImageCard extends StatelessWidget {
   final PostsCubit postsCubit;
   final Function()? onPressed;
   final bool isProfile;
+  final BoxFit fit;
+  final bool isZoom;
   const ImageCard({
     super.key,
     required this.imageUrl,
@@ -446,7 +457,7 @@ class ImageCard extends StatelessWidget {
     required this.onExpand,
     required this.isExpanded,
     this.onPressed,
-    required this.postsCubit,  this.isProfile=false,
+    required this.postsCubit,  this.isProfile=false,  this.fit=BoxFit.cover,  this.isZoom=true,
   });
 
   @override
@@ -470,6 +481,8 @@ class ImageCard extends StatelessWidget {
           children: [
             Center(
               child: Container(
+                width: 169.w,
+                height: 128.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   // image: DecorationImage(
@@ -479,11 +492,13 @@ class ImageCard extends StatelessWidget {
                 ),
                 child: CustomCachedNetworkImage(
                   imageUrl: imageUrl,
-                  fit: BoxFit.cover,
+                  fit: fit,
+                  isZoom: isZoom,
                   borderRadius: 10,
                 ),
               ),
             ),
+            isProfile?
             Positioned(
               top: 10.w,
               left: 8.w,
@@ -495,12 +510,12 @@ class ImageCard extends StatelessWidget {
                   ),
                   child:  ClipOval(
                       child:
-                          CustomCachedNetworkImage(imageUrl: profileImageUrl,fit: BoxFit.cover,width: 20,height:20,isDefault: true,)
+                          CustomCachedNetworkImage(imageUrl: profileImageUrl,fit: BoxFit.cover,width: 20.w,height:20.h,isDefault: true,)
 
                   ),
                 ),
               ),
-            ),
+            ):SizedBox(),
             Positioned(
               top: 10,
               right: 8,
@@ -515,22 +530,21 @@ class ImageCard extends StatelessWidget {
                         children: [
                           InkWell(
                             child: Icon(Icons.bookmark_border,
-                                color: postsCubit.isBookmarked
+                                color: false
                                     ? Colors.red
                                     : ColorsManager.white,
                                 size: 20),
                             onTap: () {
-                              postsCubit.toggleBookmark();
+                              // postsCubit.toggleBookmark();
                             },
                           ),
                           SizedBox(width: 10.w),
                           InkWell(
                             onTap: () {
-                              postsCubit.toggleFavorite();
                               postsCubit.saveDesign(imageUrl: imageUrl);
                             },
                             child: Icon(Icons.favorite_border,
-                                color: postsCubit.isFavorited
+                                color: postsCubit.isFavorite[imageUrl]??false
                                     ? Colors.red
                                     : ColorsManager.white,
                                 size: 20),
@@ -538,11 +552,10 @@ class ImageCard extends StatelessWidget {
                           SizedBox(width: 10.w),
                           InkWell(
                               onTap: () {
-                                postsCubit.toggleDownload();
                                 postsCubit.download(imageUrl: imageUrl);
                               },
                               child: Icon(Icons.download,
-                                  color: postsCubit.isDownloaded
+                                  color: postsCubit.isDownloaded[imageUrl]??false
                                       ? Colors.red
                                       : ColorsManager.white,
                                   size: 20)),
@@ -557,10 +570,10 @@ class ImageCard extends StatelessWidget {
                           width: 2,
                         ),
                       ),
-                      child: const Icon(
+                      child:  Icon(
                         Icons.more_horiz,
                         color: ColorsManager.white,
-                        size: 14,
+                        size: 12.sp,
                       ),
                     )
                   ],

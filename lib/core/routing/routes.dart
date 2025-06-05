@@ -11,5 +11,6 @@ class Routes {
   static const String loginScreen = '/loginScreen';
   static const String forgetPassword = '/forgetPassword';
   static const String profile = '/profile';
+  static const String notification = '/notification';
 
 }

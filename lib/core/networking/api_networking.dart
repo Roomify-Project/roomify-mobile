@@ -66,6 +66,7 @@ class ApiConstants {
   static  String getSavedDesign({required String userId}){
     return '/api/RoomImage/saved-designs/$userId';
   }
+  static const String getAllNotification='/api/notifications';
 }
 
 

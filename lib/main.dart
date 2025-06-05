@@ -25,16 +25,14 @@ void main() async {
   await ScreenUtil.ensureScreenSize();
   await SharedPrefHelper.init();
   await setupGetIt();
-  await CheckServerConnection.checkServerConnection();
+  // await CheckServerConnection.checkServerConnection();
+  // await CheckServerNotificationConnection.checkServerNotificationConnection();
   final status = await Permission.notification.status;
-  if (!status.isGranted) {
-    await Permission.notification.request();
-  }
+  _requestNotificationPermission();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationSignalRService.initializeConnection();
-  NotificationSignalRService.startConnection();
+
   Permission permission;
 
 
@@ -69,5 +67,19 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false;
+}
+
+Future<void> _requestNotificationPermission() async {
+  if (Platform.isAndroid) {
+    // Android 13+ only
+    final status = await Permission.notification.status;
+    if (!status.isGranted) {
+      final result = await Permission.notification.request();
+      if (!result.isGranted) {
+        // المستخدم رفض الصلاحية، ممكن تنبهه برسالة
+        debugPrint('Notification permission denied');
+      }
+    }
+  }
 }
 

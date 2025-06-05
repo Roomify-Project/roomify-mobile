@@ -8,6 +8,9 @@ import 'package:rommify_app/features/create_room_screen/logic/cubit/generate_cub
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
+import 'package:rommify_app/features/notification/data/apis/notification_api.dart';
+import 'package:rommify_app/features/notification/data/repo/notification_repo.dart';
+import 'package:rommify_app/features/notification/logic/cubit/notiication_cubit.dart';
 import 'package:rommify_app/features/profile/data/apis/profile_api_service.dart';
 import 'package:rommify_app/features/profile/data/repos/profile_repo.dart';
 import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
@@ -68,6 +71,11 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<GenerateApiService>(() => GenerateApiService(dio: dio));
   getIt.registerLazySingleton<GenerateRepo>(() => GenerateRepo(getIt()));
   getIt.registerFactory<GenerateCubit>(() => GenerateCubit(getIt()));
+
+  ///// notification
+  getIt.registerLazySingleton<NotificationApiService>(() => NotificationApiService(dio: dio));
+  getIt.registerLazySingleton<NotificationRepo>(() => NotificationRepo(getIt()));
+  getIt.registerFactory<NotificationCubit>(() => NotificationCubit(getIt()));
 
 
   // //friend list

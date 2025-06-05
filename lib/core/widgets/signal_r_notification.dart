@@ -21,7 +21,7 @@ class NotificationSignalRService {
 
   static bool isConnected = false;
   static int _retryCount = 0;
-  static const int maxRetries = 10;
+  static const int maxRetries = 3;
 
   static Future<void> initializeConnection() async {
     await _initLocalNotifications();
@@ -160,6 +160,7 @@ class NotificationSignalRService {
       playSound: true,
       ticker: 'ticker',
       enableVibration: true,
+      icon: 'ic_stat_notification'
     );
 
     const NotificationDetails platformDetails =

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
@@ -17,12 +19,14 @@ class NavBarScreen extends StatefulWidget {
 }
 
 class _NavBarScreenState extends State<NavBarScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
     // TODO: implement initState
-     CheckServerConnection.checkServerConnection();
+    CheckServerConnection.checkServerConnection();
+    CheckServerNotificationConnection.checkServerNotificationConnection();
+
 
     super.initState();
   }
@@ -30,7 +34,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
   final List<Widget> _screens = [
     const ExploreScreen(),
     const CreateRoomScreen(),
-     ProfileScreen(profileId: SharedPrefHelper.getString(SharedPrefKey.userId),),
+    ProfileScreen(profileId: SharedPrefHelper.getString(SharedPrefKey.userId),),
   ];
 
   @override
@@ -59,9 +63,9 @@ class _NavBarScreenState extends State<NavBarScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, Icons.layers),
-              _buildNavItem(1, Icons.search),
-              _buildNavItem(2, Icons.person),
+              _buildNavItem(0, 'assets/images/explore.svg'),
+              _buildNavItem(1, 'assets/images/generate.svg'),
+              _buildNavItem(2, 'assets/images/profile.svg'),
             ],
           ),
         ],
@@ -69,21 +73,23 @@ class _NavBarScreenState extends State<NavBarScreen> {
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      child: Container(
-        width: (MediaQuery.of(context).size.width - 40) / 3,
-        height: 80,
-        color: Colors.transparent,
-        child: Icon(
-          icon,
-          color: _selectedIndex == index ? Colors.white : Colors.grey,
-          size: 28,
+  Widget _buildNavItem(int index, String icon) {
+    return Padding(
+      padding:  EdgeInsets.only(bottom: 5.h),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        child: Container(
+            width: (MediaQuery.of(context).size.width - 40) / 3,
+            height: 80.h,
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: SvgPicture.asset(icon,height: 5.h,width: 5.w,color: _selectedIndex == index ? Colors.white : Colors.grey,fit: BoxFit.contain,),
+            )
         ),
       ),
     );

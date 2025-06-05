@@ -31,6 +31,7 @@ class GenerateCubit extends Cubit<GenerateStates> {
   String roomStyle="";
   String imageStyle='';
   String imageType='';
+  List<bool> isExpandedList = [];
 
   String descriptionText="";
   final generateController=TextEditingController();
@@ -112,6 +113,8 @@ class GenerateCubit extends Cubit<GenerateStates> {
       },
           (right) {
             generatedImagesResponse=right;
+            isExpandedList =
+                List.generate(right.generatedImageUrls.length, (index) => false);
         emit(GenerateSuccessState());
       },
     );
@@ -137,6 +140,8 @@ class GenerateCubit extends Cubit<GenerateStates> {
             for(var image in right.generatedImageUrls){
               generatedImagesResponse!.generatedImageUrls.add(image);
             }
+            isExpandedList =
+                List.generate(generatedImagesResponse!.generatedImageUrls.length, (index) => false);
         emit(GenerateSuccessState());
       },
     );
