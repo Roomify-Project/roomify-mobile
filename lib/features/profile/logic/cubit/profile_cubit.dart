@@ -54,7 +54,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
       (right) {
         getFollowCountModel = getFollowCountModel!.copyWith(
-          following: getFollowCountModel!.following + 1,
+          followers: getFollowCountModel!.followers + 1,
         );
         emit(AddFollowSuccessState(message: right.message));
       },
@@ -74,7 +74,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
       (right) {
         getFollowCountModel = getFollowCountModel!.copyWith(
-          following: getFollowCountModel!.following - 1,
+          followers: getFollowCountModel!.followers - 1,
         );
         emit(AddFollowSuccessState(message: right.message));
       },

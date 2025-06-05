@@ -16,7 +16,7 @@ class SignalRService {
 
   static bool isConnected = false;
   static int _retryCount = 0;
-  static const int maxRetries = 10;
+  static const int maxRetries = 3;
 
   static Future<void> initializeConnection() async {
     _connection = HubConnectionBuilder()

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,12 +39,12 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<PostsCubit, PostsStates>(
       buildWhen: (previous, current) =>
-      current is GetPostLoadingState ||
+          current is GetPostLoadingState ||
           context is GetPostErrorState ||
           current is GetPostSuccessState ||
           current is ChangeEmojiState,
       listenWhen: (previous, current) =>
-      current is DeletePostLoadingState ||
+          current is DeletePostLoadingState ||
           current is DeletePostErrorState ||
           current is DeletePostSuccessState,
       listener: (context, state) {
@@ -68,9 +67,9 @@ class _MainScreenState extends State<MainScreen> {
               backgroundColor: ColorsManager.colorPrimary,
               body: Center(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 50.h),
-                    child: const CustomShimmerEffect(),
-                  )));
+                padding: EdgeInsets.only(top: 50.h),
+                child: const CustomShimmerEffect(),
+              )));
         } else if (state is GetPostErrorState) {
           return AnimatedErrorWidget(
             title: state.message,
@@ -78,9 +77,9 @@ class _MainScreenState extends State<MainScreen> {
         }
         return Scaffold(
           backgroundColor: ColorsManager.colorPrimary,
-          resizeToAvoidBottomInset: true, // مهم جداً للكيبورد
+          resizeToAvoidBottomInset: true,
           body: WillPopScope(
-            onWillPop: () async{
+            onWillPop: () async {
               if (postCubit.emojiShowing) {
                 postCubit.changeEmojiState();
                 return false;
@@ -102,94 +101,132 @@ class _MainScreenState extends State<MainScreen> {
                             SizedBox(height: 30.h),
                             InkWell(
                               onTap: () {
-                                context.pushNamed(Routes.profile,arguments: {'profileId':postCubit.getPostResponse!.applicationUserId});
+                                context.pushNamed(Routes.profile, arguments: {
+                                  'profileId': postCubit
+                                      .getPostResponse!.applicationUserId
+                                });
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(left: 8.w),
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 60,
-                                      height: 60,
+                                      width: 60.w,
+                                      height: 60.h,
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),
-                                      child: ClipOval(child: CachedNetworkImage(imageUrl: postCubit.getPostResponse?.ownerProfilePicture??"",fit: BoxFit.cover,)),
+                                      child: ClipOval(
+                                          child: CustomCachedNetworkImage(
+                                        imageUrl: postCubit.getPostResponse
+                                                ?.ownerProfilePicture ??
+                                            "",
+                                        fit: BoxFit.cover,
+                                        isDefault: true,
+                                      )),
                                     ),
                                     SizedBox(width: 16.w),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          postCubit.getPostResponse?.ownerUserName??"",
+                                          postCubit.getPostResponse
+                                                  ?.ownerUserName ??
+                                              "",
                                           style: TextStyles.font18WhiteRegular
-                                              .copyWith(fontWeight: FontWeight.w700),
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w700),
                                         ),
                                         Text(
-                                          postCubit.timeMap[postCubit.getPostResponse!.id]??"",
+                                          postCubit.timeMap[postCubit
+                                                  .getPostResponse!.id] ??
+                                              "",
                                           style: TextStyles.font12WhiteRegular
-                                              .copyWith(fontWeight: FontWeight.w700),
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w700),
                                         ),
                                       ],
                                     ),
                                     const Spacer(),
-                                    postCubit.getPostResponse?.applicationUserId ==
-                                        SharedPrefHelper.getString(SharedPrefKey.userId)
+                                    postCubit.getPostResponse
+                                                ?.applicationUserId ==
+                                            SharedPrefHelper.getString(
+                                                SharedPrefKey.userId)
                                         ? PopupMenuButton(
-                                      color: const Color(0xFF2D1B2E),
-                                      icon: const Icon(Icons.more_vert,color: Colors.white),
-                                      itemBuilder: (context) => [
-                                        const PopupMenuItem(
-                                          value: 'delete',
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.delete, color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text('Delete Post',
-                                                  style: TextStyle(color: Colors.white)),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                      onSelected: (value) {
-                                        if (value == 'delete') {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                backgroundColor: const Color(0xFF2D1B2E),
-                                                title: Text(
-                                                  'Delete Post',
-                                                  style: TextStyles.font18WhiteRegular,
+                                            color: const Color(0xFF2D1B2E),
+                                            icon: const Icon(Icons.more_vert,
+                                                color: Colors.white),
+                                            itemBuilder: (context) => [
+                                              const PopupMenuItem(
+                                                value: 'delete',
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.delete,
+                                                        color: Colors.white),
+                                                    SizedBox(width: 8),
+                                                    Text('Delete Post',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
                                                 ),
-                                                content: Text(
-                                                    'Are you sure you want to delete this post?',
-                                                    style: TextStyles.font16WhiteInter),
-                                                actions: [
-                                                  TextButton(
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(color: Colors.white),
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text('Delete',
-                                                        style: TextStyle(color: Colors.red)),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      postCubit.deletePost(postId: widget.postId);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
+                                              ),
+                                            ],
+                                            onSelected: (value) {
+                                              if (value == 'delete') {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      backgroundColor:
+                                                          const Color(
+                                                              0xFF2D1B2E),
+                                                      title: Text(
+                                                        'Delete Post',
+                                                        style: TextStyles
+                                                            .font18WhiteRegular,
+                                                      ),
+                                                      content: Text(
+                                                          'Are you sure you want to delete this post?',
+                                                          style: TextStyles
+                                                              .font16WhiteInter),
+                                                      actions: [
+                                                        TextButton(
+                                                          child: const Text(
+                                                            'Cancel',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                          child: const Text(
+                                                              'Delete',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red)),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            postCubit.deletePost(
+                                                                postId: widget
+                                                                    .postId);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
                                             },
-                                          );
-                                        }
-                                      },
-                                    )
+                                          )
                                         : const SizedBox(),
                                     SizedBox(width: 16.w)
                                   ],
@@ -203,7 +240,8 @@ class _MainScreenState extends State<MainScreen> {
                                 padding: EdgeInsets.only(left: 16.w),
                                 child: Center(
                                   child: Text(
-                                    postCubit.getPostResponse?.description ?? "",
+                                    postCubit.getPostResponse?.description ??
+                                        "",
                                     style: TextStyles.font18WhiteRegular,
                                   ),
                                 ),
@@ -212,14 +250,17 @@ class _MainScreenState extends State<MainScreen> {
                             SizedBox(height: 20.h),
                             Stack(alignment: Alignment.topRight, children: [
                               Container(
+                                  width: double.infinity.w,
                                   height: 300.h,
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
-                                    borderRadius: BorderRadiusDirectional.circular(14.r),
+                                    borderRadius:
+                                        BorderRadiusDirectional.circular(14.r),
                                   ),
                                   child: CustomCachedNetworkImage(
-                                    imageUrl: postCubit.getPostResponse?.imagePath,
-                                    fit: BoxFit.cover,
+                                    imageUrl:
+                                        postCubit.getPostResponse?.imagePath,
+                                    fit: BoxFit.fill,
                                   )),
                             ]),
                             SizedBox(height: 29.h),
@@ -232,12 +273,12 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
 
-                // الكومنت بار في الأسفل
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 5.w),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16.h, horizontal: 5.w),
                       child: Container(
                         width: double.infinity.w,
                         height: 84.h,
@@ -309,55 +350,60 @@ class _MainScreenState extends State<MainScreen> {
                       height: postCubit.emojiShowing ? 300 : 0,
                       child: postCubit.emojiShowing
                           ? EmojiPicker(
-                        textEditingController: postCubit.commentController,
-                        config: Config(
-                          height: 300,
-                          checkPlatformCompatibility: true,
-                          emojiViewConfig: const EmojiViewConfig(
-                            backgroundColor: ColorsManager.colorPrimary,
-                            columns: 7,
-                            emojiSizeMax: 28,
-                            verticalSpacing: 2,
-                            horizontalSpacing: 2,
-                            gridPadding: EdgeInsets.all(4),
-                            buttonMode: ButtonMode.MATERIAL,
-                            loadingIndicator: Center(
-                              child: CircularProgressIndicator(
-                                color: ColorsManager.colorSecondry,
-                                strokeWidth: 2,
+                              textEditingController:
+                                  postCubit.commentController,
+                              config: Config(
+                                height: 300,
+                                checkPlatformCompatibility: true,
+                                emojiViewConfig: const EmojiViewConfig(
+                                  backgroundColor: ColorsManager.colorPrimary,
+                                  columns: 7,
+                                  emojiSizeMax: 28,
+                                  verticalSpacing: 2,
+                                  horizontalSpacing: 2,
+                                  gridPadding: EdgeInsets.all(4),
+                                  buttonMode: ButtonMode.MATERIAL,
+                                  loadingIndicator: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ColorsManager.colorSecondry,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                  recentsLimit: 28,
+                                  replaceEmojiOnLimitExceed: true,
+                                ),
+                                skinToneConfig: const SkinToneConfig(
+                                  indicatorColor: ColorsManager.colorSecondry,
+                                  dialogBackgroundColor:
+                                      ColorsManager.colorSecondry,
+                                  enabled: true,
+                                ),
+                                categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor: ColorsManager.colorSecondry,
+                                  iconColorSelected:
+                                      ColorsManager.colorSecondry,
+                                  backgroundColor: ColorsManager.colorPrimary,
+                                  iconColor: Colors.grey,
+                                  tabIndicatorAnimDuration:
+                                      Duration(milliseconds: 200),
+                                  dividerColor: Colors.grey.shade300,
+                                  recentTabBehavior: RecentTabBehavior.RECENT,
+                                ),
+                                bottomActionBarConfig:
+                                    const BottomActionBarConfig(
+                                  backgroundColor: ColorsManager.colorSecondry,
+                                  buttonColor: Colors.white,
+                                  buttonIconColor: ColorsManager.white,
+                                  showBackspaceButton: false,
+                                  showSearchViewButton: false,
+                                ),
+                                searchViewConfig: const SearchViewConfig(
+                                  backgroundColor: ColorsManager.colorPrimary,
+                                  buttonIconColor: Colors.white,
+                                  hintText: 'Search emoji...',
+                                ),
                               ),
-                            ),
-                            recentsLimit: 28,
-                            replaceEmojiOnLimitExceed: true,
-                          ),
-                          skinToneConfig: const SkinToneConfig(
-                            indicatorColor: ColorsManager.colorSecondry,
-                            dialogBackgroundColor: ColorsManager.colorSecondry,
-                            enabled: true,
-                          ),
-                          categoryViewConfig: CategoryViewConfig(
-                            indicatorColor: ColorsManager.colorSecondry,
-                            iconColorSelected: ColorsManager.colorSecondry,
-                            backgroundColor: ColorsManager.colorPrimary,
-                            iconColor: Colors.grey,
-                            tabIndicatorAnimDuration: Duration(milliseconds: 200),
-                            dividerColor: Colors.grey.shade300,
-                            recentTabBehavior: RecentTabBehavior.RECENT,
-                          ),
-                          bottomActionBarConfig: const BottomActionBarConfig(
-                            backgroundColor: ColorsManager.colorSecondry,
-                            buttonColor: Colors.white,
-                            buttonIconColor: ColorsManager.white,
-                            showBackspaceButton: false,
-                            showSearchViewButton: false,
-                          ),
-                          searchViewConfig: const SearchViewConfig(
-                            backgroundColor: ColorsManager.colorPrimary,
-                            buttonIconColor: Colors.white,
-                            hintText: 'Search emoji...',
-                          ),
-                        ),
-                      )
+                            )
                           : SizedBox.shrink(),
                     ),
                   ],

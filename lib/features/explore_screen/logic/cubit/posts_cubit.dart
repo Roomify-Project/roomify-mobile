@@ -340,46 +340,48 @@ class PostsCubit extends Cubit<PostsStates> {
     print("emojeeee ${emojiShowing}");
     emit(ChangeEmojiState());
   }
-   bool isBookmarked=false;
-   bool isFavorited=false;
-   bool isDownloaded=false;
-  void toggleBookmark() {
-    isBookmarked=!isBookmarked;
-    isFavorited=false;
-    isDownloaded=false;
-    emit(TogelState());
-  }
-
-  void toggleFavorite() {
-    isFavorited=!isFavorited;
-    isDownloaded=false;
-    isBookmarked=false;
-    emit(TogelState());
-
-  }
-
-  void toggleDownload() {
-    isDownloaded=!isDownloaded;
-    isBookmarked=false;
-    isFavorited=false;
-
-    emit(TogelState());
-
-  }
+   Map<String,bool> isBookmarked= {};
+  Map<String,bool> isFavorite= {};
+  Map<String,bool> isDownloaded={};
+  // void toggleBookmark() {
+  //   isBookmarked=!isBookmarked;
+  //   isFavorited=false;
+  //   isDownloaded=false;
+  //   emit(TogelState());
+  // }
+  //
+  // void toggleFavorite() {
+  //   isFavorited=!isFavorited;
+  //   isDownloaded=false;
+  //   isBookmarked=false;
+  //   emit(TogelState());
+  //
+  // }
+  //
+  // void toggleDownload() {
+  //   isDownloaded=!isDownloaded;
+  //   isBookmarked=false;
+  //   isFavorited=false;
+  //
+  //   emit(TogelState());
+  //
+  // }
   void download({required String imageUrl}) async {
+    isDownloaded[imageUrl]=true;
+
     emit(DownloadLoadingState());
     final response = await _postsRepo.download(imageUrl: imageUrl
     );
 
     response.fold(
           (left) {
-            isDownloaded=!isDownloaded;
+            isDownloaded[imageUrl]=!isDownloaded[imageUrl]!;
             print("errorrrrr ${left.apiErrorModel.title}");
 
             emit(DownloadErrorState(message: left.apiErrorModel.title ?? ""));
       },
           (right) {
-            isDownloaded=false;
+            isDownloaded[imageUrl]=false;
             print("sucesssssssssss downloaddd");
 
         emit(DownloadSuccessState());
@@ -388,19 +390,21 @@ class PostsCubit extends Cubit<PostsStates> {
     
 }
   void saveDesign({required String imageUrl}) async {
+    isFavorite[imageUrl]=true;
+
     emit(SaveDesignLoadingState());
     final response = await _postsRepo.saveDesign(imageUrl: imageUrl, userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
     );
 
     response.fold(
           (left) {
-        isFavorited=!isFavorited;
+            isFavorite[imageUrl]=!isFavorite[imageUrl]!;
         print("errorrrrr ${left.apiErrorModel.title}");
 
         emit(SaveDesignErrorState(message: left.apiErrorModel.title ?? ""));
       },
           (right) {
-        isFavorited=false;
+            isFavorite[imageUrl]=false;
         print("sucesssssssssss downloaddd");
 
         emit(SaveDesignSuccessState());

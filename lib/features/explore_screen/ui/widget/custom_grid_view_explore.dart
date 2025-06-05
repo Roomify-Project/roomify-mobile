@@ -68,7 +68,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           // Initialize isExpandedList
 
           return GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            // padding: EdgeInsets.symmetric(horizontal: 10.w),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -84,6 +84,8 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
                   });
                   },
                 child: ImageCard(
+                  isZoom: false,
+                  isProfile: true,
                   imageUrl: posts[index].imagePath,
                   profileImageUrl: posts[index].ownerProfilePicture??"",
                   onPressed: () {
