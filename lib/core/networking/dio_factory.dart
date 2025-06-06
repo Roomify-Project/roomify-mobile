@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import '../helpers/shared_pref_helper.dart';
@@ -11,7 +11,7 @@ class DioFactory {
   static Dio? dio;
 
   static Dio getDio() {
-    Duration timeOut = const Duration(seconds: 30);
+    Duration timeOut = const Duration(seconds: 60);
 
     if (dio == null) {
       dio = Dio();

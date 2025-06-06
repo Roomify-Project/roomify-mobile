@@ -10,19 +10,20 @@ class SignalRService {
   static HubConnection? _connection;
   static final StreamController<Map<String, dynamic>> _friendChatController =
   StreamController<Map<String, dynamic>>.broadcast();
-
   static final StreamController<String> _friendChatControllerString =
   StreamController<String>.broadcast();
 
 
   static bool isConnected = false;
   static int _retryCount = 0;
-  static const int maxRetries = 20;
+  static const int maxRetries = 3;
 
   static Future<void> initializeConnection() async {
     _connection = HubConnectionBuilder()
         .withUrl(ApiConstants.signalRUrl,
         options: HttpConnectionOptions(
+          skipNegotiation: false,
+          transport: HttpTransportType.WebSockets,
           accessTokenFactory: () async =>
           await SharedPrefHelper.getString(SharedPrefKey.token),
         ))

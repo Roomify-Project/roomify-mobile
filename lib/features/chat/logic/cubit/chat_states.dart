@@ -26,6 +26,8 @@ class SendMessagesErrorStates extends ChatStates {}
 ///
 class SendMessagesInternetSuccessStates extends ChatStates {}
 
+class UploadImageState extends ChatStates {}
+class UploadMessageState extends ChatStates {}
 
 
 

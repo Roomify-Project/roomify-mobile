@@ -15,3 +15,4 @@ class OtpLoadingErrorState extends SignUpStates {
   final String message;
   OtpLoadingErrorState({required this.message});
 }
+class SignUpRoleChangedState extends SignUpStates {}

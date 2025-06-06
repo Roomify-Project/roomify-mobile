@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'api_error_model.dart';
+import 'api_networking.dart';
 
 enum DataSource {
   NO_CONTENT,
@@ -115,16 +118,13 @@ class ErrorHandler implements Exception {
     if (error is DioException) {
       print("diooooo");
       apiErrorModel = _handleError(error);
+      if(apiErrorModel.status==401){
+      }
     } else {
       print("not diooooo");
       apiErrorModel = DataSource.DEFAULT.getFailure();
     }
   }
-
-  // void showMessage(String message) {
-  //   // Display error message (e.g., using Snackbar or Dialog)
-  //   print(message);  // Replace with actual UI display mechanism
-  // }
 }
 
 ApiErrorModel _handleError(DioException error) {
@@ -151,38 +151,51 @@ ApiErrorModel _handleError(DioException error) {
 
 ApiErrorModel _handleUnknownError(DioException error) {
   // Handle unknown errors and extract messages if available
-  String message = "An unexpected error occurred."; // رسالة عامة للخطأ الافتراضي
+  String message = "An unexpected error occurred.";
 
   if (error.response != null && error.response?.data != null) {
     final data = error.response?.data;
 
-    // حالة إذا كانت الرسالة تحتوي على تفاصيل أخطاء
-    if (data['errors'] != null) {
-      final errors = data['errors'];
-      if (errors['Description'] != null && errors['Description'].isNotEmpty) {
-        // في حالة وجود وصف للخطأ في الـ Description
-        message = errors['Description'][0];
-      } else {
-        // في حالة إذا كان الخطأ يحتوي على أخطاء أخرى غير Description
-        message = "Validation error occurred.";
+    // Check if data is a Map before accessing keys
+    if (data is Map) {
+      // Handle different error response structures
+      if (data.containsKey('errors')) {
+        dynamic errors = data['errors'];
+        
+        // Check if errors is a Map
+        if (errors is Map) {
+          // Try different ways to extract error message
+          if (errors.containsKey('Description') && 
+              errors['Description'] is List && 
+              errors['Description'].isNotEmpty) {
+            message = errors['Description'][0];
+          } else if (errors.containsKey('message')) {
+            message = errors['message'];
+          }
+        } 
+        // Check if errors is a List
+        else if (errors is List && errors.isNotEmpty) {
+          message = errors[0].toString();
+        }
+      }
+      // Fallback to 'message' key if 'errors' not found
+      else if (data.containsKey('message')) {
+        message = data['message'].toString();
       }
     }
-    // حالة إذا كان الخطأ يحتوي على عنوان
-    else if (data['message'] != null) {
-      message = data['message'];  // استخدام العنوان لوحده في حالة وجوده
-    }
-  } else {
-    // إذا كان الخطأ لا يحتوي على بيانات استجابة من الـ API
-    message = "Unable to reach the server, please try again later.";
   }
 
-  // بدلاً من DataSource.DEFAULT.getFailure()، نرجع ApiErrorModel مع الرسالة المحفوظة
+  // If no specific error message found, use a default
+  if (message == "An unexpected error occurred.") {
+    message = error.response?.statusMessage ?? 
+              "Unable to reach the server, please try again later.";
+  }
+
   return ApiErrorModel(
-    status: ResponseCode.DEFAULT, // يمكن استبدال ResponseCode.DEFAULT حسب الحاجة
+    status: error.response?.statusCode ?? ResponseCode.DEFAULT, 
     title: message,
   );
 }
-
 
 ApiErrorModel _handleBadResponse(DioException error) {
   if (error.response != null) {

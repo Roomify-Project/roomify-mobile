@@ -19,7 +19,6 @@ class CustomGridViewExplore extends StatefulWidget {
 }
 
 class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
-  late List<bool> isExpandedList;
 
   @override
   void initState() {
@@ -67,10 +66,9 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           // Initialize isExpandedList
-          isExpandedList = List.generate(posts.length, (index) => false);
 
           return GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            // padding: EdgeInsets.symmetric(horizontal: 10.w),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -86,17 +84,19 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
                   });
                   },
                 child: ImageCard(
+                  isZoom: false,
+                  isProfile: true,
                   imageUrl: posts[index].imagePath,
-                  profileImageUrl: posts[index].imagePath,
+                  profileImageUrl: posts[index].ownerProfilePicture??"",
                   onPressed: () {
                     context.pushNamed(Routes.profile,arguments: {'profileId':posts[index].applicationUserId});
                   },
                   onExpand: () {
                     setState(() {
-                      isExpandedList[index] = !isExpandedList[index];
+                      postsCubit.isExpandedListExploreScreen[index] = !postsCubit.isExpandedListExploreScreen[index];
                     });
                   },
-                  isExpanded: isExpandedList[index],
+                  isExpanded: postsCubit.isExpandedListExploreScreen[index], postsCubit: postsCubit,
                 ),
               );
             },

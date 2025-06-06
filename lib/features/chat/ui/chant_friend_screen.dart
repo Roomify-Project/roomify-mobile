@@ -60,54 +60,63 @@ class ChatFriendScreen extends StatelessWidget {
                 backgroundColor: ColorsManager.colorPrimary,
                 elevation: 0,
                 leading: Padding(
-                  padding: EdgeInsets.only(left: 12.w),
+                  padding: const EdgeInsets.all(8.0),
                   child: CircleAvatar(
-                    radius: 12,
+                    radius: 12.r,
                     // backgroundImage: AssetImage('assets/profile_image.jpg'),
                     child: ClipOval(
                       child: CustomCachedNetworkImage(
-                          imageUrl: getProfileDataModel.profilePicture),
+                        width: double.infinity,
+                          height: double.infinity,
+                          imageUrl:getProfileDataModel
+                              .profilePicture ==
+                              null ||
+                              getProfileDataModel
+                                  .profilePicture ==
+                                  ""
+                              ? Constants.defaultImagePerson
+                              : getProfileDataModel
+                              .profilePicture,
+                      fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
-                title: Padding(
-                  padding: EdgeInsets.only(left: 1.w),
-                  child: Text(getProfileDataModel.userName ?? "",
-                    style: TextStyles.font19WhiteBold.copyWith(
-                        fontWeight: FontWeight.w700),),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {},
-                  ),
-                ],
+                title: Text(getProfileDataModel.userName ?? "",
+                  style: TextStyles.font19WhiteBold.copyWith(
+                      fontWeight: FontWeight.w700),),
+
               ),
               body: Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
-                      controller: chatCubit.scrollController,
+                      // controller: chatCubit.scrollController,
+                      reverse: true, // هنا المهم - الليست هتبدأ من تحت
                       padding: const EdgeInsets.all(16),
-                      itemCount: chatCubit.getMessagesResponse?.messages
-                          .length ??
-                          0,
+                      itemCount: chatCubit.getMessagesResponse?.messages.length ?? 0,
                       itemBuilder: (context, index) {
+                        // عكس الـ index عشان آخر رسالة تبقى فوق
+                        int reversedIndex = (chatCubit.getMessagesResponse?.messages.length ?? 0) - 1 - index;
+
                         return MessageBubble(
-                          message: chatCubit.getMessagesResponse
-                              ?.messages[index]
-                              .content ?? "",
-                          isMe: chatCubit.getMessagesResponse?.messages[index]
-                              .senderId == SharedPrefHelper.getString(
-                              SharedPrefKey.userId),
-                          time: chatCubit.getMessagesResponse?.messages[index]
-                              .sentAt ?? "", chatCubit: chatCubit, messageId: chatCubit.getMessagesResponse!.messages[index].messageId,
+                          message: chatCubit.getMessagesResponse?.messages[reversedIndex].content ?? "",
+                          isMe: chatCubit.getMessagesResponse?.messages[reversedIndex].senderId ==
+                              SharedPrefHelper.getString(SharedPrefKey.userId),
+                          time: chatCubit.getMessagesResponse?.messages[reversedIndex].sentAt ?? "",
+                          chatCubit: chatCubit,
+                          messageId: chatCubit.getMessagesResponse!.messages[reversedIndex].messageId,
+                          image: chatCubit.getMessagesResponse?.messages[reversedIndex].attachmentUrl ?? "",
                         );
                       },
                     ),
                   ),
-                  buildMessageComposer(chatCubit: chatCubit,
-                      getProfileDataModel: getProfileDataModel),
+                  buildMessageComposer(
+                      chatCubit: chatCubit,
+                      getProfileDataModel: getProfileDataModel,
+                      context: context
+                  ),
+
                 ],
               ),
             );

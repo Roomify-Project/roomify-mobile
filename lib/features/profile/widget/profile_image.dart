@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
 import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:rommify_app/features/profile/widget/show_image_dialog.dart';
@@ -38,7 +39,17 @@ class ProfileImage extends StatelessWidget {
                       : ClipOval(
                           child: CustomCachedNetworkImage(
                             imageUrl: profileCubit
-                                .getProfileDataModel!.profilePicture,
+                                .getProfileDataModel
+                                ?.profilePicture ==
+                                null ||
+                                profileCubit
+                                    .getProfileDataModel!
+                                    .profilePicture ==
+                                    ""
+                                ? Constants.defaultImagePerson
+                                : profileCubit
+                                .getProfileDataModel!
+                                .profilePicture,
                             fit: BoxFit
                                 .cover, // علشان الصورة تملأ الدائرة بشكل صحيح
                           ),
