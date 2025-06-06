@@ -21,6 +21,7 @@ class ApiConstants {
   static const String verifyOtpUrl = '/api/Auth/confirm-email';
   static const String forgetPasswordUrl = '/api/Auth/forget-password';
   static const String resetPasswordUrl = '/api/Auth/reset-password';
+   static const String changePasswordUrl = '/api/Auth/change-password';
   static  String addFollowUrl({required String followId}){
    return '/api/follow/$followId';
 }

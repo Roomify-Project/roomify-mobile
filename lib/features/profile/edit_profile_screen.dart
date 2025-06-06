@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:rommify_app/core/di/dependency_injection.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
+import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/flutter_show_toast.dart';
+import 'package:rommify_app/features/change_password/ui/change_password_dialog.dart';
+
 import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:rommify_app/features/profile/logic/cubit/profile_states.dart';
 import 'package:rommify_app/features/profile/widget/custom_app_bar.dart';
 import 'package:rommify_app/features/profile/widget/custom_button.dart';
-import 'package:rommify_app/features/profile/widget/custom_dialog_widget.dart';
+
 import 'package:rommify_app/features/profile/widget/custom_text_field.dart';
 import 'package:rommify_app/features/profile/widget/profile_image.dart';
 
-import '../../core/helpers/shared_pref_helper.dart';
+import 'package:rommify_app/features/change_password/logic/cubit/change_password_cubit.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final ProfileCubit profileCubit;
@@ -46,11 +50,17 @@ class EditProfileScreen extends StatelessWidget {
               }
               else if(state is UpdateProfileSuccessState){
                 EasyLoading.dismiss();
-                flutterShowToast(message: "Update Profile Successfully", toastCase: ToastCase.success);
+                flutterShowToast(
+                  message: "Update Profile Successfully", 
+                  toastCase: ToastCase.success
+                );
               }
               else if(state is UpdateProfileErrorState){
                 EasyLoading.dismiss();
-                flutterShowToast(message: state.message, toastCase: ToastCase.error);
+                flutterShowToast(
+                  message: state.message, 
+                  toastCase: ToastCase.error
+                );
               }
             },
             builder: (context, state) {
@@ -127,7 +137,10 @@ class EditProfileScreen extends StatelessWidget {
                         context: context,
                         barrierColor: const Color(0xFF341D38).withOpacity(0.91),
                         builder: (BuildContext context) {
-                          return const ChangePasswordDialog();
+                          return BlocProvider(
+                            create: (context) => getIt<ChangePasswordCubit>(),
+                            child: const ChangePasswordDialog(),
+                          );
                         },
                       );
                     },
@@ -138,7 +151,8 @@ class EditProfileScreen extends StatelessWidget {
                     text: 'SAVE CHANGES',
                     onPressed: () {
                       profileCubit.updateProfile(
-                          updateProfileId:SharedPrefHelper.getString(SharedPrefKey.userId));
+                        updateProfileId: SharedPrefHelper.getString(SharedPrefKey.userId)
+                      );
                     },
                     color: const Color(0xff320c39),
                     width: 147,
@@ -147,7 +161,7 @@ class EditProfileScreen extends StatelessWidget {
                   const SizedBox(height: 40),
                   TextButton(
                     onPressed: () async {
-                     await profileCubit.logOut(context: context);
+                      await profileCubit.logOut(context: context);
                     },
                     child: const Text(
                       'LOG OUT',
