@@ -9,15 +9,16 @@ import 'package:rommify_app/features/explore_screen/data/models/get_posts_respon
 
 import '../../../../core/networking/api_error_handler.dart';
 import '../apis/chat_api_service.dart';
+import '../model/send_message_response.dart';
 class ChatRepo {
   final ChatApiService _chatApiService;
 
   ChatRepo(this._chatApiService);
 
-  Future<Either<ErrorHandler,String>> sendMessage({required SendChatMessageBody sendChatMessageBody}) async {
+  Future<Either<ErrorHandler,SendMessageResponse>> sendMessage({required SendChatMessageBody sendChatMessageBody,required File? image}) async {
     try {
-      final response = await _chatApiService.sendMessage(sendChatMessage: sendChatMessageBody);
-      return const Right("Message sent successfully.");
+      final response = await _chatApiService.sendMessage(sendChatMessage: sendChatMessageBody, image: image);
+      return Right(SendMessageResponse.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

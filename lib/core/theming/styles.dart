@@ -40,6 +40,16 @@ class TextStyles {
     fontWeight: FontWeightHelper.semiBold,
     color: Colors.white,
   );
+  static TextStyle font10WhiteBold = TextStyle(
+    fontSize: 15.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: Colors.white,
+  );
+  static TextStyle font16WhiteBold = TextStyle(
+    fontSize: 13.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: Colors.white,
+  );
   static TextStyle font19WhiteBold = TextStyle(
     fontSize: 19.sp,
     fontWeight: FontWeightHelper.bold,

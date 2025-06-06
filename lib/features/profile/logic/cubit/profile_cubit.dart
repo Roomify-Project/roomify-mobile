@@ -6,13 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/explore_screen/data/models/save_design_response.dart';
 import 'package:rommify_app/features/profile/data/models/get_follow_count_model.dart';
+import 'package:rommify_app/features/profile/data/models/get_follow_model.dart';
 import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
+import '../../data/models/get_history_design.dart';
+import '../../data/models/saved_design_model.dart';
 import '../../data/models/update_profile_body.dart';
 import '../../data/repos/profile_repo.dart';
 import 'profile_states.dart';
@@ -34,36 +39,102 @@ class ProfileCubit extends Cubit<ProfileStates> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   GetFollowCountModel? getFollowCountModel;
+  SavedDesignsResponse? savedDesignResponse;
+  Map<String,bool> isFollowingList={};
 
+  ImageHistoryResponse? imageHistoryResponse;
   void addFollow({required String followId}) async {
+    isFollowingList[followId]=! isFollowingList[followId]!;
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
     final response = _profileRepo.addFollow(followId: followId);
 
     response.fold(
-      (left) {
+          (left) {
         print("followww errrorr ${left.apiErrorModel.title}");
         isFollowing = !isFollowing!;
+        isFollowingList[followId]=! isFollowingList[followId]!;
+
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
+        getFollowCountModel =
+            getFollowCountModel!.copyWith(
+              followers: getFollowCountModel!.followers + 1,
+            );
+        emit(AddFollowSuccessState(message: right.message));
+      },
+    );
+  }
+
+  void addFollowMyProfile({required String followId}) async {
+    isFollowingList[followId]=! isFollowingList[followId]!;
+    isFollowing = !isFollowing!;
+    // emit(AddFollowSuccessState(message: ""));
+    final response = _profileRepo.addFollow(followId: followId);
+
+    response.fold(
+          (left) {
+        print("followww errrorr ${left.apiErrorModel.title}");
+        isFollowing = !isFollowing!;
+        isFollowingList[followId]=! isFollowingList[followId]!;
+
+        emit(AddFollowErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        getFollowCountModel =
+
+            getFollowCountModel!.copyWith(
+
+              following: getFollowCountModel!.following + 1,
+            );
         emit(AddFollowSuccessState(message: right.message));
       },
     );
   }
 
   void unFollow({required String followId}) async {
+    isFollowingList[followId]=! isFollowingList[followId]!;
+
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
     final response = _profileRepo.unFollow(followId: followId);
 
     response.fold(
-      (left) {
+          (left) {
         print("followww errrorr ${left.apiErrorModel.title}");
         isFollowing = !isFollowing!;
+        isFollowingList[followId]=! isFollowingList[followId]!;
+
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
+        getFollowCountModel = getFollowCountModel!.copyWith(
+          followers: getFollowCountModel!.followers - 1,
+        );
+        emit(AddFollowSuccessState(message: right.message));
+      },
+    );
+  }
+  void unFollowMyProfile({required String followId}) async {
+    isFollowingList[followId]=! isFollowingList[followId]!;
+
+    isFollowing = !isFollowing!;
+    // emit(AddFollowSuccessState(message: ""));
+    final response = _profileRepo.unFollow(followId: followId);
+
+    response.fold(
+          (left) {
+        print("followww errrorr ${left.apiErrorModel.title}");
+        isFollowing = !isFollowing!;
+        isFollowingList[followId]=! isFollowingList[followId]!;
+
+        emit(AddFollowErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        getFollowCountModel = getFollowCountModel!.copyWith(
+          following: getFollowCountModel!.following - 1,
+        );
         emit(AddFollowSuccessState(message: right.message));
       },
     );
@@ -73,12 +144,13 @@ class ProfileCubit extends Cubit<ProfileStates> {
     final response = _profileRepo.checkIsFollowing(followId: followId);
 
     response.fold(
-      (left) {
+          (left) {
         emit(GetIsFollowingErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
         isFollowing = right.data;
-        print("is folllllow${isFollowing}");
+        isFollowingList[followId]=right.data;
+        print("is folllllow${isFollowingList[followId]}");
 
         emit(GetIsFollowingSuccessState());
       },
@@ -88,6 +160,12 @@ class ProfileCubit extends Cubit<ProfileStates> {
   void changeDropDown() {
     isDropdownOpen = !isDropdownOpen;
     print(isDropdownOpen);
+    emit(ChangeDropDownState());
+  }
+  Map<String,bool> isDropdownOpenList={};
+  void changeDropDownList({required String followId}) {
+    isDropdownOpenList[followId] = !isDropdownOpenList[followId]!;
+    print(isDropdownOpenList[followId]);
     emit(ChangeDropDownState());
   }
 
@@ -119,21 +197,23 @@ class ProfileCubit extends Cubit<ProfileStates> {
         imageProfile: imageFile);
 
     response.fold(
-      (left) {
+          (left) {
         emit(UpdateProfileErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
         updateProfileResponse = right;
         getProfileDataModel = GetProfileDataModel(
-            id: right.id,
-            userName: right.userName,
-            fullName: right.fullName,
-            bio: right.bio,
-            email: right.email,
-            emailConfirmed: right.emailConfirmed,
-            phoneNumber: right.phoneNumber,
-            role: getProfileDataModel!.role);
-        emit(UpdateProfileSuccessState());
+          id: right.user.id,
+          userName: right.user.userName,
+          fullName: right.user.fullName,
+          bio: right.user.bio,
+          email: right.user.email,
+          emailConfirmed: right.user.emailConfirmed,
+          phoneNumber: right.user.phoneNumber,
+          role: getProfileDataModel!.role,
+          profilePicture: right.user.profilePicture,
+        );
+        emit(UpdateProfileSuccessState(updateProfileResponse: right));
       },
     );
   }
@@ -143,10 +223,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
     final response = _profileRepo.getProfileData(profileId: profileId);
 
     response.fold(
-      (left) {
+          (left) {
         emit(GetUserDataProfileErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
         getProfileDataModel = right;
         fullNameController.text = right.fullName;
         bioController.text = right.bio;
@@ -164,14 +244,92 @@ class ProfileCubit extends Cubit<ProfileStates> {
     final response = _profileRepo.getFollowCount(followId: followId);
 
     response.fold(
-      (left) {
+          (left) {
         emit(GetFollowCountErrorState(message: left.apiErrorModel.title));
       },
-      (right) {
+          (right) {
         getFollowCountModel = right;
         print("is folllllow${isFollowing}");
 
         emit(GetFollowCountSuccessState());
+      },
+    );
+  }
+  int item=-1;
+  void toggleProfile(int index){
+    item=index;
+    emit(ToggleProfile());
+  }
+  List<bool> isExpandedListHistory = [];
+  List<bool> isExpandedListSaved = [];
+  void getSavedDesign() async {
+    emit(GetSavedLoadingState());
+    final response = _profileRepo.getSavedDesign(userId: await SharedPrefHelper.getString(SharedPrefKey.userId));
+
+    response.fold(
+          (left) {
+        emit(GetSavedErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        savedDesignResponse=right;
+        isExpandedListSaved =
+            List.generate(right.savedDesigns.length, (index) => false);
+        print("is folllllow${isFollowing}");
+
+        emit(GetSavedSuccessState());
+      },
+    );
+  }
+
+
+  void getHistory() async {
+    emit(GetHistoryLoadingState());
+    final response = _profileRepo.getHistory(userId: await SharedPrefHelper.getString(SharedPrefKey.userId));
+
+    response.fold(
+          (left) {
+        emit(GetHistoryErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+
+        imageHistoryResponse=right;
+        isExpandedListHistory =
+            List.generate(right.history.length, (index) => false);
+        emit(GetHistorySuccessState());
+      },
+    );
+  }
+  GetFollowModel? followersModel;
+  GetFollowModel? followingModel;
+
+  void getFollowersList({required String userId}) async {
+    emit(GetFollowersLoadingState());
+    final response = _profileRepo.getFollowersList(userId: userId);
+
+    response.fold(
+          (left) {
+        emit(GetFollowersErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        followersModel=right;
+        for(var i in followersModel!.users){
+          isDropdownOpenList[i.id]=false;
+        }
+        emit(GetFollowersSuccessState());
+      },
+    );
+  }
+  void getFollowingList({required String userId}) async {
+    emit(GetFollowingLoadingState());
+    final response = _profileRepo.getFollowingList(userId: userId);
+
+    response.fold(
+          (left) {
+        emit(GetFollowingErrorState(message: left.apiErrorModel.title));
+      },
+          (right) {
+        followingModel=right;
+        emit(GetFollowingSuccessState());
       },
     );
   }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
-import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
+
 
 class ProfileApiService {
   final Dio dio;
@@ -47,21 +47,21 @@ class ProfileApiService {
   Future<Response> updateProfile({required UpdateProfileBody updateProfileBody,required String profileId,required File? imageProfile}) async {
     try {
       final formData = FormData.fromMap({
-        'userName': updateProfileBody.userName,
-        'fullName': updateProfileBody.fullName,
-        'bio': updateProfileBody.bio,
-        'email': updateProfileBody.email,
-        'profilePicture':"",
+        'UserName': updateProfileBody.userName,
+        'FullName': updateProfileBody.fullName,
+        'Bio': updateProfileBody.bio,
+        'Email': updateProfileBody.email,
+        if(imageProfile!=null)
+        'ProfileImage':await MultipartFile.fromFile(imageProfile.path, filename: 'upload.jpg'),
       });
       final response = await dio.put(
-        ApiConstants.profileId(profileId: profileId),
-        data: {
-          'userName': updateProfileBody.userName,
-          'fullName': updateProfileBody.fullName,
-          'bio': updateProfileBody.bio,
-          'email': updateProfileBody.email,
-          'profilePicture':"",
-        },
+        ApiConstants.updateProfile,
+        data: formData,
+          options: Options(
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          )
       );
       return response;
     } catch (e) {
@@ -90,6 +90,44 @@ class ProfileApiService {
       rethrow;
     }
   }
-
-
+  Future<Response> getHistory({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getHistory(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<Response> getSavedDesign({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getSavedDesign(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<Response> getFollowingList({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getFollowingList(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<Response> getFollowersList({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getFollowersList(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

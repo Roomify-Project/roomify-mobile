@@ -1,3 +1,7 @@
+import 'package:rommify_app/features/explore_screen/data/models/delete_comment_response.dart';
+import 'package:rommify_app/features/explore_screen/data/models/delete_post_Response.dart';
+import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
+
 import '../../data/models/add_post_nodel.dart';
 
 abstract class PostsStates{}
@@ -30,6 +34,15 @@ class GetPostErrorState extends PostsStates{
   GetPostErrorState({required this.message});
 }
 
+
+//get comment ////
+class GetCommentLoadingState extends PostsStates{}
+class  GetCommentSuccessState extends PostsStates{}
+class GetCommentErrorState extends PostsStates{
+  final String message;
+
+  GetCommentErrorState({required this.message});
+}
 //// add post
 class AddPostLoadingState extends PostsStates{}
 class  AddPostSuccessState extends PostsStates{
@@ -54,6 +67,68 @@ class DeletePostErrorState extends PostsStates{
 
   DeletePostErrorState({required this.message});
 }
+
+//// add comment
+class AddCommentLoadingState extends PostsStates{}
+class  AddCommentSuccessState extends PostsStates{
+  final CommentData commentData;
+  AddCommentSuccessState(this.commentData);
+}
+class AddCommentErrorState extends PostsStates{
+  final String message;
+
+  AddCommentErrorState({required this.message});
+}
+
+//// update comment
+class UpdateCommentLoadingState extends PostsStates{}
+class  UpdateCommentSuccessState extends PostsStates{
+  final CommentData commentData;
+  UpdateCommentSuccessState(this.commentData);
+}
+class UpdateCommentErrorState extends PostsStates{
+  final String message;
+
+  UpdateCommentErrorState({required this.message});
+}
+
+class DeleteCommentLoadingState extends PostsStates{}
+class  DeleteCommentSuccessState extends PostsStates{
+  final DeleteCommentResponse deleteCommentResponse;
+  DeleteCommentSuccessState(this.deleteCommentResponse);
+}
+class DeleteCommentErrorState extends PostsStates{
+  final String message;
+
+  DeleteCommentErrorState({required this.message});
+}
+
+
 /// upload image
 class UploadImageStata extends PostsStates{}
+
+
+class EditState extends PostsStates{}
+
+class ChangeTimeState extends PostsStates{}
+class ChangeEmojiState extends PostsStates{}
+class TogelState extends PostsStates{}
+class DownloadLoadingState extends PostsStates{}
+class  DownloadSuccessState extends PostsStates{
+}
+class DownloadErrorState extends PostsStates{
+  final String message;
+
+  DownloadErrorState({required this.message});
+}
+
+class SaveDesignLoadingState extends PostsStates{}
+class  SaveDesignSuccessState extends PostsStates{
+}
+class SaveDesignErrorState extends PostsStates{
+  final String message;
+
+  SaveDesignErrorState({required this.message});
+}
+
 

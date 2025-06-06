@@ -6,13 +6,16 @@ import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.da
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
 import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
 import 'package:rommify_app/features/main_screen/ui/main_screen.dart';
+import 'package:rommify_app/features/notification/ui/notification_screen.dart';
 import 'package:rommify_app/features/profile/add_post.dart';
 import 'package:rommify_app/features/profile/profile.dart';
+import 'package:rommify_app/features/profile/widget/following_screen.dart';
 import 'package:rommify_app/features/sign_up/ui/sign_up_screen.dart';
 
 import '../../features/forget_password/ui/forget_password.dart';
 import '../../features/log_in/ui/log_in_screan.dart';
 import '../../features/nav_bar/ui/nav_bar.dart';
+import '../../features/profile/widget/followes_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -42,8 +45,10 @@ class AppRouter {
           builder: (_) => const CreateRoomScreen(),
         );
       case Routes.generateRoomScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
         return MaterialPageRoute(
-          builder: (_) =>  const GenerateRoomScreen(),
+          builder: (_) =>   GenerateRoomScreen(generateCubit: arguments?['generateCubit'],),
         );
       case Routes.exploreScreen:
         return MaterialPageRoute(
@@ -72,6 +77,22 @@ class AppRouter {
       case Routes.loginScreen:
         return MaterialPageRoute(
           builder: (_) => const LogInScreen(),
+        );
+      case Routes.notification:
+        return MaterialPageRoute(
+          builder: (_) => const NotificationScreen(),
+        );
+      case Routes.followingScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
+        return MaterialPageRoute(
+          builder: (_) =>  FollowingScreen(profileCubit: arguments!['profileCubit'],userId: arguments!['userId'],),
+        );
+      case Routes.followersScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
+        return MaterialPageRoute(
+          builder: (_) =>  FollowersScreen(profileCubit: arguments!['profileCubit'],userId: arguments['userId'],),
         );
       default:
         return null;
