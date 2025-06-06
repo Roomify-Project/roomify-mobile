@@ -1,17 +1,15 @@
-// abstract class ChangePasswordState {}
+abstract class ChangePasswordStates {}
 
-// class ChangePasswordInitial extends ChangePasswordState {}
+class ChangePasswordInitialState extends ChangePasswordStates {}
 
-// class ChangePasswordLoading extends ChangePasswordState {}
+class ChangePasswordLoadingState extends ChangePasswordStates {}
 
-// class ChangePasswordSuccess extends ChangePasswordState {
-//   final String message;
+class ChangePasswordSuccessState extends ChangePasswordStates {
+  final String message;
+  ChangePasswordSuccessState({required this.message});
+}
 
-//   ChangePasswordSuccess(this.message);
-// }
-
-// class ChangePasswordError extends ChangePasswordState {
-//   final String message;
-
-//   ChangePasswordError(this.message);
-// }
+class ChangePasswordErrorState extends ChangePasswordStates {
+  final String message;
+  ChangePasswordErrorState({required this.message});
+}
