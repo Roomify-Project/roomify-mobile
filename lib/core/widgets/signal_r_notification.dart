@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rommify_app/core/routing/routes.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import '../../../../core/helpers/constans.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
@@ -24,33 +25,29 @@ class NotificationSignalRService {
   static const int maxRetries = 3;
 
   static Future<void> initializeConnection() async {
-    await _initLocalNotifications();
-    await _initFCM();
     await _initSignalRConnection();
-    await startConnection();
   }
 
-  /// إعداد إشعارات Firebase
   static Future<void> _initFCM() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     String? token = await messaging.getToken();
     print("FCM Token: $token");
 
-    // إشعار أثناء ما التطبيق شغال
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        _showNotification(message.notification!.body ?? "New Message");
+        _showNotification({
+          "type": "general",
+          "message": message.notification!.body ?? "New Message",
+        });
       }
     });
 
-    // لما يضغط على الإشعار
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("Notification clicked while app in background.");
     });
   }
 
-  /// إعداد flutter_local_notifications
   static Future<void> _initLocalNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -61,21 +58,62 @@ class NotificationSignalRService {
     await _notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print("Notification tapped: ${response.payload}");
+        if (response.payload != null) {
+          final data = jsonDecode(response.payload!);
+          final type = data['type'];
+
+          switch (type) {
+            case 'chat':
+              final chatId = data['chatId'];
+              Constants.navigatorKey.currentState?.pushNamed(
+                Routes.chatsFriendsScreen,
+                arguments: chatId,
+              );
+              break;
+            case 'follow':
+              final userId = data['userId'];
+              Constants.navigatorKey.currentState?.pushNamed(
+                Routes.profile,
+                arguments: {
+                  'profileId':userId
+                },
+              );
+              break;
+            case 'comment':
+              final postId = data['postId'];
+              Constants.navigatorKey.currentState?.pushNamed(
+                Routes.mainScreen,
+                arguments: {
+                  'postId':postId
+                },
+              );
+              break;
+            default:
+              Constants.navigatorKey.currentState?.pushNamed(Routes.notification);
+              break;
+          }
+
+          print("Notification tapped with data: $data");
+        }
       },
     );
   }
 
-  /// إعداد اتصال SignalR
   static Future<void> _initSignalRConnection() async {
     _connection = HubConnectionBuilder()
         .withUrl("${ApiConstants.apiBaseUrl}/notificationHub",
         options: HttpConnectionOptions(
+          skipNegotiation: false,
+          transport: HttpTransportType.WebSockets,
           accessTokenFactory: () async =>
           await SharedPrefHelper.getString(SharedPrefKey.token),
         ))
         .withAutomaticReconnect()
         .build();
+
+    await startConnection();
+    await _initLocalNotifications();
+    await _initFCM();
   }
 
   static Future<void> startConnection() async {
@@ -120,11 +158,11 @@ class NotificationSignalRService {
     try {
       if (data is List) {
         print("Received list data: ${data[0]['message']}");
-        _showNotification(data[0]['message']);
+        _showNotification(data[0]);
         processItem(data[0]);
       } else if (data is Map<String, dynamic>) {
         print("Received map data: ${data['message']}");
-        _showNotification(data['message']);
+        _showNotification(data);
         processItem(data);
       } else {
         print('Unknown data format.');
@@ -150,7 +188,7 @@ class NotificationSignalRService {
   static Stream<String> get notificationStream => _notificationController.stream;
   static Stream<Map<String, dynamic>> get apiNotificationStream => _notificationAPController.stream;
 
-  static Future<void> _showNotification(String message) async {
+  static Future<void> _showNotification(Map<String, dynamic> data) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'default_channel',
       'Notifications',
@@ -160,18 +198,19 @@ class NotificationSignalRService {
       playSound: true,
       ticker: 'ticker',
       enableVibration: true,
-      icon: 'ic_stat_notification'
+      icon: 'ic_stat_notification',
     );
 
-    const NotificationDetails platformDetails =
-    NotificationDetails(android: androidDetails);
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    final message = data['message'] ?? 'New Notification';
 
     await _notificationsPlugin.show(
       0,
       'New Notification',
       message,
       platformDetails,
-      payload: 'Notification Payload',
+      payload: jsonEncode(data),
     );
   }
 

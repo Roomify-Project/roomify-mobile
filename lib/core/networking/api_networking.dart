@@ -66,6 +66,12 @@ class ApiConstants {
   static  String getSavedDesign({required String userId}){
     return '/api/RoomImage/saved-designs/$userId';
   }
+  static  String getFollowersList({required String userId}){
+    return '/api/follow/followers/$userId';
+  }
+  static  String getFollowingList({required String userId}){
+    return '/api/follow/following/$userId';
+  }
   static const String getAllNotification='/api/notifications';
 }
 

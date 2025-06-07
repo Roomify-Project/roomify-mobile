@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 
 bool isLogin=false;
@@ -9,5 +10,6 @@ class SharedPrefKey
 }
 class Constants {
   static String defaultImagePerson='https://th.bing.com/th/id/OIP.5kU_nQdgEEPluSjSXhKZSAHaHa?rs=1&pid=ImgDetMain';
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 }

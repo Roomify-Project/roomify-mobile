@@ -7,6 +7,7 @@ import 'package:rommify_app/features/profile/data/models/update_profile_body.dar
 import '../../../../core/networking/api_error_handler.dart';
 import '../apis/profile_api_service.dart';
 import '../models/get_follow_count_model.dart';
+import '../models/get_follow_model.dart';
 import '../models/get_history_design.dart';
 import '../models/get_profile_data.dart';
 import '../models/saved_design_model.dart';
@@ -87,6 +88,24 @@ class ProfileRepo {
     try {
       final response = await _apiService.getHistory(userId: userId);
       return  Right(ImageHistoryResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, GetFollowModel>> getFollowingList(
+      {required String userId}) async {
+    try {
+      final response = await _apiService.getFollowingList(userId: userId);
+      return  Right(GetFollowModel.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler, GetFollowModel>> getFollowersList(
+      {required String userId}) async {
+    try {
+      final response = await _apiService.getFollowersList(userId: userId);
+      return  Right(GetFollowModel.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

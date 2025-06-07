@@ -76,3 +76,18 @@ class GetHistoryErrorState extends ProfileStates {
 }
 class ToggleProfile extends ProfileStates {
 }
+
+class GetFollowersLoadingState extends ProfileStates {}
+class GetFollowersSuccessState extends ProfileStates {
+}
+class GetFollowersErrorState extends ProfileStates {
+  final String message;
+  GetFollowersErrorState({required this.message});
+}
+class GetFollowingLoadingState extends ProfileStates {}
+class GetFollowingSuccessState extends ProfileStates {
+}
+class GetFollowingErrorState extends ProfileStates {
+  final String message;
+  GetFollowingErrorState({required this.message});
+}

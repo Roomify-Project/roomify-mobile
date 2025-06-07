@@ -22,6 +22,8 @@ class SignalRService {
     _connection = HubConnectionBuilder()
         .withUrl(ApiConstants.signalRUrl,
         options: HttpConnectionOptions(
+          skipNegotiation: false,
+          transport: HttpTransportType.WebSockets,
           accessTokenFactory: () async =>
           await SharedPrefHelper.getString(SharedPrefKey.token),
         ))

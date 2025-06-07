@@ -10,6 +10,7 @@ import 'package:rommify_app/features/profile/profile.dart';
 
 import '../../../core/helpers/shared_pref_helper.dart';
 import '../../../core/widgets/check_server_connection.dart';
+import '../../../core/widgets/signal_r_notification.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -26,7 +27,12 @@ class _NavBarScreenState extends State<NavBarScreen> {
     // TODO: implement initState
     CheckServerConnection.checkServerConnection();
     CheckServerNotificationConnection.checkServerNotificationConnection();
+    NotificationSignalRService.apiNotificationStream.listen((notification) {
+      print('New notification: ${notification['message']}');
+    });
 
+// إعادة تشغيل الخدمة
+//      NotificationSignalRService.restart();
 
     super.initState();
   }
