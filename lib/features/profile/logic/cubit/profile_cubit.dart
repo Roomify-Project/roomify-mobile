@@ -162,6 +162,12 @@ class ProfileCubit extends Cubit<ProfileStates> {
     print(isDropdownOpen);
     emit(ChangeDropDownState());
   }
+  Map<String,bool> isDropdownOpenList={};
+  void changeDropDownList({required String followId}) {
+    isDropdownOpenList[followId] = !isDropdownOpenList[followId]!;
+    print(isDropdownOpenList[followId]);
+    emit(ChangeDropDownState());
+  }
 
   File? imageFile;
 
@@ -306,6 +312,9 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
           (right) {
         followersModel=right;
+        for(var i in followersModel!.users){
+          isDropdownOpenList[i.id]=false;
+        }
         emit(GetFollowersSuccessState());
       },
     );
