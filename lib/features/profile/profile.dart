@@ -129,17 +129,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   null
                                               ? Row(
                                                   children: [
-                                                    Text(
-                                                        "${profileCubit.getFollowCountModel!.followers} followers",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14.sp)),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        context.pushNamed(Routes.followersScreen,arguments: {
+                                                          'profileCubit':profileCubit,
+                                                          'userId':widget.profileId
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                          "${profileCubit.getFollowCountModel!.followers} followers",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 14.sp)),
+                                                    ),
                                                     SizedBox(width: 20.w),
-                                                    Text(
-                                                        "${profileCubit.getFollowCountModel!.following} following",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14.sp)),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        context.pushNamed(Routes.followingScreen,arguments: {
+                                                          'profileCubit':profileCubit,
+                                                          'userId':widget.profileId
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                          "${profileCubit.getFollowCountModel!.following} following",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 14.sp)),
+                                                    ),
                                                   ],
                                                 )
                                               : const SizedBox(),

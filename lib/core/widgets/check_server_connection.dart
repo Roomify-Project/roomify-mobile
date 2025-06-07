@@ -21,7 +21,7 @@ class CheckServerNotificationConnection {
     if (!NotificationSignalRService.isConnected) {
       try {
         await NotificationSignalRService.initializeConnection();
-        NotificationSignalRService.startConnection();
+        // NotificationSignalRService.startConnection();
 
       } catch (error) {
         return false;

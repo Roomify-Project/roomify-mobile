@@ -42,6 +42,7 @@ dependencies:
   signalr_netcore: ^1.4.3
   flutter_easyloading: ^3.0.5
   get: ^4.6.5
+#  workmanager: ^0.5.2
   fluttertoast: ^8.2.8
   get_it: ^8.0.3
   flutter_svg: ^2.0.16

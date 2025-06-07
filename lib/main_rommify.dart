@@ -21,6 +21,7 @@ class RoomifyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         // BlocProvider<NotificationCubit>(
@@ -32,6 +33,7 @@ class RoomifyApp extends StatelessWidget {
         designSize: const Size(402, 874),
         minTextAdapt: true,
         child: MaterialApp(
+          navigatorKey: Constants.navigatorKey,
           title: 'RoomifyApp',
           builder:EasyLoading.init(),
           theme: ThemeData(

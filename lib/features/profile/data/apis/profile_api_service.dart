@@ -110,5 +110,24 @@ class ProfileApiService {
       rethrow;
     }
   }
-
+  Future<Response> getFollowingList({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getFollowingList(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<Response> getFollowersList({required String userId}) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.getFollowersList(userId: userId),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

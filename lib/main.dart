@@ -27,6 +27,7 @@ void main() async {
   await setupGetIt();
   // await CheckServerConnection.checkServerConnection();
   // await CheckServerNotificationConnection.checkServerNotificationConnection();
+
   final status = await Permission.notification.status;
   _requestNotificationPermission();
   await Firebase.initializeApp(

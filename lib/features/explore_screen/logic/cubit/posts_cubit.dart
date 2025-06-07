@@ -58,7 +58,7 @@ class PostsCubit extends Cubit<PostsStates> {
       (right) {
         isExpandedList = List.generate(right.posts.length, (index) => false);
 
-        print("sucessssss ${getAllPostsResponse!.posts}");
+        print("sucessssss ${getAllPostsResponse?.posts}");
         getPostsResponse = right;
 
         emit(GetUserPostsSuccessState());
