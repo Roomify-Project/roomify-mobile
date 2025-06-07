@@ -206,7 +206,7 @@ class _FollowItemState extends State<FollowItem> {
                             ),
                           ),
                           onPressed: () {
-                            ProfileCubit.get(context).changeDropDown();
+                            ProfileCubit.get(context).changeDropDownList(followId: widget.getFollowModelData.id);
                           },
                           child: Row(
                             children: [
@@ -217,7 +217,7 @@ class _FollowItemState extends State<FollowItem> {
                               ),
                               const SizedBox(width: 4),
                               Icon(
-                                ProfileCubit.get(context).isDropdownOpen
+                                ProfileCubit.get(context).isDropdownOpenList[widget.getFollowModelData.id]??false
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
                                 color: Colors.green,
@@ -226,12 +226,12 @@ class _FollowItemState extends State<FollowItem> {
                             ],
                           ),
                         ),
-                        if (ProfileCubit.get(context).isDropdownOpen)
+                        if (ProfileCubit.get(context).isDropdownOpenList[widget.getFollowModelData.id]??false)
                           Material(
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                ProfileCubit.get(context).changeDropDown();
+                                ProfileCubit.get(context).changeDropDownList(followId: widget.getFollowModelData.id);
                                 ProfileCubit.get(context).unFollowMyProfile(
                                     followId: widget.getFollowModelData.id);
                               },
