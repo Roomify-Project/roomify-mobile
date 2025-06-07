@@ -2,27 +2,30 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
-import 'package:rommify_app/features/create_room_screen/data/apis/generate_api_service.dart';
-import 'package:rommify_app/features/create_room_screen/data/repos/generate_repo.dart';
-import 'package:rommify_app/features/create_room_screen/logic/cubit/generate_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/apis/posts_api_service.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
-import 'package:rommify_app/features/notification/data/apis/notification_api.dart';
-import 'package:rommify_app/features/notification/data/repo/notification_repo.dart';
-import 'package:rommify_app/features/notification/logic/cubit/notiication_cubit.dart';
 import 'package:rommify_app/features/profile/data/apis/profile_api_service.dart';
 import 'package:rommify_app/features/profile/data/repos/profile_repo.dart';
 import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
 
+import '../../features/change_password/data/apis/change_password_api_service.dart';
+import '../../features/change_password/data/repos/change_password_repo.dart';
+import '../../features/change_password/logic/cubit/change_password_cubit.dart';
 import '../../features/chat/data/apis/chat_api_service.dart';
 import '../../features/chat/data/repos/chat_repo.dart';
+import '../../features/create_room_screen/data/apis/generate_api_service.dart';
+import '../../features/create_room_screen/data/repos/generate_repo.dart';
+import '../../features/create_room_screen/logic/cubit/generate_cubit.dart';
 import '../../features/forget_password/data/apis/forget_api_service.dart';
 import '../../features/forget_password/data/repo/forget_repo.dart';
 import '../../features/forget_password/logic/forget_cubit.dart';
 import '../../features/log_in/data/apis/login_api_service.dart';
 import '../../features/log_in/data/repos/login_repo.dart';
 import '../../features/log_in/logic/cubit/login_cubit.dart';
+import '../../features/notification/data/apis/notification_api.dart';
+import '../../features/notification/data/repo/notification_repo.dart';
+import '../../features/notification/logic/cubit/notiication_cubit.dart';
 import '../../features/sign_up/data/apis/sign_api_service.dart';
 import '../../features/sign_up/data/repos/sign_repo.dart';
 import '../../features/sign_up/logic/cubit/sign_cubit.dart';
@@ -60,6 +63,12 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<ProfileApiService>(() => ProfileApiService(dio: dio));
   getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepo(getIt()));
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt()));
+
+  //// change password/////
+  getIt.registerLazySingleton<ChangePasswordApiService>(() => ChangePasswordApiService(dio: dio));
+  getIt.registerLazySingleton<ChangePasswordRepo>(() => ChangePasswordRepo(getIt()));
+  getIt.registerFactory<ChangePasswordCubit>(() => ChangePasswordCubit(getIt()));
+
 
   ///// chat
   getIt.registerLazySingleton<ChatApiService>(() => ChatApiService(dio: dio));

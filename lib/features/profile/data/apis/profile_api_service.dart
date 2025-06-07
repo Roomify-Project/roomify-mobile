@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:rommify_app/core/networking/api_networking.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_body.dart';
-import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
+
 
 class ProfileApiService {
   final Dio dio;

@@ -12,7 +12,10 @@ import 'package:rommify_app/features/profile/widget/custom_dialog_widget.dart';
 import 'package:rommify_app/features/profile/widget/custom_text_field.dart';
 import 'package:rommify_app/features/profile/widget/profile_image.dart';
 
+import '../../core/di/dependency_injection.dart';
 import '../../core/helpers/shared_pref_helper.dart';
+import '../change_password/logic/cubit/change_password_cubit.dart';
+import '../change_password/ui/change_password_dialog.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final ProfileCubit profileCubit;
@@ -127,7 +130,10 @@ class EditProfileScreen extends StatelessWidget {
                         context: context,
                         barrierColor: const Color(0xFF341D38).withOpacity(0.91),
                         builder: (BuildContext context) {
-                          return const ChangePasswordDialog();
+                          return BlocProvider(
+                            create: (context) => getIt<ChangePasswordCubit>(),
+                            child: const ChangePasswordDialog(),
+                          );
                         },
                       );
                     },
@@ -138,7 +144,8 @@ class EditProfileScreen extends StatelessWidget {
                     text: 'SAVE CHANGES',
                     onPressed: () {
                       profileCubit.updateProfile(
-                          updateProfileId:SharedPrefHelper.getString(SharedPrefKey.userId));
+                        updateProfileId: SharedPrefHelper.getString(SharedPrefKey.userId)
+                      );
                     },
                     color: const Color(0xff320c39),
                     width: 147,
