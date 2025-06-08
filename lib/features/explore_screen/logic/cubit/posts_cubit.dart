@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/explore_screen/data/models/add_comment_body.dart';
+import 'package:rommify_app/features/explore_screen/data/models/search_user_model.dart';
 
 import '../../../create_room_screen/data/models/image_icon_state.dart';
 import '../../../profile/data/models/get_all_chats_response.dart';
@@ -389,7 +390,7 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(DownloadSuccessState());
       },
     );
-    
+
 }
   void saveDesign({required String imageUrl}) async {
     isFavorite[imageUrl]=true;
@@ -414,5 +415,34 @@ class PostsCubit extends Cubit<PostsStates> {
     );
 
   }
+  Timer? _debounceTimer;
 
+  SearchUserModel ?searchUserModel;
+  void searchUser({required String query}) async {
+    // إلغاء أي timer سابق
+    _debounceTimer?.cancel();
+
+    // إنشاء timer جديد
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (query.isEmpty) return;
+
+      emit(SearchUserLoadingState());
+      final response = await _postsRepo.searchUser(query: query);
+      response.fold(
+            (left) {
+          emit(SearchUserErrorState(message: left.apiErrorModel.title ?? ""));
+        },
+            (right) {
+          searchUserModel = right;
+          emit(SearchUserSuccessState());
+        },
+      );
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
+  }
 }

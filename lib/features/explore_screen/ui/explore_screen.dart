@@ -35,7 +35,11 @@ class ExploreScreen extends StatelessWidget {
                     SizedBox(height: 80.h,),
                     Text("EXPLORE",style: TextStyles.font10WhiteBold,),
                     const Spacer(),
-                    SvgPicture.asset('assets/images/search.svg',height: 20.h,width: 20.w,),
+                    InkWell(
+                        onTap: () {
+                          context.pushNamed(Routes.searchScreen);
+                        },
+                        child: SvgPicture.asset('assets/images/search.svg',height: 20.h,width: 20.w,)),
                     SizedBox(width: 10.w,),
                     InkWell(
                         onTap: () {

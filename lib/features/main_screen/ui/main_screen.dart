@@ -111,8 +111,8 @@ class _MainScreenState extends State<MainScreen> {
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 60.w,
-                                      height: 60.h,
+                                      width: 50.w,
+                                      height: 50.h,
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),

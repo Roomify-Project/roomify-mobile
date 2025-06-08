@@ -4,6 +4,7 @@ import 'package:rommify_app/features/chat/ui/chant_friend_screen.dart';
 import 'package:rommify_app/features/chat/ui/chat_screen.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
+import 'package:rommify_app/features/explore_screen/ui/search_screen.dart';
 import 'package:rommify_app/features/generate_room_screen/ui/generate_room_screen.dart';
 import 'package:rommify_app/features/main_screen/ui/main_screen.dart';
 import 'package:rommify_app/features/notification/ui/notification_screen.dart';
@@ -95,6 +96,10 @@ class AppRouter {
 
         return MaterialPageRoute(
           builder: (_) =>  FollowersScreen(profileCubit: arguments!['profileCubit'],userId: arguments['userId'],),
+        );
+      case Routes.searchScreen:
+        return MaterialPageRoute(
+          builder: (_) => const SearchUserScreen(),
         );
       default:
         return null;

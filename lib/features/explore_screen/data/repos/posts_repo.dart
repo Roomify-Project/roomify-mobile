@@ -17,6 +17,7 @@ import '../models/delete_comment_response.dart';
 import '../models/delete_post_Response.dart';
 import '../models/get_post_model.dart';
 import '../models/save_design_response.dart';
+import '../models/search_user_model.dart';
 
 
 class PostsRepo {
@@ -138,5 +139,12 @@ class PostsRepo {
       return Left(ErrorHandler.handle(error));
     }
   }
-
+  Future<Either<ErrorHandler,SearchUserModel>> searchUser({required String query}) async {
+    try {
+      final response = await _postsApiService.searchUsers(query: query);
+      return  Right(SearchUserModel.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
 }

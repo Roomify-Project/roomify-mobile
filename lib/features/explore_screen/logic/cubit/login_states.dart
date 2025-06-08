@@ -132,5 +132,14 @@ class SaveDesignErrorState extends PostsStates{
 }
 
 
+class SearchUserLoadingState extends PostsStates{}
+class  SearchUserSuccessState extends PostsStates{
+}
+class SearchUserErrorState extends PostsStates{
+  final String message;
+
+  SearchUserErrorState({required this.message});
+}
+
 
 
