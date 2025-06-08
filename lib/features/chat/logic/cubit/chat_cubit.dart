@@ -301,5 +301,9 @@ class ChatCubit extends Cubit<ChatStates> {
       return DateFormat.yMd().add_jm().format(dateTime); // e.g. 6/5/2025 12:38 PM
     }
   }
+  String formatTimeOnly(String timeString) {
+    final dateTime = DateTime.parse(timeString);
+    return DateFormat.jm().format(dateTime); // مثال: 3:45 PM
+  }
 
 }

@@ -277,8 +277,8 @@ class _MessageBubbleState extends State<MessageBubble> {
   @override
   void initState() {
     // TODO: implement initState
-    DateTime parsedSentAt = DateTime.parse(widget.time);
-    formattedTime = DateFormat('HH:mm').format(parsedSentAt);
+    // DateTime parsedSentAt = DateTime.parse(widget.time);
+    // formattedTime = DateFormat('HH:mm').format(parsedSentAt);
 
     super.initState();
   }
@@ -359,7 +359,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                     SizedBox(
                       width: 60,
                       child: Text(
-                        formattedTime ?? "",
+                        widget.chatCubit.formatTimeOnly(widget.time) ?? "",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 9.3.sp,
