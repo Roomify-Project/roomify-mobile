@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/chat/data/model/send_message_body.dart';
 import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
+import 'package:rommify_app/features/profile/data/models/get_all_chats_response.dart';
 
 import '../../../../core/widgets/signal_R_service.dart';
 import '../../data/model/get_message_model.dart';
@@ -22,6 +24,7 @@ class ChatCubit extends Cubit<ChatStates> {
   final ScrollController scrollController = ScrollController();
 
   GetMessageResponse? getMessagesResponse;
+  GetAllChatResponse? getAllChatResponse;
 
   TextEditingController messageController = TextEditingController();
   StreamSubscription<Map<String, dynamic>>? _subscription;
@@ -102,6 +105,20 @@ class ChatCubit extends Cubit<ChatStates> {
           (right) {
         isSent = true;
         checkSendMessage[getMessageResponse.messageId] = true;
+
+        // ✅ تحديث كل الشاتات بناءً على الرسائل
+        List<GetAllChatResponseData> updatedChats = getAllChatResponse!.chats.map((chat) {
+         if(chat.chatWithUserId==receiverId){
+           return chat.copyWith(
+             lastMessageContent: getMessageResponse.content,
+             lastMessageTime: currentDateTime.toString(),
+           );
+         }
+          return chat;
+        }).toList();
+
+        // ✅ تحديث الكائن الأساسي
+        getAllChatResponse = GetAllChatResponse(chats: updatedChats);
         emit(SendMessagesSuccessStates());
       },
     );
@@ -137,6 +154,20 @@ class ChatCubit extends Cubit<ChatStates> {
         print("dataaaa ${getMessageListenResponse}");
         final getMessage = GetMessageResponseData.fromJson(getMessageListenResponse);
         getMessagesResponse!.messages.add(getMessage);
+        List<GetAllChatResponseData> updatedChats = getAllChatResponse!.chats.map((chat) {
+          print("senderIdddddddddddd${getMessage.senderId}");
+          print("chatWithUserId${chat.chatWithUserId}");
+          if(chat.chatWithUserId==getMessage.senderId){
+            return chat.copyWith(
+              lastMessageContent: getMessage.content,
+              lastMessageTime: currentDateTime.toString(),
+            );
+          }
+          return chat;
+        }).toList();
+
+        // ✅ تحديث الكائن الأساسي
+        getAllChatResponse = GetAllChatResponse(chats: updatedChats);
         if (!isClosed) {
           emit(GetMessagesSuccessStates());
         }
@@ -185,6 +216,22 @@ class ChatCubit extends Cubit<ChatStates> {
           }
         });
   }
+  void getAllChats() async {
+    emit(GetAllChatsLoadingStates());
+    final data = await _chatRepo.getAllChats();
+    data.fold(
+          (left) {
+        emit(GetAllChatsErrorStates(error: left.apiErrorModel.title));
+      },
+          (right) {
+        print("yesss");
+
+        getAllChatResponse = right;
+
+        emit(GetAllChatsSuccessStates());
+      },
+    );
+  }
 
 
   // void scrollToBottom() {
@@ -232,4 +279,27 @@ class ChatCubit extends Cubit<ChatStates> {
   //     Future.delayed(const Duration(milliseconds: 500), performScroll);
   //   });
   // }
+  String formatChatTime(String timeString) {
+    final dateTime = DateTime.parse(timeString);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(Duration(days: 1));
+    final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    final diff = now.difference(dateTime);
+
+    final timeFormat = DateFormat.jm(); // Example: 9:00 AM
+
+    if (messageDate == today) {
+      return "Today ${timeFormat.format(dateTime)}";
+    } else if (messageDate == yesterday) {
+      return "Yesterday ${timeFormat.format(dateTime)}";
+    } else if (diff.inDays < 7) {
+      return "${DateFormat.EEEE().format(dateTime)} ${timeFormat.format(dateTime)}"; // e.g. Monday 3:00 PM
+    } else if (diff.inDays < 14) {
+      return "Last week";
+    } else {
+      return DateFormat.yMd().add_jm().format(dateTime); // e.g. 6/5/2025 12:38 PM
+    }
+  }
+
 }

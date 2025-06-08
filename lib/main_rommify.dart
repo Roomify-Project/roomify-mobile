@@ -4,6 +4,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/routing/routes.dart';
+import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
+import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +29,9 @@ class RoomifyApp extends StatelessWidget {
         // BlocProvider<NotificationCubit>(
         //   create: (context) => NotificationCubit()..initializeNotifications(),
         // ),
-        BlocProvider(create: (context) => PostsCubit(getIt.get<PostsRepo>()))
+        BlocProvider(create: (context) => PostsCubit(getIt.get<PostsRepo>())),
+        BlocProvider(create: (context) => ChatCubit(getIt.get<ChatRepo>()))
+
       ],
       child: ScreenUtilInit(
         designSize: const Size(402, 874),

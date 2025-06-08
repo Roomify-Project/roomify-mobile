@@ -62,6 +62,8 @@ class AppRouter {
           ),
         );
       case Routes.chatsScreen:
+        final arguments = settings.arguments as Map<String, dynamic>?;
+
         return MaterialPageRoute(
           builder: (_) =>   ChatsScreen(),
         );

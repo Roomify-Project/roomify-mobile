@@ -33,5 +33,9 @@ class ChatApiService {
     final response= await dio.get(ApiConstants.getMessage(receiverId: receiverId));
     return  response;
   }
+  Future<Response> getAllChats() async {
+    final response= await dio.get(ApiConstants.getAllChats);
+    return  response;
+  }
 
 }

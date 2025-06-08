@@ -30,4 +30,14 @@ class UploadImageState extends ChatStates {}
 class UploadMessageState extends ChatStates {}
 
 
+/// get all chats
+class GetAllChatsLoadingStates extends ChatStates {}
+
+class GetAllChatsSuccessStates extends ChatStates {}
+
+class GetAllChatsErrorStates extends ChatStates {
+  final String error;
+
+  GetAllChatsErrorStates({required this.error});
+}
 

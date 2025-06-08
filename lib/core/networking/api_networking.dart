@@ -74,6 +74,9 @@ class ApiConstants {
     return '/api/follow/following/$userId';
   }
   static const String getAllNotification='/api/notifications';
+
+  static String getAllChats="/api/chat/GetAllChats";
+
 }
 
 

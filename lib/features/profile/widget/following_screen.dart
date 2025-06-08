@@ -10,6 +10,8 @@ import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.
 import 'package:rommify_app/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:rommify_app/features/profile/logic/cubit/profile_states.dart';
 
+import '../../../core/helpers/constans.dart';
+import '../../../core/helpers/shared_pref_helper.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/widgets/custom_empity_list.dart';
 import '../../../core/widgets/custom_error.dart';
@@ -38,67 +40,69 @@ class _FollowingScreenState extends State<FollowingScreen> {
       value: widget.profileCubit,
       child: BlocBuilder<ProfileCubit, ProfileStates>(
         builder: (BuildContext context, state) {
-          return Stack(
-            children: [
-              Scaffold(
-                appBar: AppBar(
-                  backgroundColor: ColorsManager.colorPrimary,
-                  leading: const Icon(Icons.arrow_back_ios,color: Colors.white,),
-                  centerTitle: true,
-                  title:  Text('Following',style: TextStyles.font18WhiteRegular,),
-                ),
-                backgroundColor: ColorsManager.colorPrimary,
-                body: state is GetFollowingLoadingState
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 50.h),
-                        child: const Center(child: CustomShimmerEffect()),
-                      )
-                    : ProfileCubit.get(context).followingModel!.users.isEmpty ||
-                            ProfileCubit.get(context).followingModel == null
-                        ? const Center(
-                            child: AnimatedEmptyList(
-                              title: "No Following Found",
-                              lottieAnimationPath:
-                                  'assets/animation/empity_list.json',
-                            ),
-                          )
-                        : state is GetFollowingErrorState
-                            ? Center(
-                                child: AnimatedErrorWidget(
-                                  title: "Loading Error",
-                                  message: state.message ?? "No data available",
-                                  lottieAnimationPath:
-                                      'assets/animation/error.json',
-                                  // onRetry: () => postsCubit.getAllPosts(),
-                                ),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    top: 30.h, right: 23.w, left: 23.w),
-                                child: ListView.separated(
-                                  itemCount: ProfileCubit.get(context).followingModel!.users.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                        onTap: () {
-                                          context
-                                              .pushNamed(Routes.profile,arguments: {
-                                                'profileId': ProfileCubit.get(context).followersModel!.users[index].id,
-                                          });
-                                        },
-                                        child: FollowItem(getFollowModelData:ProfileCubit.get(context).followingModel!.users[index] ,));
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return SizedBox(
-                                      height: 30.h,
-                                    );
-                                  },
-                                ),
-                              ),
-              ),
-              CircleWidget(),
+          return WillPopScope(
+            onWillPop: ()async {
 
-            ],
+              final userId = await SharedPrefHelper.getString(SharedPrefKey.userId);
+              ProfileCubit.get(context).getFollowCount(followId: userId);
+              return true;
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: ColorsManager.colorPrimary,
+                leading: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+                centerTitle: true,
+                title:  Text('Following',style: TextStyles.font18WhiteRegular,),
+              ),
+              backgroundColor: ColorsManager.colorPrimary,
+              body: state is GetFollowingLoadingState
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 50.h),
+                      child: const Center(child: CustomShimmerEffect()),
+                    )
+                  : ProfileCubit.get(context).followingModel!.users.isEmpty ||
+                          ProfileCubit.get(context).followingModel == null
+                      ? const Center(
+                          child: AnimatedEmptyList(
+                            title: "No Following Found",
+                            lottieAnimationPath:
+                                'assets/animation/empity_list.json',
+                          ),
+                        )
+                      : state is GetFollowingErrorState
+                          ? Center(
+                              child: AnimatedErrorWidget(
+                                title: "Loading Error",
+                                message: state.message ?? "No data available",
+                                lottieAnimationPath:
+                                    'assets/animation/error.json',
+                                // onRetry: () => postsCubit.getAllPosts(),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  top: 30.h, right: 23.w, left: 23.w),
+                              child: ListView.separated(
+                                itemCount: ProfileCubit.get(context).followingModel!.users.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                      onTap: () {
+                                        context
+                                            .pushNamed(Routes.profile,arguments: {
+                                              'profileId': ProfileCubit.get(context).followersModel!.users[index].id,
+                                        });
+                                      },
+                                      child: FollowItem(getFollowModelData:ProfileCubit.get(context).followingModel!.users[index] ,));
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return SizedBox(
+                                    height: 30.h,
+                                  );
+                                },
+                              ),
+                            ),
+            ),
           );
         },
       ),
@@ -123,9 +127,18 @@ class FollowItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           CircleAvatar(
-            radius: 25.r,
-             child:  ClipOval(child: CustomCachedNetworkImage(imageUrl: getFollowModelData.profilePicture,isDefault: true,fit: BoxFit.cover,)),
+          Container(
+            width: 50.w,
+            height: 50.h,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+                child: CustomCachedNetworkImage(
+                  imageUrl:getFollowModelData.profilePicture,
+                  fit: BoxFit.cover,
+                  isDefault: true,
+                )),
           ),
           SizedBox(width: 8.w),
           Column(
