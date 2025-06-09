@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/helpers/constans.dart';
@@ -39,8 +43,28 @@ class LoginCubit extends Cubit<LoginStates> {
     await SharedPrefHelper.setData(SharedPrefKey.token, token);
     DioFactory.setTokenIntoHeaderAfterLogin(token);
   }
+  Future<void> saveUserName(String name) async {
+    await SharedPrefHelper.setData(SharedPrefKey.name, name);
+  }
   Future<void> saveUserData(LoginResponse loginResponse) async {
     await SharedPrefHelper.setData("userId", loginResponse.userId);
     saveUserToken(loginResponse.token);
+    saveTokenToDatabase(loginResponse.userId);
+    saveUserName(loginResponse.userName);
+    await SharedPrefHelper.setData(
+      SharedPrefKey.data,
+      jsonEncode(loginResponse.toJson()),
+    );
   }
+  void saveTokenToDatabase(String userId) async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+
+    if (fcmToken != null) {
+      // خزنه في Firestore أو قاعدة البيانات المرتبطة بالـ userId
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'fcmToken': fcmToken,
+      });
+    }
+  }
+
 }

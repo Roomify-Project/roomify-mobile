@@ -328,7 +328,7 @@ class _MainScreenState extends State<MainScreen> {
                                 SizedBox(width: 5.w),
                                 InkWell(
                                   onTap: () {
-                                    postCubit.addComment(postId: widget.postId);
+                                    postCubit.addComment(postId: widget.postId, recieverId: postCubit.getPostResponse?.applicationUserId??"");
                                   },
                                   child: Icon(
                                     Icons.send,

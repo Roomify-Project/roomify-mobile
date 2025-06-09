@@ -36,7 +36,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
   }
 
   void _loadUserPosts() {
-    PostsCubit.get(context).getUserPosts(id: SharedPrefHelper.getString(SharedPrefKey.userId));
+    PostsCubit.get(context).getUserPosts(id:widget.profileId);
   }
 
   @override
@@ -101,6 +101,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
                   });
                 },
                 child: ImageCard(
+                  isZoom: false,
                   imageUrl: post.imagePath,
                   profileImageUrl: post.ownerProfilePicture??"",
                   onExpand: () {

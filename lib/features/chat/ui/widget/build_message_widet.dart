@@ -12,12 +12,13 @@ import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/styles.dart';
+import '../../../../core/widgets/signal_r_notification.dart';
 import '../../logic/cubit/chat_cubit.dart';
 
 Widget buildMessageComposer({required ChatCubit chatCubit,
   required GetProfileDataModel getProfileDataModel, required BuildContext context}) {
   return WillPopScope(
-    onWillPop: () async{
+    onWillPop: () async {
       if (chatCubit.emojiShowing) {
         chatCubit.changeEmojiState();
         return false;
@@ -80,7 +81,9 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
                             ),
                             InkWell(
                               onTap: () {
-                                chatCubit.sendMessage(receiverId: getProfileDataModel.id);
+                                chatCubit.sendMessage(
+                                    receiverId: getProfileDataModel.id);
+
                               },
                               child: Container(
                                 width: 35.w,
@@ -154,7 +157,8 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
                         ),
                         width: 100.w,
                         height: 100.h,
-                        child: Image.file(chatCubit.imageFile!, fit: BoxFit.cover,),
+                        child: Image.file(
+                          chatCubit.imageFile!, fit: BoxFit.cover,),
                       ),
                     ),
                     chatCubit.imageFile != null
@@ -184,7 +188,7 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
             ),
           ),
         ),
-    
+
         // الإيموجي المحسنة
         AnimatedContainer(
           duration: const Duration(milliseconds: 250),
@@ -197,7 +201,8 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
               emojiViewConfig: const EmojiViewConfig(
                 backgroundColor: ColorsManager.colorPrimary,
                 columns: 7,
-                emojiSizeMax: 28, // حجم أكبر شوية
+                emojiSizeMax: 28,
+                // حجم أكبر شوية
                 verticalSpacing: 2,
                 horizontalSpacing: 2,
                 gridPadding: EdgeInsets.all(4),
@@ -209,7 +214,8 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
                     strokeWidth: 2,
                   ),
                 ),
-                recentsLimit: 28, // أقل عدد
+                recentsLimit: 28,
+                // أقل عدد
                 replaceEmojiOnLimitExceed: true,
               ),
               skinToneConfig: const SkinToneConfig(
@@ -244,7 +250,7 @@ Widget buildMessageComposer({required ChatCubit chatCubit,
           )
               : SizedBox.shrink(),
         ),
-    
+
         SizedBox(height: 20.h),
       ],
     ),
@@ -311,8 +317,8 @@ class _MessageBubbleState extends State<MessageBubble> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.image!=''?
-                        widget.image is File?
+                    widget.image != '' ?
+                    widget.image is File ?
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -320,7 +326,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                           width: 130,
                           height: 110.h,
                           child:
-                          Image.file(widget.image,fit: BoxFit.cover,),
+                          Image.file(widget.image, fit: BoxFit.cover,),
                         ),
                         SizedBox(height: 10.h,),
                         Text(
@@ -330,7 +336,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                         ),
 
                       ],
-                    ):
+                    ) :
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -338,7 +344,8 @@ class _MessageBubbleState extends State<MessageBubble> {
                           width: 130,
                           height: 110.h,
                           child:
-                          CustomCachedNetworkImage(imageUrl: widget.image,fit: BoxFit.cover,),
+                          CustomCachedNetworkImage(imageUrl: widget.image,
+                            fit: BoxFit.cover,),
                         ),
                         SizedBox(height: 10.h,),
                         Text(
@@ -403,6 +410,7 @@ class _MessageBubbleState extends State<MessageBubble> {
     );
   }
 }
+
 bool isFromServer(String path) {
   return path.startsWith('http://') || path.startsWith('https://');
 }

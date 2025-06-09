@@ -80,9 +80,6 @@ class NotificationScreen extends StatelessWidget {
                                       final notificationItem = notification
                                           .notificationModel!
                                           .notificationData[index];
-                                      DateTime dateTime = DateTime.parse(
-                                          notificationItem.createdAt);
-
                                       // نحول الوقت لشكل 12 ساعة مع AM/PM
                                       return Row(
                                         crossAxisAlignment:

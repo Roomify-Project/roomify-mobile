@@ -16,6 +16,7 @@ import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
+import '../../../../core/widgets/signal_r_notification.dart';
 import '../../data/models/get_history_design.dart';
 import '../../data/models/saved_design_model.dart';
 import '../../data/models/update_profile_body.dart';
@@ -69,6 +70,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
                     followers: getFollowCountModel!.followers + 1,
                   );
             }
+            NotificationSignalRService.sendPushNotification(
+                title: 'New Notification',
+                body: "${SharedPrefHelper.getString(SharedPrefKey.name)} started following you.",
+                userId: followId);
         isFollow=true;
         // checkISFollowing(followId: followId);
         emit(AddFollowSuccessState(message: right.message));
@@ -177,6 +182,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
           role: getProfileDataModel!.role,
           profilePicture: right.user.profilePicture,
         );
+        if(right.user.profilePicture!=null) {
+          SharedPrefHelper.setData(
+              SharedPrefKey.image, right.user.profilePicture);
+        }
         emit(UpdateProfileSuccessState(updateProfileResponse: right));
       },
     );

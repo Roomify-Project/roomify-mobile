@@ -123,7 +123,7 @@ class _ChatFriendScreenState extends State<ChatFriendScreen> {
                 buildMessageComposer(
                     chatCubit: chatCubit,
                     getProfileDataModel: widget.getProfileDataModel,
-                    context: context
+                    context: context,
                 ),
 
               ],
