@@ -11,6 +11,7 @@ class SharedPrefKey
   static const String data='data';
   static const String image='image';
 
+
   static const String token='token';
   static String userId='userId';
 }
