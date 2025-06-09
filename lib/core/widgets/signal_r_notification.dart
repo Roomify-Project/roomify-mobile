@@ -13,6 +13,7 @@ import '../../../../core/helpers/constans.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../../../core/networking/api_networking.dart';
 import '../../features/profile/data/models/get_profile_data.dart';
+import '../helpers/firebase_information.dart';
 
 class NotificationSignalRService {
   static HubConnection? _connection;
@@ -276,24 +277,6 @@ class NotificationSignalRService {
             .isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
       return _cachedAccessToken!;
     }
-
-    final serviceAccountJson = {
-      "type": "service_account",
-      "project_id": "roomify-beb04",
-      "private_key_id": "859a5859ec156b396d8bba7c693b0121676802a5",
-      "private_key":
-          "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOp0NrAVv7C1eD\n5I8N8r1jN7vK3vOWj92AviDyll87e83wI4VqwiNTvqk9fuvZMaMu6AUTva/36Pfh\nM5Z7doctD+QDmfJdFIIPuScNsDJFuK7CtQCB55ouDNrQqnqK/nUXoniqQscAYtKn\nbUjSC7m1g98JZYjHr++fG3bb4Vl/RkVw0L+RKbTTs93K7QwTOVAPVlwF0eQNIK2G\nQSPNvyUA4AoeuUuuQ8ukPMlMHzhBG4mdzS3M2C2QXQsQYX9GkpxHuFxQxrwy+DAv\niM3nfz9f6AzpH4ahomu/kZdCFP+Ppo69qCkD/upRUZI531AskPi7IYII4sxocMnw\nQ9drAMitAgMBAAECggEACyQkQg0aYFuKU3j235LrzdNaaur+5m1TJ5z8c5h2ahh5\nJO46mzP72yxwHnx/54KMA9u878XYDS+IUoc7U2ZWWC4znkC4UCLhUIs4R1um5Xvv\nHDJTjpG7yykXsDCBqcLbUBlRPWeXOrVnzd8yuYLkbLkr+Bl9Cq7NMxA2TXscCLJN\nVFIeVoUNeT3uPdpc0c8KxrcJ8lthTaX3NUOS4IM2B/jANdx2n9+RsjPGssWGT/QN\nkGJOnLRUc7e3X1ZaGQyoSKFJO2EcSoeA5SGV1g/JBf9kUbEBQUX4DtDN/a4Ukf4q\nPmmlHUW+fr0SMof2vIhkQAD8ln6aQ+5a+XAJiMaDGQKBgQDIBRmFFm6mwix+2aZC\nyVVXkNO224gFAO11bGg2y3G3/+fvNd/8sKbdGUYK+a3ndAULXKOdCt59nJnOQF16\nNvVcU66qyyfkGVL1LLzPy0iJjwcRAJzVCzyrCIkudIqnp0nZFiEL5bw7RhGeaODa\nWcuaunLtfd29zeX+/dzrvYXfqQKBgQC2lABrCqweCbCCaPzL46L6y2bVKQWWhhhc\nFGxbJJVpnDpjKN5JKvnHI03TSeQvOJPtS9OGy7TMw00/HnIGEPTBjMCfoyd3IlAD\nGXJN09f1wlH7d2jK48XP0FGBELlqkF53B/nF2Xm3cXhDwtCbkYk69JQxR6snXBIr\nJCIs/qYTZQKBgB/18KX7d6Ld1A5Q6OgzE5fyZGILoihqhYcF04Et8PXdxknK6geO\nkpsxtqd6Tfd16nhuTRaC7hpUM59pWYZ10a73ECnqXG1uPns+sszhRq30VMS6vFSu\nfvs1WfY6WQ2BBaPSjWVBSFqQT7BoQcWiI46NzF92hUAW7nFYTzy8A/BBAoGAPl1b\nrzScCj6hDkqyXyrIlwY3gARdJkdztrA7Ov7KEqMMxqZFF5UYcM88XDnXOdIHpXzL\nKjYW8gKcNj0+EZhlIl/jxCPE7UrJLeXZR4BfOlFAE7d8EiGvhgbQcFe4HhBmVB5j\nUROyIdkejXbULu+NgpfcruCeM/mdMyNKkTgCnokCgYEArX0eExCimEfWybpCGKIB\nmFYp0s+i5jQRm+NcvqIP+9BWREFu15C2BWv5r9Sin71gLi5biWIOOHG7RjfOnZ8w\naGDm0vJWnRAbaqFmcJCipdtqaGvxELhnwUBH/Hqo9VA5on1b/bCF6Xx6gveIFDlW\ntFKC+yLQBDfL5Hv6eXaKqLc=\n-----END PRIVATE KEY-----\n",
-      "client_email":
-          "firebase-adminsdk-fbsvc@roomify-beb04.iam.gserviceaccount.com",
-      "client_id": "108968200977035992277",
-      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-      "token_uri": "https://oauth2.googleapis.com/token",
-      "auth_provider_x509_cert_url":
-          "https://www.googleapis.com/oauth2/v1/certs",
-      "client_x509_cert_url":
-          "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40roomify-beb04.iam.gserviceaccount.com",
-      "universe_domain": "googleapis.com"
-    };
 
     try {
       final accountCredentials =
