@@ -9,8 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
-roomify/helpers/firebase_information.dart
-
+lib/core/helpers/firebase_information
 
 # IntelliJ related
 *.iml
