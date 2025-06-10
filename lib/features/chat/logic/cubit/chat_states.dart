@@ -41,3 +41,17 @@ class GetAllChatsErrorStates extends ChatStates {
   GetAllChatsErrorStates({required this.error});
 }
 
+class DeleteMessageLoadingStates extends ChatStates {}
+
+class DeleteMessageSuccessStates extends ChatStates {
+  final String messgae;
+
+  DeleteMessageSuccessStates({required this.messgae});
+}
+
+class DeleteMessageErrorStates extends ChatStates {
+  final String error;
+
+  DeleteMessageErrorStates({required this.error});
+}
+

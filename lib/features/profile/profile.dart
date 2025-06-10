@@ -79,8 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         MainAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: 90,
-                                        height: 90,
+                                        width: 90.w,
+                                        height: 90.h,
                                         decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                         ),

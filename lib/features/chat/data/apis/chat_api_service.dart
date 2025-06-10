@@ -37,5 +37,9 @@ class ChatApiService {
     final response= await dio.get(ApiConstants.getAllChats);
     return  response;
   }
+  Future<Response> deleteMessage({required String messageId}) async {
+    final response= await dio.delete(ApiConstants.deleteMessage(messageId: messageId));
+    return  response;
+  }
 
 }

@@ -96,7 +96,9 @@ class ApiConstants {
 
   static String searchUsers = "/api/Users/search";
   static const String sendNotification = "https://fcm.googleapis.com/v1/projects/roomify-beb04/messages:send";
-
+  static String deleteMessage({required String messageId}) {
+    return '/api/chat/delete/$messageId';
+  }
 
 }
 

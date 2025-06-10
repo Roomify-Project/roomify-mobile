@@ -13,7 +13,6 @@ import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/chat/data/model/send_message_body.dart';
 import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
 import 'package:rommify_app/features/profile/data/models/get_all_chats_response.dart';
-import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 
 import '../../../../core/widgets/signal_R_service.dart';
 import '../../../../core/widgets/signal_r_notification.dart';
@@ -67,7 +66,8 @@ class ChatCubit extends Cubit<ChatStates> {
 
   String? jsonString;
   LoginResponse? model;
-  Map<String, dynamic> userMap={};
+  Map<String, dynamic> userMap = {};
+
   void sendMessage({required String receiverId, String? messageNotSent}) async {
     if (messageController.text.isEmpty && imageFile == null) {
       return;
@@ -114,16 +114,28 @@ class ChatCubit extends Cubit<ChatStates> {
         emit(SendMessagesErrorStates());
       },
       (right) async {
+        print("iiiii ${i}");
+
         isSent = true;
-        checkSendMessage[getMessageResponse.messageId] = true;
+        int index = getMessagesResponse!.messages.indexWhere(
+          (element) => element.messageId == getMessageResponse.messageId,
+        );
+        if (index != -1) {
+          final updatedResponse = getMessageResponse.copyWith(
+              messageId: right.messageData.messageId);
+          getMessagesResponse!.messages[index] = updatedResponse;
+          checkSendMessage[updatedResponse.messageId] = true;
+        }
         NotificationSignalRService.sendPushNotification(
-            title: '${SharedPrefHelper.getString(SharedPrefKey.name)}',
-            body: getMessageResponse.content,
-            userId:receiverId,
-          chatId:   await SharedPrefHelper.getString(SharedPrefKey.userId),
+          title: '${SharedPrefHelper.getString(SharedPrefKey.name)}',
+          body: getMessageResponse.content,
+          userId: receiverId,
+          messageId: right.messageData.messageId,
+          chatId: await SharedPrefHelper.getString(SharedPrefKey.userId),
           userName: model!.userName,
-          userImage:await SharedPrefHelper.getString(SharedPrefKey.image),
-          role:model!.roles,
+          userImage: await SharedPrefHelper.getString(SharedPrefKey.image),
+          role: model!.roles,
+          image: right.messageData.attachmentUrl,
           bio: model!.userName,
           email: model!.userName,
         );
@@ -134,7 +146,9 @@ class ChatCubit extends Cubit<ChatStates> {
               getAllChatResponse!.chats.map((chat) {
             if (chat.chatWithUserId == receiverId) {
               return chat.copyWith(
-                lastMessageContent: getMessageResponse.content,
+                lastMessageContent:getMessageResponse.content.isEmpty&&right.messageData.attachmentUrl!=null?
+                "Send photo":
+                getMessageResponse.content,
                 lastMessageTime: currentDateTime.toString(),
               );
             }
@@ -149,7 +163,8 @@ class ChatCubit extends Cubit<ChatStates> {
       },
     );
   }
-  bool isListen=false;
+
+  bool isListen = false;
 
   void getMessages({required receiverId}) async {
     emit(GetMessagesLoadingStates());
@@ -166,7 +181,7 @@ class ChatCubit extends Cubit<ChatStates> {
           checkSendMessage[item.messageId] = true;
         }
         checkInternet(receiverId: receiverId);
-        if(isListen==false) {
+        if (isListen == false) {
           listenToData();
         }
 
@@ -174,6 +189,7 @@ class ChatCubit extends Cubit<ChatStates> {
       },
     );
   }
+
   Future<void> listenToData() async {
     print("listeennnn");
     _subscription = friendChatStream?.listen(
@@ -190,7 +206,8 @@ class ChatCubit extends Cubit<ChatStates> {
             print("chatWithUserId${chat.chatWithUserId}");
             if (chat.chatWithUserId == getMessage.senderId) {
               return chat.copyWith(
-                lastMessageContent: getMessage.content,
+                lastMessageContent:getMessage.content.isEmpty&&getMessage.attachmentUrl!=null?
+              "Send photo":getMessage.content,
                 lastMessageTime: currentDateTime.toString(),
               );
             }
@@ -201,7 +218,7 @@ class ChatCubit extends Cubit<ChatStates> {
           getAllChatResponse = GetAllChatResponse(chats: updatedChats);
         }
         if (!isClosed) {
-          isListen=true;
+          isListen = true;
           emit(GetMessagesSuccessStates());
         }
       },
@@ -267,6 +284,67 @@ class ChatCubit extends Cubit<ChatStates> {
     );
   }
 
+  void deleteMessage(
+      {required String messageId, required String recievdId}) async {
+    print("iiiii ${i}");
+    emit(DeleteMessageLoadingStates());
+    final data = await _chatRepo.deleteMessage(messageId: messageId);
+    data.fold(
+      (left) {
+        emit(DeleteMessageErrorStates(error: left.apiErrorModel.title));
+      },
+      (right) async {
+        final index = getMessagesResponse!.messages
+            .indexWhere((msg) => msg.messageId == messageId);
+
+        if (index != -1) {
+          final updatedMessage = getMessagesResponse!.messages[index].copyWith(
+            content: "🚫 you deleted this message",
+            attachmentUrl: "",
+          );
+
+          print("attachmentUrlllllllll ${updatedMessage.attachmentUrl}");
+          getMessagesResponse!.messages[index] = updatedMessage;
+          if (getAllChatResponse != null &&
+              getMessagesResponse!.messages.last.messageId == messageId) {
+            List<GetAllChatResponseData> updatedChats =
+                getAllChatResponse!.chats.map((chat) {
+              // print("senderIdddddddddddd${getMessage.senderId}");
+              // print("chatWithUserId${chat.chatWithUserId}");
+              if (chat.chatWithUserId == recievdId) {
+                return chat.copyWith(
+                  lastMessageContent: "🚫 you deleted this message",
+                  lastMessageTime: currentDateTime.toString(),
+                );
+              }
+              return chat;
+            }).toList();
+            print("message updateddd");
+            // ✅ تحديث الكائن الأساسي
+            getAllChatResponse = GetAllChatResponse(chats: updatedChats);
+          }
+          print('Message updated!');
+        } else {
+          print('Message not found');
+        }
+        NotificationSignalRService.sendPushNotification(
+          title: '${SharedPrefHelper.getString(SharedPrefKey.name)}',
+          body: "message is deleted",
+          userId: recievdId,
+          messageId: messageId,
+          chatId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+          userName: model!.userName,
+          userImage: await SharedPrefHelper.getString(SharedPrefKey.image),
+          role: model!.roles,
+          bio: model!.userName,
+          email: model!.userName,
+        );
+
+        emit(DeleteMessageSuccessStates(messgae: right));
+      },
+    );
+  }
+
   // void scrollToBottom() {
   //   scrollController.animateTo(
   //     scrollController.position.maxScrollExtent,
@@ -316,7 +394,7 @@ class ChatCubit extends Cubit<ChatStates> {
     final dateTime = DateTime.parse(timeString);
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(Duration(days: 1));
+    final yesterday = today.subtract(const Duration(days: 1));
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
     final diff = now.difference(dateTime);
 

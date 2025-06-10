@@ -343,11 +343,14 @@ class NotificationSignalRService {
     required String userId,
     String? postId,
     String? userName,
-    String?chatId,
+    String? image,
+    String? chatId,
     String? userImage,
-    String?role,
-    String?bio,
-    String?email,
+    String? role,
+    String? bio,
+    String? email,
+    String? messageId, // أضف هذا المعامل
+    bool isUpdate = false, // أضف هذا المعامل
     Map<String, String>? additionalData,
   }) async {
     try {
@@ -362,37 +365,47 @@ class NotificationSignalRService {
       final String accessToken = await getAccessToken();
       const String projectId = "roomify-beb04";
 
-      // 3. بناء الـ payload (مبسط للسرعة)
+      // 3. بناء الـ payload مع إضافة معرف النوتيفيكيشن
       final Map<String, dynamic> notificationPayload = {
         "message": {
           "token": fcmToken,
           "notification": {
             "title": title,
             "body": body,
+            "image":image,
           },
           "data": {
             "click_action": "FLUTTER_NOTIFICATION_CLICK",
             "status": "done",
             "userId": userId,
             'postId': postId,
-            'chatId':chatId,
+            'chatId': chatId,
             "userName": userName,
-            "userImage":userImage,
+            "userImage": userImage,
             "role": role,
-            "bio":bio,
-            "email":email,
+            "bio": bio,
+            "email": email,
+            "messageId": messageId, // معرف الرسالة
+            "isUpdate": isUpdate.toString(), // علشان نعرف إن دي تحديث
             ...?additionalData,
           },
           "android": {
             "priority": "high",
             "notification": {
               "sound": "default",
-              "channel_id": "high_importance_channel"
+              "channel_id": "high_importance_channel",
+              // أضف tag عشان Android يستبدل النوتيفيكيشن بدلاً من إضافة واحدة جديدة
+              "tag": messageId ?? chatId ?? "default_tag",
             }
           },
           "apns": {
             "payload": {
-              "aps": {"sound": "default", "badge": 1}
+              "aps": {
+                "sound": "default",
+                "badge": 1,
+                // بالنسبة لـ iOS، thread-id بيخلي النوتيفيكيشنز تتجمع
+                "thread-id": chatId ?? "default_thread"
+              }
             }
           }
         }

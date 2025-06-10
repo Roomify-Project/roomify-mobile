@@ -469,6 +469,7 @@ class PostsCubit extends Cubit<PostsStates> {
   @override
   Future<void> close() {
     _debounceTimer?.cancel();
+    focusNode.dispose();
     return super.close();
   }
 }

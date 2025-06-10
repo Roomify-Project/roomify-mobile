@@ -40,6 +40,14 @@ class ChatRepo {
       return Left(ErrorHandler.handle(error));
     }
   }
+  Future<Either<ErrorHandler,String>> deleteMessage({required String messageId}) async {
+    try {
+      final response = await _chatApiService.deleteMessage(messageId: messageId);
+      return  const Right("Message deleted successfully.");
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
 
 
 }

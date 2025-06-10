@@ -38,7 +38,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
           current is GetAllChatsSuccessStates ||
           current is GetAllChatsErrorStates ||
           current is SendMessagesSuccessStates ||
-          current is GetMessagesSuccessStates,
+          current is GetMessagesSuccessStates ||
+          current is DeleteMessageSuccessStates,
       builder: (BuildContext context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -132,14 +133,18 @@ class ChatItem extends StatelessWidget {
       },
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25.r,
+          Container(
+            width: 50.w,
+            height: 50.h,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
             child: ClipOval(
                 child: CustomCachedNetworkImage(
               imageUrl: getAllChatResponseData.chatWithImageUrl,
               isDefault: true,
               fit: BoxFit.cover,
-              isZoom: false,
+              isZoom: true,
             )),
           ),
           SizedBox(width: 10.w),
