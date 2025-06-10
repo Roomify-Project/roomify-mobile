@@ -48,8 +48,16 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     super.dispose();
   }
 
+  TextDirection _getTextDirection(String text) {
+    final isArabic = RegExp(r'[\u0600-\u06FF]').hasMatch(text);
+    return isArabic ? TextDirection.rtl : TextDirection.ltr;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentText = widget.controller?.text ?? '';
+    final textDirection = _getTextDirection(currentText);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0),
       child: Column(
@@ -83,6 +91,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               keyboardType: widget.keyboardType,
               enableSuggestions: false,
               cursorColor: Colors.white,
+              textDirection: textDirection,
+              textAlign: textDirection == TextDirection.rtl
+                  ? TextAlign.right
+                  : TextAlign.left,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,

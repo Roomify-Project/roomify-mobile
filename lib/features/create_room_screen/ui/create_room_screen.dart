@@ -16,6 +16,7 @@ import 'package:rommify_app/features/create_room_screen/ui/widget/room_type.dart
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/routing/routes.dart';
 import '../../../core/theming/styles.dart';
+import '../../../core/widgets/animated_bottom_right.dart'; // استيراد StaticGradientBeam
 
 class CreateRoomScreen extends StatelessWidget {
   const CreateRoomScreen({super.key});
@@ -23,148 +24,130 @@ class CreateRoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context)=>GenerateCubit(getIt.get<GenerateRepo>()),
-      child: BlocConsumer<GenerateCubit,GenerateStates>(
+      create: (BuildContext context) => GenerateCubit(getIt.get<GenerateRepo>()),
+      child: BlocConsumer<GenerateCubit, GenerateStates>(
         listener: (BuildContext context, GenerateStates state) {
-          if(state is GenerateValidationErrorState){
+          if (state is GenerateValidationErrorState) {
             flutterShowToast(message: state.message, toastCase: ToastCase.error);
           }
         },
         builder: (BuildContext context, state) {
-          final generateCubit=GenerateCubit.get(context);
-          return  Scaffold(
-              backgroundColor: ColorsManager.colorPrimary,
-              body: Stack(
-                children: [
-                  CircleWidget(),
-                  SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 60.h,
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 180,
-                                  decoration: BoxDecoration(
-                                    color: ColorsManager.colorContainer,
-                                    // Transparent background
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.r),
-                                        topRight:
-                                        Radius.circular(20.r)), // Rounded corners
+          final generateCubit = GenerateCubit.get(context);
+          return Scaffold(
+            backgroundColor: ColorsManager.colorPrimary,
+            body: Stack(
+              children: [
+                const StaticGradientBeam(), // الخلفية المتحركة
+                CircleWidget(),
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 60.h),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  color: ColorsManager.colorContainer,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.r),
+                                    topRight: Radius.circular(20.r),
                                   ),
-                                  child: TextFormField(
-                                    textAlign: TextAlign.center, // Centers the input text
-                                    controller:generateCubit.generateController,
-                                    style: TextStyles.font14WhiteRegular.copyWith(
+                                ),
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  controller: generateCubit.generateController,
+                                  style: TextStyles.font14WhiteRegular.copyWith(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    hintText: "write description",
+                                    hintStyle: TextStyles.font14WhiteRegular.copyWith(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    maxLines: null, // يسمح بكتابة أكثر من سطر
-                                    decoration: InputDecoration(
-                                      hintText:"write description",
-
-                                      // "Put this wall clock on the wall of room \n image above the sofa, fit it with light and \n shadow of room image",
-                                      hintStyle:
-                                      TextStyles.font14WhiteRegular.copyWith(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold,
+                                    filled: false,
+                                    fillColor: ColorsManager.colorContainer,
+                                    contentPadding: EdgeInsets.only(
+                                        top: 20.h, left: 8.w, right: 8.w),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.r),
+                                        topRight: Radius.circular(20.r),
                                       ),
-                                      filled: false,
-                                      fillColor: ColorsManager.colorContainer,
-                                      // نفس لون الخلفية
-                                      contentPadding: EdgeInsets.only(
-                                          top: 20.h, left: 8.w, right: 8.w),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(20.r),
-                                          topRight: Radius.circular(20.r),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
+                                      borderSide: BorderSide.none,
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 3.h,
+                              ),
+                              SizedBox(height: 3.h),
+                              AddRoomImage(generateCubit: generateCubit),
+                              SizedBox(height: 3.h),
+                              // const AddFurnitureImage(),
+                              SizedBox(height: 65.h),
+                              InkWell(
+                                child: Text(
+                                  "Room type",
+                                  style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp),
                                 ),
-                                 AddRoomImage(generateCubit: generateCubit,),
-                                SizedBox(
-                                  height: 3.h,
-                                ),
-                                // const AddFurnitureImage(),
-                                SizedBox(
-                                  height: 65.h,
-                                ),
-                                InkWell(
-                                  child: Text("Room type",
-                                      style: TextStyles.font15WhiteRegular
-                                          .copyWith(fontSize: 16.sp)),
-                                  onTap: () {
-                                    context.pushNamed(Routes.exploreScreen);
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 3.h,
-                                ),
-                                 RoomType(generateCubit: generateCubit,),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Text("Style",
-                                    style: TextStyles.font15WhiteRegular
-                                        .copyWith(fontSize: 16.sp)),
-                                SizedBox(
-                                  height: 3.h,
-                                ),
-                                 DesignStyle(generateCubit: generateCubit,),
-                                SizedBox(
-                                  height: 50.h,
-                                ),
-                              ],
-                            ),
+                                onTap: () {
+                                  context.pushNamed(Routes.exploreScreen);
+                                },
+                              ),
+                              SizedBox(height: 3.h),
+                              RoomType(generateCubit: generateCubit),
+                              SizedBox(height: 20.h),
+                              Text(
+                                "Style",
+                                style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp),
+                              ),
+                              SizedBox(height: 3.h),
+                              DesignStyle(generateCubit: generateCubit),
+                              SizedBox(height: 50.h),
+                            ],
                           ),
                         ),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              generateCubit.generate(context: context);
-                              print("Purple button pressed!");
-
-                              // Define what happens when the button is pressed
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorsManager.mainBurble,
-                              // Set the button color to purple
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 100.w, vertical: 15.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(32), // Rounded corners
-                              ),
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            generateCubit.generate(context: context);
+                            print("Purple button pressed!");
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorsManager.mainBurble,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 100.w, vertical: 15.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32),
                             ),
-                            child: Text('GENERATE',
-                                style: TextStyles.font21BlackSemiBold
-                                    .copyWith(color: Colors.white, fontSize: 18.sp)),
                           ),
-                        )
-                      ],
-                    ),
+                          child: Text(
+                            'GENERATE',
+                            style: TextStyles.font21BlackSemiBold
+                                .copyWith(color: Colors.white, fontSize: 18.sp),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ));
+                ),
+              ],
+            ),
+          );
         },
-
       ),
     );
   }
 }
+
+

@@ -131,29 +131,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
-                                                        context.pushNamed(Routes.followersScreen,arguments: {
-                                                          'profileCubit':profileCubit,
-                                                          'userId':widget.profileId
-                                                        });
+                                                        context.pushNamed(
+                                                            Routes
+                                                                .followersScreen,
+                                                            arguments: {
+                                                              'profileCubit':
+                                                                  profileCubit,
+                                                              'userId': widget
+                                                                  .profileId
+                                                            });
                                                       },
                                                       child: Text(
                                                           "${profileCubit.getFollowCountModel!.followers} followers",
                                                           style: TextStyle(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontSize: 14.sp)),
                                                     ),
                                                     SizedBox(width: 20.w),
                                                     InkWell(
                                                       onTap: () {
-                                                        context.pushNamed(Routes.followingScreen,arguments: {
-                                                          'profileCubit':profileCubit,
-                                                          'userId':widget.profileId
-                                                        });
+                                                        context.pushNamed(
+                                                            Routes
+                                                                .followingScreen,
+                                                            arguments: {
+                                                              'profileCubit':
+                                                                  profileCubit,
+                                                              'userId': widget
+                                                                  .profileId
+                                                            });
                                                       },
                                                       child: Text(
                                                           "${profileCubit.getFollowCountModel!.following} following",
                                                           style: TextStyle(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontSize: 14.sp)),
                                                     ),
                                                   ],
@@ -359,22 +371,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Expanded(
                                     child: profileCubit.item == -1
                                         ? Padding(
-                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
-                                          child: CustomGridViewProfile(
+                                            padding: EdgeInsets.only(
+                                                left: 23.w, right: 23.w),
+                                            child: CustomGridViewProfile(
                                               profileId: widget.profileId,
                                             ),
-                                        )
+                                          )
                                         : profileCubit.item == 0
                                             ? Padding(
-                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
-                                              child: CustomSavedDesignGridViewProfile(
-                                                  profileId: widget.profileId),
-                                            )
+                                                padding: EdgeInsets.only(
+                                                    left: 23.w, right: 23.w),
+                                                child:
+                                                    CustomSavedDesignGridViewProfile(
+                                                        profileId:
+                                                            widget.profileId),
+                                              )
                                             : Padding(
-                                      padding:  EdgeInsets.only(left: 23.w,right: 23.w),
-                                              child: CustomHistoryDesignGridViewProfile(
-                                                  profileId: widget.profileId),
-                                            ))
+                                                padding: EdgeInsets.only(
+                                                    left: 23.w, right: 23.w),
+                                                child:
+                                                    CustomHistoryDesignGridViewProfile(
+                                                        profileId:
+                                                            widget.profileId),
+                                              ))
                               ],
                             ),
                           ),
@@ -473,7 +492,10 @@ class ImageCard extends StatelessWidget {
     required this.onExpand,
     required this.isExpanded,
     this.onPressed,
-    required this.postsCubit,  this.isProfile=false,  this.fit=BoxFit.cover,  this.isZoom=true,
+    required this.postsCubit,
+    this.isProfile = false,
+    this.fit = BoxFit.cover,
+    this.isZoom = true,
   });
 
   @override
@@ -514,24 +536,28 @@ class ImageCard extends StatelessWidget {
                 ),
               ),
             ),
-            isProfile?
-            Positioned(
-              top: 10.w,
-              left: 8.w,
-              child: InkWell(
-                onTap: onPressed,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child:  ClipOval(
-                      child:
-                          CustomCachedNetworkImage(imageUrl: profileImageUrl,fit: BoxFit.cover,width: 20.w,height:20.h,isDefault: true,)
-
-                  ),
-                ),
-              ),
-            ):SizedBox(),
+            isProfile
+                ? Positioned(
+                    top: 10.w,
+                    left: 8.w,
+                    child: InkWell(
+                      onTap: onPressed,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                            child: CustomCachedNetworkImage(
+                          imageUrl: profileImageUrl,
+                          fit: BoxFit.cover,
+                          width: 20.w,
+                          height: 20.h,
+                          isDefault: true,
+                        )),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
             Positioned(
               top: 10,
               right: 8,
@@ -546,9 +572,7 @@ class ImageCard extends StatelessWidget {
                         children: [
                           InkWell(
                             child: Icon(Icons.bookmark_border,
-                                color: false
-                                    ? Colors.red
-                                    : ColorsManager.white,
+                                color: false ? Colors.red : ColorsManager.white,
                                 size: 20),
                             onTap: () {
                               // postsCubit.toggleBookmark();
@@ -560,7 +584,7 @@ class ImageCard extends StatelessWidget {
                               postsCubit.saveDesign(imageUrl: imageUrl);
                             },
                             child: Icon(Icons.favorite_border,
-                                color: postsCubit.isFavorite[imageUrl]??false
+                                color: postsCubit.isFavorite[imageUrl] ?? false
                                     ? Colors.red
                                     : ColorsManager.white,
                                 size: 20),
@@ -571,9 +595,10 @@ class ImageCard extends StatelessWidget {
                                 postsCubit.download(imageUrl: imageUrl);
                               },
                               child: Icon(Icons.download,
-                                  color: postsCubit.isDownloaded[imageUrl]??false
-                                      ? Colors.red
-                                      : ColorsManager.white,
+                                  color:
+                                      postsCubit.isDownloaded[imageUrl] ?? false
+                                          ? Colors.red
+                                          : ColorsManager.white,
                                   size: 20)),
                           SizedBox(width: 10.w),
                         ],
@@ -586,7 +611,7 @@ class ImageCard extends StatelessWidget {
                           width: 2,
                         ),
                       ),
-                      child:  Icon(
+                      child: Icon(
                         Icons.more_horiz,
                         color: ColorsManager.white,
                         size: 12.sp,

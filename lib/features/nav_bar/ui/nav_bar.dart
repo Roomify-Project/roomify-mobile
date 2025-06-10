@@ -5,9 +5,7 @@ import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
-
 import 'package:rommify_app/features/profile/profile.dart';
-
 import '../../../core/helpers/shared_pref_helper.dart';
 import '../../../core/widgets/check_server_connection.dart';
 import '../../../core/widgets/signal_r_notification.dart';
