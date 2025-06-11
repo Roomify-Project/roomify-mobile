@@ -23,16 +23,14 @@ import '../../core/helpers/shared_pref_helper.dart';
 import '../../core/theming/styles.dart';
 import '../../core/widgets/custom_error.dart';
 import '../../core/widgets/custom_gird_view.dart';
-import '../../main_rommify.dart';
 
-class ProfileScreen extends StatefulWidget  {
+class ProfileScreen extends StatefulWidget {
   final String profileId;
 
   const ProfileScreen({super.key, required this.profileId});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
-
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -57,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }, builder: (BuildContext context, state) {
         final profileCubit = ProfileCubit.get(context);
         return Scaffold(
-            backgroundColor: ColorsManager.colorPrimary,
+            backgroundColor: ColorsManager.mainColor,
             body: state is GetUserDataProfileLoadingState
                 ? const Padding(
                     padding: EdgeInsets.only(top: 50),
@@ -66,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : profileCubit.getProfileDataModel != null
                     ? Stack(
                         children: [
-                          // CircleWidget(),
+                          CircleWidget(),
                           Padding(
                             padding: const EdgeInsets.only(top: 60),
                             child: Column(
@@ -75,12 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Padding(
                                   padding: EdgeInsets.only(left: 24.w),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: 90.w,
-                                        height: 90.h,
+                                        width: 90,
+                                        height: 90,
                                         decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                         ),
@@ -106,8 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            profileCubit.getProfileDataModel!
-                                                .userName,
+                                            profileCubit
+                                                .getProfileDataModel!.userName,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 22.sp,
@@ -147,10 +144,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       child: Text(
                                                           "${profileCubit.getFollowCountModel!.followers} followers",
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .white,
-                                                              fontSize:
-                                                                  14.sp)),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14.sp)),
                                                     ),
                                                     SizedBox(width: 20.w),
                                                     InkWell(
@@ -168,10 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       child: Text(
                                                           "${profileCubit.getFollowCountModel!.following} following",
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .white,
-                                                              fontSize:
-                                                                  14.sp)),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14.sp)),
                                                     ),
                                                   ],
                                                 )
@@ -194,36 +189,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 child: Row(
                                                   children: [
                                                     Expanded(
-                                                      child: !profileCubit
-                                                              .isFollowing!
-                                                          ? ElevatedButton(
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    ColorsManager
-                                                                        .colorSecondry,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(8),
-                                                                ),
-                                                              ),
-                                                              onPressed: () {
-                                                                profileCubit.addFollow(
-                                                                    followId:
-                                                                        widget
-                                                                            .profileId,isAdd: true);
-                                                              },
-                                                              child: Text(
-                                                                'Follow',
-                                                                style: TextStyles
-                                                                    .font16WhiteInter,
-                                                              ),
-                                                            )
-                                                          : Column(
-                                                              children: [
-                                                                ElevatedButton(
+                                                      child:
+                                                          !profileCubit
+                                                                  .isFollowing!
+                                                              ? ElevatedButton(
                                                                   style: ElevatedButton
                                                                       .styleFrom(
                                                                     backgroundColor:
@@ -232,78 +201,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                     shape:
                                                                         RoundedRectangleBorder(
                                                                       borderRadius:
-                                                                          BorderRadius.circular(8),
+                                                                          BorderRadius.circular(
+                                                                              8),
                                                                     ),
                                                                   ),
                                                                   onPressed:
                                                                       () {
-                                                                    profileCubit
-                                                                        .changeDropDown();
+                                                                    profileCubit.addFollow(
+                                                                        followId:
+                                                                            widget.profileId);
                                                                   },
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'Following',
-                                                                        style: TextStyles
-                                                                            .font16WhiteInter
-                                                                            .copyWith(color: Colors.green),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                          width:
-                                                                              4),
-                                                                      Icon(
-                                                                        profileCubit.isDropdownOpen
-                                                                            ? Icons.keyboard_arrow_up
-                                                                            : Icons.keyboard_arrow_down,
-                                                                        color:
-                                                                            Colors.green,
-                                                                        size:
-                                                                            20,
-                                                                      ),
-                                                                    ],
+                                                                  child: Text(
+                                                                    'Follow',
+                                                                    style: TextStyles
+                                                                        .font16WhiteInter,
                                                                   ),
-                                                                ),
-                                                                if (profileCubit
-                                                                    .isDropdownOpen)
-                                                                  Container(
-                                                                    width:
-                                                                        170.w,
-                                                                    height:
-                                                                        40.h,
-                                                                    margin: const EdgeInsets
-                                                                        .only(
-                                                                        top:
-                                                                            1),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: ColorsManager
-                                                                          .colorSecondry,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(8),
-                                                                    ),
-                                                                    child:
-                                                                        Material(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child:
-                                                                          InkWell(
-                                                                        onTap:
-                                                                            () {
-                                                                          profileCubit.changeDropDown();
-                                                                          profileCubit.unFollow(followId: widget.profileId,isMinus: true);
-                                                                        },
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(8),
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Text("Unfollow", style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)),
+                                                                )
+                                                              : Column(
+                                                                  children: [
+                                                                    ElevatedButton(
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                            ColorsManager.colorSecondry,
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8),
                                                                         ),
                                                                       ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        profileCubit
+                                                                            .changeDropDown();
+                                                                      },
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            'Following',
+                                                                            style:
+                                                                                TextStyles.font16WhiteInter.copyWith(color: Colors.green),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                              width: 4),
+                                                                          Icon(
+                                                                            profileCubit.isDropdownOpen
+                                                                                ? Icons.keyboard_arrow_up
+                                                                                : Icons.keyboard_arrow_down,
+                                                                            color:
+                                                                                Colors.green,
+                                                                            size:
+                                                                                20,
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                              ],
-                                                            ),
+                                                                    if (profileCubit
+                                                                        .isDropdownOpen)
+                                                                      Container(
+                                                                        width:
+                                                                            170.w,
+                                                                        height:
+                                                                            40.h,
+                                                                        margin: const EdgeInsets
+                                                                            .only(
+                                                                            top:
+                                                                                1),
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              ColorsManager.colorSecondry,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8),
+                                                                        ),
+                                                                        child:
+                                                                            Material(
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              profileCubit.changeDropDown();
+                                                                              profileCubit.unFollow(followId: widget.profileId);
+                                                                            },
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(8),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text("Unfollow", style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                  ],
+                                                                ),
                                                     ),
                                                     SizedBox(width: 10.w),
                                                     Expanded(
@@ -458,9 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : const Padding(
                             padding: EdgeInsets.only(top: 50),
                             child: Center(child: CustomShimmerEffect()),
-                          )
-
-        );
+                          ));
       }),
     );
   }
@@ -494,7 +485,6 @@ class ImageCard extends StatelessWidget {
   final bool isProfile;
   final BoxFit fit;
   final bool isZoom;
-
   const ImageCard({
     super.key,
     required this.imageUrl,
