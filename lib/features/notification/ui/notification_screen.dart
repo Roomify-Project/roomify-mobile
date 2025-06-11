@@ -29,18 +29,27 @@ class NotificationScreen extends StatelessWidget {
           return Stack(
             children: [
               CircleWidget(),
-              state is NotificationLoading
-                  ? Scaffold(
-                      backgroundColor: ColorsManager.colorPrimary,
-                      body: Padding(
+              Scaffold(
+                appBar: AppBar(
+                  backgroundColor: ColorsManager.colorPrimary,
+                  leading: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  centerTitle: true,
+                  title: Text(
+                    'Notifications',
+                    style: TextStyles.font18WhiteRegular,
+                  ),
+                ),
+                backgroundColor: ColorsManager.colorPrimary,
+                body: state is NotificationLoading
+                    ? Padding(
                         padding: EdgeInsets.only(top: 50.h),
                         child: const CustomShimmerEffect(),
-                      ),
-                    )
-                  : state is GetNotificationError
-                      ? Scaffold(
-                          backgroundColor: ColorsManager.colorPrimary,
-                          body: Center(
+                      )
+                    : state is GetNotificationError
+                        ? Center(
                             child: AnimatedErrorWidget(
                               title: "Loading Error",
                               message: state.message ?? "No data available",
@@ -48,27 +57,21 @@ class NotificationScreen extends StatelessWidget {
                                   'assets/animation/error.json',
                               // onRetry: () => postsCubit.getAllPosts(),
                             ),
-                          ),
-                        )
-                      : (notification.notificationModel!.notificationData
-                                  .isEmpty ||
-                              notification.notificationModel == null)
-                          ? const Scaffold(
-                              backgroundColor: ColorsManager.colorPrimary,
-                              body: Center(
+                          )
+                        : (notification.notificationModel!.notificationData
+                                    .isEmpty ||
+                                notification.notificationModel == null)
+                            ? const Center(
                                 child: AnimatedEmptyList(
                                   title: "No Notificatiom Found",
                                   lottieAnimationPath:
                                       'assets/animation/empity_list.json',
                                 ),
-                              ),
-                            )
-                          : Scaffold(
-                              backgroundColor: ColorsManager.colorPrimary,
-                              body: SafeArea(
+                              )
+                            : SafeArea(
                                 child: Padding(
-                                  padding:  EdgeInsets.only(
-                                      top: 85.h,right: 23.w,left: 23.w),
+                                  padding: EdgeInsets.only(
+                                      top: 10.h, right: 10.w, left: 10.w),
                                   child: ListView.separated(
                                     padding: const EdgeInsets.all(16),
                                     itemCount: notification.notificationModel!
@@ -77,12 +80,7 @@ class NotificationScreen extends StatelessWidget {
                                       final notificationItem = notification
                                           .notificationModel!
                                           .notificationData[index];
-                                      DateTime dateTime = DateTime.parse(
-                                          notificationItem.createdAt);
-
                                       // نحول الوقت لشكل 12 ساعة مع AM/PM
-                                      String formattedTime =
-                                          DateFormat('hh:mm a').format(dateTime);
                                       return Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -100,20 +98,24 @@ class NotificationScreen extends StatelessWidget {
                                           ),
                                           const SizedBox(width: 10),
                                           Text(
-                                            formattedTime,
+                                            NotificationCubit.get(context).formatChatTime(notificationItem.createdAt),
                                             style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.white54),
                                           ),
                                         ],
                                       );
-                                    }, separatorBuilder: (BuildContext context, int index) {
-                                      return SizedBox(height: 23.h,);
-                                  },
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return SizedBox(
+                                        height: 23.h,
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
-                            ),
+              ),
             ],
           );
         },

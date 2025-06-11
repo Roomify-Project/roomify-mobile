@@ -1,0 +1,13 @@
+final serviceAccountJson = {
+  "type": "service_account",
+  "project_id": "roomify-beb04",
+  "private_key_id": "19108375b760f0c8f2a0fcfcafb85747c7cf6b49",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDf8HD2XFbb+VIi\nzAfQsM5hi/teJ0gwOsI0pO7ngjZVBJ+XRnwYIvyI/PPkJEsFpNZRawowGAdK7cn3\n1H5qv/A6dM3VRvejZq4JQXSNQ2rw9Dg352reeDUyDq4mRPt6sIY2/EpjpjkzuYhq\n39Rr6b7d8kXSoyoIHHKsXoPFXBHXS9IrJJqcg6GxPIoJhXQNUDbnjt00tQ2TerZh\n0XiC8IseCQo49HMaZoXfnwDnFmUuw4oJvrieDUsXbTVxhBhwTHSVE4JLKgD5zse1\nW+OBe47pgMjyr8nrgo21KDoehLzVIZBGy+AEVRfKiUBxxvECmEXgAvU78z6IVXFd\n2GsO+L7HAgMBAAECggEAItBh92Lmm/8YLlGy21ZJV2/oLbyEo/7Wh1Gm1HXxVWlJ\nGD78dtIlmXRdxDeCNEfqi7DM3io2JAdwsScnWhgp1CSphUEpqY0CfGzhHj7/ZqNJ\nBCPlgN2GQ5h1qXxq7il4TB8Pv4stdGWhGCBhCT/HDQEnqrX0CFvH1hVBfhKwsVwN\nJoWkEVN7+0hXsCTD255uDwOOTurTDL4hKoMO5uRM0PiFOxIMo1X/Jsq+FsJL+R7D\nDBC7KWiNKSdYZBfdNIX4zUQOs3AXsNuJKAitWCNX2ti4XerUYkH/a3gJYYk0Gg8O\npby6IVptsh3YxcWcEdB+09xUbpyxensat796zQZG9QKBgQD989HzT6BJMCxzxrdH\nqHRV7y1T1G4SyTFLeB4xoyBJvjvZJu0EPQ9QxQJQ+GkOs5u8BooejIYJ9/FxFo62\nqO+paLwrExYFufcNbqAa3ssS8T9YVr8eQuFaJsarwHTBxRIJuFC8HtwUxTzHnqfx\nJ2zUdmvhV78VqTt0gP4looRU+wKBgQDhvqvZkQRUM2oKQ3J/9GLT+zenys9KgHxz\nmmIe7+oXtTkENHuZfo+EFNkk7uf24JjoKS1POeA82KomL7Wqoq+jwau0DG0Z97Y1\nbnMvJKacGgLR0dGU55MAIsqDQn8mHDSLTE0jHY2jqj1ceqqrGB/oDNt6FPIc21Fi\n6sr0l46bpQKBgFfuKG/6ziEJURr1X1isdzuaCTPRhhtzFmJvQOUm+nMOL2LNG5ww\nGDF7RYYLvTSd8/pyuThCp9ajxzHFAb01WWZrIVw4y5NIBMbd2wnywpXYenp37szn\nk2fHrVqi1MqTFd/PtgStGr8GXDkyMixJ3mDicBAidcNmSXPZhiY502ApAoGAZ5WO\nVW7thZVx+vOn/n6tOofzqdKt+4mpkYIts/Ryfh5x4zQR4wTn5buLSB834Vh90UnT\nuJ7d/g2NRahuu7Wa0pFzsFJjXZ8ExM/Bmsg+izKESLL2cFUyZsWQF1rT7TDUC3cf\njhVpgMgFEAJZfdi8C0abDxG9ZvBcD/+c0U8Z6OECgYBjd3gxOqMRc9ba3HMrLhTK\nRVBUnl0GIQ6tJRwSUOBo0X7pPLy7Ux+yglJi4uTb6lWXIiFZjasEw/UK4vSngTtv\nyCv6nNB/YF1k+J9/416MkkvxW7LqC5jV6TOVtXak5geF+nWXhXBs8rOqRXqlF9Ai\npelMIMIkfIidWzz5hwaFMg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@roomify-beb04.iam.gserviceaccount.com",
+  "client_id": "108968200977035992277",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40roomify-beb04.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+};

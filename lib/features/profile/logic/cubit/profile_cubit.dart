@@ -16,6 +16,7 @@ import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
+import '../../../../core/widgets/signal_r_notification.dart';
 import '../../data/models/get_history_design.dart';
 import '../../data/models/saved_design_model.dart';
 import '../../data/models/update_profile_body.dart';
@@ -41,9 +42,14 @@ class ProfileCubit extends Cubit<ProfileStates> {
   GetFollowCountModel? getFollowCountModel;
   SavedDesignsResponse? savedDesignResponse;
   Map<String,bool> isFollowingList={};
-
+  bool? isFollow;
   ImageHistoryResponse? imageHistoryResponse;
-  void addFollow({required String followId}) async {
+  void changeFollow({required String followId}){
+    print("changeee ${isFollowingList[followId]}");
+    isFollowingList[followId]=! isFollowingList[followId]!;
+    emit(ChangeFollowCount());
+  }
+  void addFollow({required String followId,bool isAdd=false}) async {
     isFollowingList[followId]=! isFollowingList[followId]!;
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
@@ -58,42 +64,23 @@ class ProfileCubit extends Cubit<ProfileStates> {
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
           (right) {
-        getFollowCountModel =
-            getFollowCountModel!.copyWith(
-              followers: getFollowCountModel!.followers + 1,
-            );
+            if(isAdd) {
+              getFollowCountModel =
+                  getFollowCountModel!.copyWith(
+                    followers: getFollowCountModel!.followers + 1,
+                  );
+            }
+            NotificationSignalRService.sendPushNotification(
+                title: 'New Notification',
+                body: "${SharedPrefHelper.getString(SharedPrefKey.name)} started following you.",
+                userId: followId);
+        isFollow=true;
+        // checkISFollowing(followId: followId);
         emit(AddFollowSuccessState(message: right.message));
       },
     );
   }
-
-  void addFollowMyProfile({required String followId}) async {
-    isFollowingList[followId]=! isFollowingList[followId]!;
-    isFollowing = !isFollowing!;
-    // emit(AddFollowSuccessState(message: ""));
-    final response = _profileRepo.addFollow(followId: followId);
-
-    response.fold(
-          (left) {
-        print("followww errrorr ${left.apiErrorModel.title}");
-        isFollowing = !isFollowing!;
-        isFollowingList[followId]=! isFollowingList[followId]!;
-
-        emit(AddFollowErrorState(message: left.apiErrorModel.title));
-      },
-          (right) {
-        getFollowCountModel =
-
-            getFollowCountModel!.copyWith(
-
-              following: getFollowCountModel!.following + 1,
-            );
-        emit(AddFollowSuccessState(message: right.message));
-      },
-    );
-  }
-
-  void unFollow({required String followId}) async {
+  void unFollow({required String followId,bool isMinus=false}) async {
     isFollowingList[followId]=! isFollowingList[followId]!;
 
     isFollowing = !isFollowing!;
@@ -109,38 +96,20 @@ class ProfileCubit extends Cubit<ProfileStates> {
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
           (right) {
-        getFollowCountModel = getFollowCountModel!.copyWith(
-          followers: getFollowCountModel!.followers - 1,
-        );
-        emit(AddFollowSuccessState(message: right.message));
-      },
-    );
-  }
-  void unFollowMyProfile({required String followId}) async {
-    isFollowingList[followId]=! isFollowingList[followId]!;
+            if(isMinus) {
+              getFollowCountModel = getFollowCountModel!.copyWith(
+                followers: getFollowCountModel!.followers - 1,
+              );
+            }
+        isFollow=false;
 
-    isFollowing = !isFollowing!;
-    // emit(AddFollowSuccessState(message: ""));
-    final response = _profileRepo.unFollow(followId: followId);
-
-    response.fold(
-          (left) {
-        print("followww errrorr ${left.apiErrorModel.title}");
-        isFollowing = !isFollowing!;
-        isFollowingList[followId]=! isFollowingList[followId]!;
-
-        emit(AddFollowErrorState(message: left.apiErrorModel.title));
-      },
-          (right) {
-        getFollowCountModel = getFollowCountModel!.copyWith(
-          following: getFollowCountModel!.following - 1,
-        );
         emit(AddFollowSuccessState(message: right.message));
       },
     );
   }
 
   void checkISFollowing({required String followId}) async {
+    emit(GetIsFollowingLoadingState());
     final response = _profileRepo.checkIsFollowing(followId: followId);
 
     response.fold(
@@ -213,6 +182,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
           role: getProfileDataModel!.role,
           profilePicture: right.user.profilePicture,
         );
+        if(right.user.profilePicture!=null) {
+          SharedPrefHelper.setData(
+              SharedPrefKey.image, right.user.profilePicture);
+        }
         emit(UpdateProfileSuccessState(updateProfileResponse: right));
       },
     );
@@ -251,7 +224,9 @@ class ProfileCubit extends Cubit<ProfileStates> {
         getFollowCountModel = right;
         print("is folllllow${isFollowing}");
 
-        emit(GetFollowCountSuccessState());
+          emit(GetFollowCountSuccessState());
+          print("emitttttt");
+
       },
     );
   }

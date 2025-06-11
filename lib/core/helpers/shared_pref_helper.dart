@@ -17,9 +17,18 @@ class SharedPrefHelper {
     }
   }
 
-  static dynamic get({required String key}) async {
-    return await SharedPreferences.getInstance();
+   static Future<T?> get<T>({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (T == String) return prefs.getString(key) as T?;
+    if (T == int) return prefs.getInt(key) as T?;
+    if (T == bool) return prefs.getBool(key) as T?;
+    if (T == double) return prefs.getDouble(key) as T?;
+    if (T == List<String>) return prefs.getStringList(key) as T?;
+
+    return null; // لو نوع مش مدعوم
   }
+
 
   static getString(String key) {
     return sharedPreferences.get(key);

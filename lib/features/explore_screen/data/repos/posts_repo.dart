@@ -10,12 +10,14 @@ import 'package:rommify_app/features/explore_screen/data/models/get_omment_model
 import 'package:rommify_app/features/explore_screen/data/models/get_posts_response.dart';
 
 import '../../../../core/networking/api_error_handler.dart';
+import '../../../profile/data/models/get_all_chats_response.dart';
 import '../models/add_comment_body.dart';
 import '../models/add_post_nodel.dart';
 import '../models/delete_comment_response.dart';
 import '../models/delete_post_Response.dart';
 import '../models/get_post_model.dart';
 import '../models/save_design_response.dart';
+import '../models/search_user_model.dart';
 
 
 class PostsRepo {
@@ -125,6 +127,22 @@ class PostsRepo {
 
 
       return  Right(SavedDesignResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler,GetAllChatResponse>> getAllChats() async {
+    try {
+      final response = await _postsApiService.getAllChats();
+      return  Right(GetAllChatResponse.fromJson(response.data));
+    } catch (error) {
+      return Left(ErrorHandler.handle(error));
+    }
+  }
+  Future<Either<ErrorHandler,SearchUserModel>> searchUser({required String query}) async {
+    try {
+      final response = await _postsApiService.searchUsers(query: query);
+      return  Right(SearchUserModel.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

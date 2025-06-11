@@ -174,4 +174,14 @@ class PostsApiService {
     );
     return response;
   }
+  Future<Response> getAllChats() async {
+    final response= await dio.get(ApiConstants.getAllChats);
+    return  response;
+  }
+  Future<Response> searchUsers({required String query}) async {
+    final response= await dio.get(ApiConstants.searchUsers,queryParameters: {
+      'query':query
+    });
+    return  response;
+  }
 }

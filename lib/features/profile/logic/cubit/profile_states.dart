@@ -91,3 +91,5 @@ class GetFollowingErrorState extends ProfileStates {
   final String message;
   GetFollowingErrorState({required this.message});
 }
+class ChangeFollowCount extends ProfileStates {}
+

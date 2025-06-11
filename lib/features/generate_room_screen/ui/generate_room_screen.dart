@@ -36,7 +36,7 @@ class _GenerateRoomScreenState extends State<GenerateRoomScreen> {
                 final generateCubitItem=GenerateCubit.get(context);
                 return Stack(
                   children: [
-                    CircleWidget(),
+                    // CircleWidget(),
                     state is GenerateLoadingState
                         ? Padding(
                       padding: EdgeInsets.only(top: 50.h),

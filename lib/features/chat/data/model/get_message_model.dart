@@ -19,12 +19,12 @@ class GetMessageResponseData {
   final String sentAt;
   final dynamic attachmentUrl;
 
-  GetMessageResponseData( {
+  GetMessageResponseData({
     required this.messageId,
     required this.senderId,
     required this.content,
     required this.sentAt,
-    required this.attachmentUrl
+    required this.attachmentUrl,
   });
 
   factory GetMessageResponseData.fromJson(Map<String, dynamic> json) {
@@ -33,7 +33,7 @@ class GetMessageResponseData {
       senderId: json['senderId'] as String,
       content: json['content'] as String,
       sentAt: json['sentAt'],
-        attachmentUrl:json['attachmentUrl'],
+      attachmentUrl: json['attachmentUrl'],
     );
   }
 
@@ -43,6 +43,24 @@ class GetMessageResponseData {
       'senderId': senderId,
       'content': content,
       'sentAt': sentAt,
+      'attachmentUrl': attachmentUrl,
     };
+  }
+
+  // إضافة copyWith
+  GetMessageResponseData copyWith({
+    String? messageId,
+    String? senderId,
+    String? content,
+    String? sentAt,
+    dynamic attachmentUrl,
+  }) {
+    return GetMessageResponseData(
+      messageId: messageId ?? this.messageId,
+      senderId: senderId ?? this.senderId,
+      content: content ?? this.content,
+      sentAt: sentAt ?? this.sentAt,
+      attachmentUrl: attachmentUrl ?? this.attachmentUrl,
+    );
   }
 }

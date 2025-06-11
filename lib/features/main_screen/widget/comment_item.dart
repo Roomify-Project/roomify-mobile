@@ -23,19 +23,17 @@ class CommentItem extends StatefulWidget {
 class _CommentItemState extends State<CommentItem> {
   @override
   void initState() {
-    PostsCubit.get(context).getElapsedTime(
-        widget.getCommentData.createdAt, widget.getCommentData.id);
-    // _editController =
-    //     TextEditingController(text: widget.getCommentData.content);
-    PostsCubit.get(context).focusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PostsCubit.get(context).getElapsedTime(
+        widget.getCommentData.createdAt,
+        widget.getCommentData.id,
+      );
+
+      PostsCubit.get(context).focusNode = FocusNode();
+    });
     super.initState();
   }
-  @override
-  void dispose() {
-    // _editController.dispose();
-    PostsCubit.get(context).focusNode.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
