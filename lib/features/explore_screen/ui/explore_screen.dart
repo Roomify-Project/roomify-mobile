@@ -25,7 +25,7 @@ class ExploreScreen extends StatelessWidget {
       backgroundColor: ColorsManager.colorPrimary,
       body: Stack(
         children: [
-          CircleWidget(),
+          // CircleWidget(),
           Column(
             children: [
               Padding(

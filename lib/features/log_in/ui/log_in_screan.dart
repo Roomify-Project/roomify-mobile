@@ -1,5 +1,3 @@
-// LogInScreen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -31,12 +29,12 @@ class LogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsManager.colorPrimary,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              const StaticGradientBeam(),
-              BlocProvider(
+      body: Stack(
+        children: [
+          const StaticGradientBeam(), // الخلفية المتحركة
+          SafeArea(
+            child: SingleChildScrollView(
+              child: BlocProvider(
                 create: (BuildContext context) =>
                     LoginCubit(getIt.get<LoginRepo>()),
                 child: BlocConsumer<LoginCubit, LoginStates>(
@@ -58,16 +56,19 @@ class LogInScreen extends StatelessWidget {
                     final loginCubit = LoginCubit.get(context);
 
                     return Form(
-                      key: LoginCubit.get(context).formKey,
+                      key: loginCubit.formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 157.w, top: 68.h),
-                            child: const AnimatedText(text: 'Log In'),
+                          SizedBox(height: 30.h),
+                          const Center(
+                            child:  AnimatedText(text: 'Log In'),
                           ),
                           SizedBox(height: 20.h),
-                           SingupRichText(onLoginTap: () => context.pushNamed(Routes.signUpScreen)),
+                          SingupRichText(
+                            onLoginTap: () =>
+                                context.pushNamed(Routes.signUpScreen),
+                          ),
                           SizedBox(height: 67.h),
                           Center(child: GoogleIcon()),
                           SizedBox(height: 47.42.h),
@@ -108,11 +109,9 @@ class LogInScreen extends StatelessWidget {
                               child: ColorChangingButton(
                                 buttonText: "Log In",
                                 onPressed: () {
-                                  if (LoginCubit.get(context)
-                                      .formKey
-                                      .currentState!
+                                  if (loginCubit.formKey.currentState!
                                       .validate()) {
-                                    LoginCubit.get(context).login();
+                                    loginCubit.login();
                                   }
                                 },
                               ),
@@ -150,9 +149,9 @@ class LogInScreen extends StatelessWidget {
                   },
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

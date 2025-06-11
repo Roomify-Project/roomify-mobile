@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }, builder: (BuildContext context, state) {
         final profileCubit = ProfileCubit.get(context);
         return Scaffold(
-            backgroundColor: ColorsManager.mainColor,
+            backgroundColor: ColorsManager.colorPrimary,
             body: state is GetUserDataProfileLoadingState
                 ? const Padding(
                     padding: EdgeInsets.only(top: 50),
@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : profileCubit.getProfileDataModel != null
                     ? Stack(
                         children: [
-                          CircleWidget(),
+                          // CircleWidget(),
                           Padding(
                             padding: const EdgeInsets.only(top: 60),
                             child: Column(
@@ -458,7 +458,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : const Padding(
                             padding: EdgeInsets.only(top: 50),
                             child: Center(child: CustomShimmerEffect()),
-                          ));
+                          )
+
+        );
       }),
     );
   }
