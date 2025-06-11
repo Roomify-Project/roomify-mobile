@@ -4,11 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/features/create_room_screen/ui/create_room_screen.dart';
+import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.dart';
 import 'package:rommify_app/features/explore_screen/ui/explore_screen.dart';
-
 import 'package:rommify_app/features/profile/profile.dart';
-
 import '../../../core/helpers/shared_pref_helper.dart';
+import '../../../core/widgets/animated_bottom_right.dart';
 import '../../../core/widgets/check_server_connection.dart';
 import '../../../core/widgets/signal_r_notification.dart';
 
@@ -50,12 +50,12 @@ class _NavBarScreenState extends State<NavBarScreen> {
       body: _screens[_selectedIndex],
       bottomNavigationBar: Stack(
         children: [
+
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             left: (_selectedIndex * (MediaQuery.of(context).size.width / 3)) +
                 (MediaQuery.of(context).size.width / 6) - 25,
-
             top: 15, // لضبط موقع الدائرة عموديًا
             child: Container(
               width: 50,
