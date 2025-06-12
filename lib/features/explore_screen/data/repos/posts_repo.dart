@@ -100,12 +100,12 @@ class PostsRepo {
     }
   }
 
-  Future<Either<ErrorHandler,LikeResponse>> removeLike({required String userId,  required bool isPost,required String postId
+  Future<Either<ErrorHandler,String>> removeLike({required String userId,  required bool isPost,required String postId
 
   }) async {
     try {
       final response = await _postsApiService.removeLike( userId: userId, isPost: isPost, postId: postId);
-      return Right(LikeResponse.fromJson(response.data));
+      return const Right("removed Successfully");
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

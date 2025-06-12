@@ -263,13 +263,21 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        int index = getUserPost!.posts
-            .indexWhere((post) => post.userId == right.portfolioPostId);
-        if (index != -1) {
-          getUserPost!.posts[index] = getUserPost!.posts[index].copyWith(
-            likesCount: getUserPost!.posts[index].likesCount + 1,
-          );
-        }
+        // final matchId = isPost ? right.portfolioPostId : right.savedDesignId;
+        //
+        // if (getPostResponse != null) {
+        //   final targetId = getPostResponse!.postData.id;
+        //   final matchId = isPost ? right.portfolioPostId : right.savedDesignId;
+        //
+        //   if (targetId == matchId) {
+        //
+        //   }
+        // }
+        getPostResponse = getPostResponse!.copyWith(
+          postData: getPostResponse!.postData.copyWith(
+            likesCount: getPostResponse!.postData.likesCount + 1,
+          ),
+        );
 
         if (recieverId != SharedPrefHelper.getString(SharedPrefKey.userId)) {
           NotificationSignalRService.sendPushNotification(
@@ -280,7 +288,7 @@ class PostsCubit extends Cubit<PostsStates> {
             postId: postId,
           );
         }
-        emit(AddLikeSuccessState(right));
+        emit(AddLikeSuccessState());
       },
     );
   }
@@ -288,8 +296,10 @@ class PostsCubit extends Cubit<PostsStates> {
   void removeLike(
       {required String postId,
       required bool isPost,
-      required String recieverId}) async {
+      required String recieverId,
+      required}) async {
     emit(AddLikeLoadingState());
+
     final response = await _postsRepo.removeLike(
         userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
         isPost: isPost,
@@ -299,22 +309,21 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        int index = getUserPost!.posts
-            .indexWhere((post) => post.userId == right.portfolioPostId);
-        if (index != -1) {
-          getUserPost!.posts[index] = getUserPost!.posts[index].copyWith(
-            likesCount: getUserPost!.posts[index].likesCount - 1,
-          );
-        }
-        emit(AddLikeSuccessState(right));
+        getPostResponse = getPostResponse!.copyWith(
+          postData: getPostResponse!.postData.copyWith(
+            likesCount: getPostResponse!.postData.likesCount - 1,
+          ),
+        );
+
+        emit(AddLikeSuccessState());
       },
     );
   }
 
-  // String elapsedTime(dynamic dateTime){
-  //
-  //   timeMap[commentId]= time;
-  // }
+// String elapsedTime(dynamic dateTime){
+//
+//   timeMap[commentId]= time;
+// }
 
   void updateComment({required String commentId}) async {
     emit(UpdateCommentLoadingState());
@@ -339,18 +348,18 @@ class PostsCubit extends Cubit<PostsStates> {
             break;
           }
         }
-        // for (int i = 0; i < getCommentResponse!.comments.length; i++) {
-        //   if (getCommentResponse!.comments[i].id == right.id) {
-        //     getCommentResponse!.comments[i] =
-        //         getCommentResponse!.comments[i].copyWith(
-        //       content: right.content,
-        //     );
-        //     print("righttt ${right.content}");
-        //     break;
-        //   }
-        // }
+// for (int i = 0; i < getCommentResponse!.comments.length; i++) {
+//   if (getCommentResponse!.comments[i].id == right.id) {
+//     getCommentResponse!.comments[i] =
+//         getCommentResponse!.comments[i].copyWith(
+//       content: right.content,
+//     );
+//     print("righttt ${right.content}");
+//     break;
+//   }
+// }
         isEditingMap[commentId] = false;
-        // emit(EditState());
+// emit(EditState());
         emit(UpdateCommentSuccessState(right));
       },
     );
@@ -371,16 +380,16 @@ class PostsCubit extends Cubit<PostsStates> {
         getPostResponse!.postData.comments.removeWhere(
           (element) => element.id == commentId,
         );
-        // getCommentResponse!.comments.removeWhere(
-        //   (element) => element.id == commentId,
-        // );
-        // emit(EditState());
+// getCommentResponse!.comments.removeWhere(
+//   (element) => element.id == commentId,
+// );
+// emit(EditState());
         emit(DeleteCommentSuccessState(right));
       },
     );
   }
 
-  // late TextEditingController _editController;
+// late TextEditingController _editController;
   Map<String, bool> isEditingMap = {};
   late FocusNode focusNode;
 
@@ -393,10 +402,10 @@ class PostsCubit extends Cubit<PostsStates> {
   }
 
   void cancelEdit({required String commentId}) {
-    // _editController.text = widget.getCommentData.content;
+// _editController.text = widget.getCommentData.content;
     isEditingMap[commentId] = false;
 
-    // isEditing = false;
+// isEditing = false;
     focusNode.unfocus();
     emit(EditState());
   }
@@ -404,14 +413,14 @@ class PostsCubit extends Cubit<PostsStates> {
   Map<String, String> timeMap = {};
 
   void getElapsedTime(dynamic dateTime, String commentId) {
-    // Convert to DateTime object if it's a string
+// Convert to DateTime object if it's a string
     final DateTime parsedDateTime =
         dateTime is String ? DateTime.parse(dateTime) : dateTime;
 
     final now = DateTime.now();
     final difference = now.difference(parsedDateTime);
 
-    // Calculate time units
+// Calculate time units
     final seconds = difference.inSeconds;
     final minutes = difference.inMinutes;
     final hours = difference.inHours;
@@ -419,7 +428,7 @@ class PostsCubit extends Cubit<PostsStates> {
     final months = (days / 30).floor();
     final years = (days / 365).floor();
 
-    // Return appropriate format based on elapsed time
+// Return appropriate format based on elapsed time
     if (seconds < 60) {
       timeMap[commentId] = '$seconds seconds ago';
     } else if (minutes < 60) {
@@ -484,29 +493,29 @@ class PostsCubit extends Cubit<PostsStates> {
   Map<String, bool> isDownloaded = {};
   Map<String, bool> isLove = {};
 
-  // void toggleBookmark() {
-  //   isBookmarked=!isBookmarked;
-  //   isSavedd=false;
-  //   isDownloaded=false;
-  //   emit(TogelState());
-  // }
-  //
-  // void toggleFavorite() {
-  //   isSavedd=!isSavedd;
-  //   isDownloaded=false;
-  //   isBookmarked=false;
-  //   emit(TogelState());
-  //
-  // }
-  //
-  // void toggleDownload() {
-  //   isDownloaded=!isDownloaded;
-  //   isBookmarked=false;
-  //   isSavedd=false;
-  //
-  //   emit(TogelState());
-  //
-  // }
+// void toggleBookmark() {
+//   isBookmarked=!isBookmarked;
+//   isSavedd=false;
+//   isDownloaded=false;
+//   emit(TogelState());
+// }
+//
+// void toggleFavorite() {
+//   isSavedd=!isSavedd;
+//   isDownloaded=false;
+//   isBookmarked=false;
+//   emit(TogelState());
+//
+// }
+//
+// void toggleDownload() {
+//   isDownloaded=!isDownloaded;
+//   isBookmarked=false;
+//   isSavedd=false;
+//
+//   emit(TogelState());
+//
+// }
   void download({required String imageUrl}) async {
     isDownloaded[imageUrl] = true;
 
@@ -559,10 +568,10 @@ class PostsCubit extends Cubit<PostsStates> {
   SearchUserModel? searchUserModel;
 
   void searchUser({required String query}) async {
-    // إلغاء أي timer سابق
+// إلغاء أي timer سابق
     _debounceTimer?.cancel();
 
-    // إنشاء timer جديد
+// إنشاء timer جديد
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
       if (query.isEmpty) return;
 

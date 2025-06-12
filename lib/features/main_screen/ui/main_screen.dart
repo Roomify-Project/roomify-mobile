@@ -288,7 +288,7 @@ class _MainScreenState extends State<MainScreen> {
                                         postId: postCubit.getPostResponse!.postData.id,
                                         isPost: postCubit.getPostResponse!.type=='Post',
                                           recieverId: postCubit.getPostResponse!.postData.userId
-                                    ):postCubit.addLike(
+                                    ):postCubit.removeLike(
                                        postId: postCubit.getPostResponse!.postData.id,
                                        isPost: postCubit.getPostResponse!.type=='Post',
                                        recieverId: postCubit.getPostResponse!.postData.userId

@@ -84,8 +84,6 @@ class AddCommentErrorState extends PostsStates{
 
 class AddLikeLoadingState extends PostsStates{}
 class  AddLikeSuccessState extends PostsStates{
-  final LikeResponse likeResponse;
-  AddLikeSuccessState(this.likeResponse);
 }
 class AddLikeErrorState extends PostsStates{
   final String message;
