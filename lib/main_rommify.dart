@@ -44,10 +44,10 @@ class RoomifyApp extends StatelessWidget {
             return Stack(
               children: [
                 EasyLoading.init()(context, child), // مهم
-                 // IgnorePointer(
-                 //   ignoring: true,
-                 //   child: CircleWidget(),
-                 // ),
+                 IgnorePointer(
+                   ignoring: true,
+                   child: CircleWidget(),
+                 ),
               ],
             );
           },

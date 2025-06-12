@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/theming/colors.dart';
