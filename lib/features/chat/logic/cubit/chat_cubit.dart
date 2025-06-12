@@ -48,7 +48,6 @@ class ChatCubit extends Cubit<ChatStates> {
   Map<String, String> messageNotSend = {};
 
   int i = 0;
-  DateTime currentDateTime = DateTime.now();
   File? imageFile;
 
   void pickImage({required ImageSource source}) async {
@@ -69,6 +68,8 @@ class ChatCubit extends Cubit<ChatStates> {
   Map<String, dynamic> userMap = {};
 
   void sendMessage({required String receiverId, String? messageNotSent}) async {
+    DateTime currentDateTime = DateTime.now();
+
     if (messageController.text.isEmpty && imageFile == null) {
       return;
     }
@@ -126,6 +127,7 @@ class ChatCubit extends Cubit<ChatStates> {
           getMessagesResponse!.messages[index] = updatedResponse;
           checkSendMessage[updatedResponse.messageId] = true;
         }
+        print("sendddddddd");
         NotificationSignalRService.sendPushNotification(
           title: '${SharedPrefHelper.getString(SharedPrefKey.name)}',
           body: getMessageResponse.content,
@@ -191,6 +193,8 @@ class ChatCubit extends Cubit<ChatStates> {
   }
 
   Future<void> listenToData() async {
+    DateTime currentDateTime = DateTime.now();
+
     print("listeennnn");
     _subscription = friendChatStream?.listen(
       (getMessageListenResponse) {
@@ -286,6 +290,8 @@ class ChatCubit extends Cubit<ChatStates> {
 
   void deleteMessage(
       {required String messageId, required String recievdId}) async {
+    DateTime currentDateTime = DateTime.now();
+
     print("iiiii ${i}");
     emit(DeleteMessageLoadingStates());
     final data = await _chatRepo.deleteMessage(messageId: messageId);

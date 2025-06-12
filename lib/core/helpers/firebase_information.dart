@@ -1,13 +1,13 @@
 final serviceAccountJson = {
-  "type": "service_account",
-  "project_id": "roomify-beb04",
-  "private_key_id": "19108375b760f0c8f2a0fcfcafb85747c7cf6b49",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDf8HD2XFbb+VIi\nzAfQsM5hi/teJ0gwOsI0pO7ngjZVBJ+XRnwYIvyI/PPkJEsFpNZRawowGAdK7cn3\n1H5qv/A6dM3VRvejZq4JQXSNQ2rw9Dg352reeDUyDq4mRPt6sIY2/EpjpjkzuYhq\n39Rr6b7d8kXSoyoIHHKsXoPFXBHXS9IrJJqcg6GxPIoJhXQNUDbnjt00tQ2TerZh\n0XiC8IseCQo49HMaZoXfnwDnFmUuw4oJvrieDUsXbTVxhBhwTHSVE4JLKgD5zse1\nW+OBe47pgMjyr8nrgo21KDoehLzVIZBGy+AEVRfKiUBxxvECmEXgAvU78z6IVXFd\n2GsO+L7HAgMBAAECggEAItBh92Lmm/8YLlGy21ZJV2/oLbyEo/7Wh1Gm1HXxVWlJ\nGD78dtIlmXRdxDeCNEfqi7DM3io2JAdwsScnWhgp1CSphUEpqY0CfGzhHj7/ZqNJ\nBCPlgN2GQ5h1qXxq7il4TB8Pv4stdGWhGCBhCT/HDQEnqrX0CFvH1hVBfhKwsVwN\nJoWkEVN7+0hXsCTD255uDwOOTurTDL4hKoMO5uRM0PiFOxIMo1X/Jsq+FsJL+R7D\nDBC7KWiNKSdYZBfdNIX4zUQOs3AXsNuJKAitWCNX2ti4XerUYkH/a3gJYYk0Gg8O\npby6IVptsh3YxcWcEdB+09xUbpyxensat796zQZG9QKBgQD989HzT6BJMCxzxrdH\nqHRV7y1T1G4SyTFLeB4xoyBJvjvZJu0EPQ9QxQJQ+GkOs5u8BooejIYJ9/FxFo62\nqO+paLwrExYFufcNbqAa3ssS8T9YVr8eQuFaJsarwHTBxRIJuFC8HtwUxTzHnqfx\nJ2zUdmvhV78VqTt0gP4looRU+wKBgQDhvqvZkQRUM2oKQ3J/9GLT+zenys9KgHxz\nmmIe7+oXtTkENHuZfo+EFNkk7uf24JjoKS1POeA82KomL7Wqoq+jwau0DG0Z97Y1\nbnMvJKacGgLR0dGU55MAIsqDQn8mHDSLTE0jHY2jqj1ceqqrGB/oDNt6FPIc21Fi\n6sr0l46bpQKBgFfuKG/6ziEJURr1X1isdzuaCTPRhhtzFmJvQOUm+nMOL2LNG5ww\nGDF7RYYLvTSd8/pyuThCp9ajxzHFAb01WWZrIVw4y5NIBMbd2wnywpXYenp37szn\nk2fHrVqi1MqTFd/PtgStGr8GXDkyMixJ3mDicBAidcNmSXPZhiY502ApAoGAZ5WO\nVW7thZVx+vOn/n6tOofzqdKt+4mpkYIts/Ryfh5x4zQR4wTn5buLSB834Vh90UnT\nuJ7d/g2NRahuu7Wa0pFzsFJjXZ8ExM/Bmsg+izKESLL2cFUyZsWQF1rT7TDUC3cf\njhVpgMgFEAJZfdi8C0abDxG9ZvBcD/+c0U8Z6OECgYBjd3gxOqMRc9ba3HMrLhTK\nRVBUnl0GIQ6tJRwSUOBo0X7pPLy7Ux+yglJi4uTb6lWXIiFZjasEw/UK4vSngTtv\nyCv6nNB/YF1k+J9/416MkkvxW7LqC5jV6TOVtXak5geF+nWXhXBs8rOqRXqlF9Ai\npelMIMIkfIidWzz5hwaFMg==\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-fbsvc@roomify-beb04.iam.gserviceaccount.com",
-  "client_id": "108968200977035992277",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40roomify-beb04.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+    "type": "service_account",
+    "project_id": "roomify-beb04",
+    "private_key_id": "fa7464f509f0c026fe8af16ac69f4cc3de770e2b",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC4iRE/gYFz1aZA\nkToo7mowkpPyl4ObvpNlGUdrltR/0bl4Pnptdr/ZMZpBqCXttxXXlS48MQxop9bz\n8Q72NVFL8hXbt4Y+flhL+HZoQC4FM8Gsq4KifQnMLJF0ze6GKyTg1IwW/TkrImcr\nj6FNT6EjrXOzz8I7/Hm3O+yPV+13GXeG6yiV2Z+kJ05LI1Qn//n+Z0Ng3+iDNEOy\n5nS30Oc9j0++k4zTBLwJ2uoxv7esdbmQ+ORCIfBAplw9fcghqhgmhzhKrzlJDad1\nCUXo5q63VzFqNMgRszdZB3fiIDYl42FF0Nvg4WY0jrqjKIw4J9OIkO60HUtxZh2z\nrLboUQx7AgMBAAECggEAIn4sZSx14Ar9anA66M+3taCQWvYLOZ9jubAB85Bb5BB1\nlI5JIBDkR1rINKGThV2Fjahq3gFlCmLlAO/8FfVdXs6/WzRwuVmwc3Lb3xyv/XTx\nLK9aWbj5jdp+zdB4V0fVOtk/3kQy3Wcu1auhQOwzeJHBYMjiy4ej0KY4z4pl7q7Y\nEm5kzTVrF53AMrypnFjaP/Jdtck8p5M+v44vG4ECgtkEAzCVFRTsVyzoTmlh5w/T\nbl68Ywj7WrOzZ7JzSLPryOq6+tboSS7MoarlSPRxztburuBIQQPAzlcwFM1b6rFu\ny/tPwRLngUrsk1+kX/z3DdXwopvRdt+wI4l6Texy8QKBgQD19JFPD9bTMilciQ+f\ndJ04Bv/NzVISIoRYC2jSqv5L3PH70sYRurjFKcxziaiJxiIHMJj4IG0k9ao6rTIj\nzi+Csi9ZtEmWE0F+/LmFOEny3A7BCHLe6rWlAakJ5R68DXs9B6AXGeepGhhcbd1W\n1P8F61mjhwtK+g7A3J18Wnv57wKBgQDAEly1Ngz9k16J4pOCsRPK75NPdJBAmx62\n+YRDw9g1EGBUYGadirEqErqXBVf/iev9pZXSxC4emUnT1fjoQxyIZYlmWYCyoYZS\nLCtUG3LBOK5uVn6DGfM1wujuuE4S5m621V00B6lvxtyP0E9vaGXNrlTgFVzQox6K\ndKNbVaSSNQKBgBRXQZ00RiP5RgptG2moj0gO7CDtFhiB2kgdyXGCyr0jbK/S4qac\ntqM3rbzwaYvbYv0NO9lpdR1VY9qucDMd3jgE3H2it2M9/HCwHfeyjAsVv/Ke7EEb\nUCJxXLWAyWXsB4EonEjMz6fgjJs4StHfk6e9qxAnHvv4ajfxBuU95nrpAoGAC7AS\nXCSR3cxd8F4NQ+Kqpaq2eBtLu+K0l8XPOqBsQ65fbkL/e465ASpqmE4G8NHfvmuZ\nFl5BwDLrvyxCHUAYOGSVW9kOb9BMcCun51JURVXBp40z3Z5yok7eBcjJV3UWP6H0\nLfpZYSfkvAudCdZ8e2ukVo52O2vxq9M1LZWkkhECgYAcjjVt+x8JNzif4lp4B8ad\n0Tn0uxztN0viuVRkoOVutRdE8VD9/BcRTVC/sHCyIXHR8m/77oQSBw8qwBrA53yC\nQhcLfKqB9R132dC5rlf0RQoN915QMQOVEtn41ZL6yeX/vLM4EgRxStEn36f/8Xu+\nT3zDxwex9vohVInbvIfjuQ==\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-fbsvc@roomify-beb04.iam.gserviceaccount.com",
+    "client_id": "108968200977035992277",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40roomify-beb04.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
 };

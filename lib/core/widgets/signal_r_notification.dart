@@ -59,6 +59,8 @@ class NotificationSignalRService {
           "message": message.notification!.body ?? "New Message",
           "title": message.notification!.title ?? "New Notification",
         });
+
+
       }
     });
 
@@ -111,6 +113,7 @@ class NotificationSignalRService {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         if (response.payload != null) {
+
           // final data = jsonDecode(response.payload!);
           // final type = data['type'];
           //
