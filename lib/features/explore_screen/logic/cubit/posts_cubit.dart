@@ -145,10 +145,10 @@ class PostsCubit extends Cubit<PostsStates> {
         );
 
         // Update posts list
-        getPostsResponse!.posts.insert(0, newPost); // Add to beginning of list
-        getUserPost!.posts.insert(0, newUserPost); // Add to beginning of list
+        getPostsResponse?.posts.insert(0, newPost); // Add to beginning of list
+        getUserPost?.posts.insert(0, newUserPost); // Add to beginning of list
         isExpandedList =
-            List.generate(getPostsResponse!.posts.length, (index) => false);
+            List.generate(getUserPost?.posts.length??0, (index) => false);
 
         emit(AddPostSuccessState(right));
       },

@@ -102,13 +102,16 @@ class _CustomHistoryDesignGridViewProfileState extends State<CustomHistoryDesign
                     final historyItem = history.history[index];
                     return InkWell(
                       onTap: () {
-                        context.pushNamed(Routes.mainScreen,arguments: {
-                          'postId':historyItem.id
-                        });
+                        // print("responseeee ${profileCubit.imageHistoryResponse!.history[index].applicationUser}");
+                        // context.pushNamed(Routes.mainScreen,arguments: {
+                        //   'postId':historyItem.id
+                        // });
                       },
                       child: ImageCard(
+                        isZoom: false,
+                        isSave: true,
                         imageUrl: historyItem.generatedImageUrl,
-                        profileImageUrl: 'assets/images/1O0A0210.jpg',
+                        profileImageUrl:"",
                         onExpand: () {
                           setState(() {
                             profileCubit.isExpandedListHistory[index] = !profileCubit.isExpandedListHistory[index];

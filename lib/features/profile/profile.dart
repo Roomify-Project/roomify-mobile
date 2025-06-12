@@ -352,10 +352,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             context.pushNamed(Routes.addPost);
                                           }, profileCubit)
                                         : const SizedBox(),
-                                    SizedBox(width: 30.w),
-                                    _buildIcon(Icons.favorite, 0, () {
-                                      profileCubit.toggleProfile(0);
-                                    }, profileCubit),
+                                    // SizedBox(width: 30.w),
+                                    // _buildIcon(Icons.favorite, 0, () {
+                                    //   profileCubit.toggleProfile(0);
+                                    // }, profileCubit),
                                     SizedBox(width: 30.w),
                                     _buildIcon(Icons.history, 1, () {
                                       profileCubit.toggleProfile(1);
@@ -378,22 +378,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               profileId: widget.profileId,
                                             ),
                                           )
-                                        : profileCubit.item == 0
-                                            ? Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 23.w, right: 23.w),
-                                                child:
-                                                    CustomSavedDesignGridViewProfile(
-                                                        profileId:
-                                                            widget.profileId),
-                                              )
+                                        // : profileCubit.item == 0
+                                        //     ? Padding(
+                                        //         padding: EdgeInsets.only(
+                                        //             left: 23.w, right: 23.w),
+                                        //         child:
+                                        //             CustomSavedDesignGridViewProfile(
+                                        //                 profileId:
+                                        //                     widget.profileId),
+                                        //       )
+                                    : profileCubit.item == 1
+                                        ? Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 23.w, right: 23.w),
+                                            child:
+                                            CustomHistoryDesignGridViewProfile(
+                                                profileId:
+                                                widget.profileId),
+                                    )
                                             : Padding(
                                                 padding: EdgeInsets.only(
                                                     left: 23.w, right: 23.w),
                                                 child:
-                                                    CustomHistoryDesignGridViewProfile(
-                                                        profileId:
-                                                            widget.profileId),
+                                                CustomSavedDesignGridViewProfile(
+                                                    profileId:
+                                                    widget.profileId),
                                               ))
                               ],
                             ),

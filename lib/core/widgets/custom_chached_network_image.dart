@@ -118,7 +118,7 @@ class _ZoomableImagePage extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Center(
+      body: SizedBox.expand(
         child: InteractiveViewer(
           panEnabled: true,
           boundaryMargin: const EdgeInsets.all(20),
@@ -127,8 +127,8 @@ class _ZoomableImagePage extends StatelessWidget {
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.contain,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white),
+            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Center(child: Icon(Icons.error, color: Colors.white)),
           ),
         ),
       ),

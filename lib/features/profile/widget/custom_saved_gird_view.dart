@@ -110,7 +110,8 @@ class _CustomSavedDesignGridViewProfileState extends State<CustomSavedDesignGrid
                       },
                       child: ImageCard(
                         imageUrl: saved.generatedImageUrl,
-                        profileImageUrl: 'assets/images/1O0A0210.jpg',
+                        profileImageUrl:profileCubit.savedDesignResponse!.savedDesigns[index].userProfilePicture??"",
+                        isZoom: false,
                         onExpand: () {
                           setState(() {
                             profileCubit.isExpandedListSaved[index] = !profileCubit.isExpandedListSaved[index];

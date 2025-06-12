@@ -277,7 +277,7 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           // قسم الإحصائيات
                           Padding(
-                            padding: const EdgeInsets.all(5.0),
+                            padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 10.h),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

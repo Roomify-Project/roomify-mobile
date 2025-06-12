@@ -507,16 +507,15 @@ class ZoomableImagePage extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Center(
+      body: SizedBox.expand(
         child: InteractiveViewer(
           panEnabled: true,
           boundaryMargin: const EdgeInsets.all(20),
           minScale: 0.5,
           maxScale: 4.0,
-          child: Image.file(
+          child:  Image.file(
             imageUrl,
-            fit: BoxFit.cover,
-
+            fit: BoxFit.contain,
           ),
         ),
       ),
