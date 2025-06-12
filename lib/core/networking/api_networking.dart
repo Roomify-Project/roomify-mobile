@@ -99,7 +99,9 @@ class ApiConstants {
   static String deleteMessage({required String messageId}) {
     return '/api/chat/delete/$messageId';
   }
-
+  static String addLike({required String postId}) {
+    return "/api/PortfolioPost/$postId/likes";
+  }
 }
 
 class ApiErrors {

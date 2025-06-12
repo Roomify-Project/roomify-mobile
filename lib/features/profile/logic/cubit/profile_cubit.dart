@@ -49,7 +49,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
     isFollowingList[followId]=! isFollowingList[followId]!;
     emit(ChangeFollowCount());
   }
-  void addFollow({required String followId,bool isAdd=false}) async {
+  void addFollow({required String followId,bool isAdd=true}) async {
     isFollowingList[followId]=! isFollowingList[followId]!;
     isFollowing = !isFollowing!;
     // emit(AddFollowSuccessState(message: ""));
@@ -80,7 +80,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
       },
     );
   }
-  void unFollow({required String followId,bool isMinus=false}) async {
+  void unFollow({required String followId,bool isMinus=true}) async {
     isFollowingList[followId]=! isFollowingList[followId]!;
 
     isFollowing = !isFollowing!;

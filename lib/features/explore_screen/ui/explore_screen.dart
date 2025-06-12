@@ -63,6 +63,7 @@ class ExploreScreen extends StatelessWidget {
                   child:  const CustomGridViewExplore(),
                 ),
               ),
+
             ],
           ),
 

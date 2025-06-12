@@ -10,6 +10,7 @@ import '../../../../core/widgets/custom_empity_list.dart';
 import '../../../../core/widgets/custom_error.dart';
 import '../../../../core/widgets/custom_shimmer.dart';
 import '../../../profile/profile.dart';
+import '../../data/models/get_posts_response.dart';
 
 class CustomGridViewExplore extends StatefulWidget {
   const CustomGridViewExplore({super.key});
@@ -19,7 +20,6 @@ class CustomGridViewExplore extends StatefulWidget {
 }
 
 class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +34,7 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
 
     return RefreshIndicator(
       onRefresh: () async {
-         postsCubit.getAllPosts();
+        postsCubit.getAllPosts();
       },
       child: BlocBuilder<PostsCubit, PostsStates>(
         builder: (BuildContext context, state) {
@@ -43,7 +43,6 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
           }
 
           if (state is GetAllPostsErrorState) {
-            print("stateeeee ${state.message}");
             return Center(
               child: AnimatedErrorWidget(
                 title: "Loading Error",
@@ -54,8 +53,11 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
             );
           }
 
-          final posts = postsCubit.getAllPostsResponse?.posts;
-          if (posts == null || posts.isEmpty) {
+          final posts = postsCubit.getAllPostsResponse?.posts ?? [];
+          final savedDesigns =
+              postsCubit.getAllPostsResponse?.savedDesigns ?? [];
+
+          if (posts.isEmpty && savedDesigns.isEmpty) {
             return const Center(
               child: AnimatedEmptyList(
                 title: "No Posts Found",
@@ -65,38 +67,64 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
             );
           }
 
-          // Initialize isExpandedList
+          // دمج البوستات والتصاميم
+          final combinedList = [
+            ...posts.map((e) => CombinedPost(post: e)),
+            ...savedDesigns.map((e) => CombinedPost(saved: e)),
+          ];
+
+          // تأكد إن قائمة التوسيع بنفس الطول
+          // postsCubit.ensureExpandedListLength(combinedList.length);
 
           return GridView.builder(
-            // padding: EdgeInsets.symmetric(horizontal: 10.w),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 15,
               childAspectRatio: 169 / 128,
             ),
-            itemCount: posts.length,
+            itemCount: posts.length+savedDesigns.length,
             itemBuilder: (context, index) {
+              final item = combinedList[index];
+
+              final imageUrl = item.isPost
+                  ? item.post!.imagePath
+                  : item.saved!.generatedImageUrl;
+
+              final profileImage = item.isPost
+                  ? item.post!.userProfilePicture ?? ""
+                  : item.saved!.userProfilePicture ?? "";
+
+              final userId =
+              item.isPost ? item.post!.userId : item.saved!.userId;
+
+              final id = item.isPost ? item.post!.id : item.saved!.id;
+
               return InkWell(
                 onTap: () {
-                  context.pushNamed(Routes.mainScreen,arguments: {
-                    'postId':posts[index].id
+                  context.pushNamed(Routes.mainScreen, arguments: {
+                    'postId': id,
+                    'isPost':item.isPost
                   });
-                  },
+                },
                 child: ImageCard(
                   isZoom: false,
                   isProfile: true,
-                  imageUrl: posts[index].imagePath,
-                  profileImageUrl: posts[index].ownerProfilePicture??"",
+                  isLove: true,
+                  imageUrl: imageUrl,
+                  profileImageUrl: profileImage,
                   onPressed: () {
-                    context.pushNamed(Routes.profile,arguments: {'profileId':posts[index].applicationUserId});
+                    context.pushNamed(Routes.profile,
+                        arguments: {'profileId': userId});
                   },
                   onExpand: () {
                     setState(() {
-                      postsCubit.isExpandedListExploreScreen[index] = !postsCubit.isExpandedListExploreScreen[index];
+                      postsCubit.isExpandedListExploreScreen[index] =
+                      !postsCubit.isExpandedListExploreScreen[index];
                     });
                   },
-                  isExpanded: postsCubit.isExpandedListExploreScreen[index], postsCubit: postsCubit,
+                  isExpanded: postsCubit.isExpandedListExploreScreen[index],
+                  postsCubit: postsCubit,
                 ),
               );
             },
@@ -106,86 +134,13 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
     );
   }
 }
-// ImageCard Widget
-// class ImageCard extends StatelessWidget {
-//   final String imageUrl;
-//   final String profileImageUrl;
-//   final VoidCallback onExpand;
-//   final bool isExpanded;
-//
-//   const ImageCard({
-//     Key? key,
-//     required this.imageUrl,
-//     required this.profileImageUrl,
-//     required this.onExpand,
-//     required this.isExpanded,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       elevation: 4,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(12.r),
-//       ),
-//       child: Stack(
-//         children: [
-//           // Main Image
-//           ClipRRect(
-//             borderRadius: BorderRadius.circular(12.r),
-//             child: CachedNetworkImage(
-//               imageUrl: imageUrl,
-//               fit: BoxFit.cover,
-//               width: double.infinity,
-//               height: double.infinity,
-//               placeholder: (context, url) => const ShimmerEffect(),
-//               errorWidget: (context, url, error) => const Icon(
-//                 Icons.error,
-//                 color: Colors.red,
-//               ),
-//             ),
-//           ),
-//
-//           // Profile Image
-//           Positioned(
-//             top: 8.h,
-//             left: 8.w,
-//             child: CircleAvatar(
-//               radius: 16.r,
-//               backgroundImage: CachedNetworkImageProvider(profileImageUrl),
-//             ),
-//           ),
-//
-//           // Expand Button
-//           Positioned(
-//             bottom: 8.h,
-//             right: 8.w,
-//             child: IconButton(
-//               icon: Icon(
-//                 isExpanded ? Icons.expand_less : Icons.expand_more,
-//                 color: Colors.white,
-//               ),
-//               onPressed: onExpand,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-// // ShimmerEffect Widget
-// class ShimmerEffect extends StatelessWidget {
-//   const ShimmerEffect({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Shimmer.fromColors(
-//       baseColor: Colors.grey[300]!,
-//       highlightColor: Colors.grey[100]!,
-//       child: Container(
-//         color: Colors.white,
-//       ),
-//     );
-//   }
-// }
+
+// الكلاس الموحّد
+class CombinedPost {
+  final PortfolioPost? post;
+  final SavedDesign? saved;
+
+  CombinedPost({this.post, this.saved});
+
+  bool get isPost => post != null;
+}

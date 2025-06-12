@@ -63,15 +63,17 @@ class _GenerateRoomScreenState extends State<GenerateRoomScreen> {
                                 itemCount: generateCubitItem.generatedImagesResponse!
                                     .generatedImageUrls.length,
                                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2, // عمودين
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  childAspectRatio: 1, // تخلي كل صورة مربعة
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 12,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 169 / 128,
                                 ),
                                 itemBuilder: (context, index) {
                                   return ImageCard(
+                                    isZoom: true,
                                       imageUrl: generateCubitItem.generatedImagesResponse!.generatedImageUrls[index],
                                       profileImageUrl: '',
+                                      isSave: true,
                                       isProfile: false,
                                       onExpand: () {
                                         setState(() {

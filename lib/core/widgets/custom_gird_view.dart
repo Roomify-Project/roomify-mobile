@@ -54,7 +54,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
             return const Center(child: CustomShimmerEffect());
           }
 
-          final posts = postsCubit.getPostsResponse?.posts;
+          final posts = postsCubit.getUserPost?.posts;
 
           // Error State
           if (state is GetUserPostsErrorState) {
@@ -103,7 +103,7 @@ class _CustomGridViewProfileState extends State<CustomGridViewProfile> {
                 child: ImageCard(
                   isZoom: false,
                   imageUrl: post.imagePath,
-                  profileImageUrl: post.ownerProfilePicture??"",
+                  profileImageUrl: post.userProfilePicture??"",
                   onExpand: () {
                     setState(() {
                       postsCubit.isExpandedList[index] = !postsCubit.isExpandedList[index];
@@ -130,6 +130,7 @@ class ImageCard extends StatelessWidget {
   final bool isProfile;
   final BoxFit fit;
   final bool isZoom;
+  final bool isSave;
 
   const ImageCard({
     super.key,
@@ -141,7 +142,7 @@ class ImageCard extends StatelessWidget {
     required this.postsCubit,
     this.isProfile = false,
     this.fit = BoxFit.cover,
-    this.isZoom = true,
+    this.isZoom = true,  this.isSave=false,
   });
 
   @override
@@ -216,21 +217,24 @@ class ImageCard extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          isSave?
                           InkWell(
-                            child: Icon(Icons.bookmark_border,
-                                color: false ? Colors.red : ColorsManager.white,
+                            child: Icon(Icons.favorite_border,
+                                color: postsCubit.isSaved[imageUrl] ?? false
+                                    ? Colors.red
+                                    : ColorsManager.white,
                                 size: 20),
-                            onTap: () {
-                              // postsCubit.toggleBookmark();
-                            },
-                          ),
-                          SizedBox(width: 10.w),
-                          InkWell(
                             onTap: () {
                               postsCubit.saveDesign(imageUrl: imageUrl);
                             },
+                          ):SizedBox(),
+                          isSave?
+                          SizedBox(width: 10.w):SizedBox(),
+                          InkWell(
+                            onTap: () {
+                            },
                             child: Icon(Icons.favorite_border,
-                                color: postsCubit.isFavorite[imageUrl] ?? false
+                                color:  false
                                     ? Colors.red
                                     : ColorsManager.white,
                                 size: 20),

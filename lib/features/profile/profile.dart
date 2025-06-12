@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
@@ -485,6 +486,9 @@ class ImageCard extends StatelessWidget {
   final bool isProfile;
   final BoxFit fit;
   final bool isZoom;
+  final bool isSave;
+  final bool isLove;
+
   const ImageCard({
     super.key,
     required this.imageUrl,
@@ -495,23 +499,31 @@ class ImageCard extends StatelessWidget {
     required this.postsCubit,
     this.isProfile = false,
     this.fit = BoxFit.cover,
-    this.isZoom = true,
+    this.isZoom = true,  this.isSave=false,  this.isLove=false,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PostsCubit, PostsStates>(
       listener: (context, state) {
-        if (state is DownloadErrorState) {
-          flutterShowToast(message: state.message, toastCase: ToastCase.error);
-        } else if (state is DownloadSuccessState) {
-          flutterShowToast(
-              message: "Download successfully", toastCase: ToastCase.success);
-        } else if (state is SaveDesignSuccessState) {
-          flutterShowToast(
-              message: "Saved successfully", toastCase: ToastCase.success);
-        } else if (state is SaveDesignErrorState) {
-          flutterShowToast(message: state.message, toastCase: ToastCase.error);
+        if (state is DownloadLoadingState || state is SaveDesignLoadingState) {
+          EasyLoading.show();
+        }
+        else {
+          EasyLoading.dismiss();
+          if (state is DownloadErrorState) {
+            flutterShowToast(
+                message: state.message, toastCase: ToastCase.error);
+          } else if (state is DownloadSuccessState) {
+            flutterShowToast(
+                message: "Download successfully", toastCase: ToastCase.success);
+          } else if (state is SaveDesignSuccessState) {
+            flutterShowToast(
+                message: "Saved successfully", toastCase: ToastCase.success);
+          } else if (state is SaveDesignErrorState) {
+            flutterShowToast(
+                message: state.message, toastCase: ToastCase.error);
+          }
         }
       },
       builder: (BuildContext context, state) {
@@ -538,29 +550,29 @@ class ImageCard extends StatelessWidget {
             ),
             isProfile
                 ? Positioned(
-                    top: 10.w,
-                    left: 8.w,
-                    child: InkWell(
-                      onTap: onPressed,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipOval(
-                            child: CustomCachedNetworkImage(
-                          imageUrl: profileImageUrl,
-                          fit: BoxFit.cover,
-                          width: 20.w,
-                          height: 20.h,
-                          isDefault: true,
-                        )),
-                      ),
-                    ),
-                  )
-                : SizedBox(),
+              top: 10.w,
+              left: 8.w,
+              child: InkWell(
+                onTap: onPressed,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                      child: CustomCachedNetworkImage(
+                        imageUrl: profileImageUrl,
+                        fit: BoxFit.cover,
+                        width: 20.w,
+                        height: 20.h,
+                        isDefault: true,
+                      )),
+                ),
+              ),
+            )
+                : const SizedBox(),
             Positioned(
-              top: 10,
-              right: 8,
+              top: 12.h,
+              right: 8.w,
               child: GestureDetector(
                 onTap: onExpand,
                 child: Row(
@@ -570,35 +582,40 @@ class ImageCard extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          isSave?
                           InkWell(
                             child: Icon(Icons.bookmark_border,
-                                color: false ? Colors.red : ColorsManager.white,
-                                size: 20),
-                            onTap: () {
-                              // postsCubit.toggleBookmark();
-                            },
-                          ),
-                          SizedBox(width: 10.w),
-                          InkWell(
-                            onTap: () {
-                              postsCubit.saveDesign(imageUrl: imageUrl);
-                            },
-                            child: Icon(Icons.favorite_border,
-                                color: postsCubit.isFavorite[imageUrl] ?? false
+                                color: postsCubit.isSaved[imageUrl] ?? false
                                     ? Colors.red
                                     : ColorsManager.white,
                                 size: 20),
-                          ),
-                          SizedBox(width: 10.w),
+                            onTap: () {
+                              postsCubit.saveDesign(imageUrl: imageUrl);
+                            },
+                          ):SizedBox(),
+                          isSave?
+                          SizedBox(width: 10.w):SizedBox(),
+                          isLove?
+                          InkWell(
+                            onTap: () {
+                            },
+                            child: const Icon(Icons.favorite_border,
+                                color:  false
+                                    ? Colors.red
+                                    : ColorsManager.white,
+                                size: 20),
+                          ):const SizedBox(),
+                          isLove?
+                          SizedBox(width: 10.w):const SizedBox(),
                           InkWell(
                               onTap: () {
                                 postsCubit.download(imageUrl: imageUrl);
                               },
                               child: Icon(Icons.download,
                                   color:
-                                      postsCubit.isDownloaded[imageUrl] ?? false
-                                          ? Colors.red
-                                          : ColorsManager.white,
+                                  postsCubit.isDownloaded[imageUrl] ?? false
+                                      ? Colors.red
+                                      : ColorsManager.white,
                                   size: 20)),
                           SizedBox(width: 10.w),
                         ],

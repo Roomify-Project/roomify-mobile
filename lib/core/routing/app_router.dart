@@ -59,7 +59,7 @@ class AppRouter {
         final arguments = settings.arguments as Map<String, dynamic>?;
 
         return MaterialPageRoute(
-          builder: (_) =>   MainScreen(postId: arguments?['postId'] as String??"",
+          builder: (_) =>   MainScreen(postId: arguments?['postId'] as String??"", isPost: arguments?['isPost'],
           ),
         );
       case Routes.chatsScreen:

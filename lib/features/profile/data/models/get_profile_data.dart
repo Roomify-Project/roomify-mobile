@@ -4,8 +4,8 @@ class GetProfileDataModel {
   final String fullName;
   final String bio;
   final String email;
-  final String? profilePicture;
-  final String? phoneNumber;
+  final String? profilePicture; // ✅ null safety
+  final String? phoneNumber;    // ✅ null safety
   final String role;
   final bool emailConfirmed;
 
@@ -15,8 +15,8 @@ class GetProfileDataModel {
     required this.fullName,
     required this.bio,
     required this.email,
-     this.profilePicture,
-    this.phoneNumber,
+    this.profilePicture, // ✅
+    this.phoneNumber,    // ✅
     required this.role,
     required this.emailConfirmed,
   });
@@ -28,9 +28,9 @@ class GetProfileDataModel {
       fullName: json['fullName'],
       bio: json['bio'],
       email: json['email'],
-      profilePicture: json['profilePicture']??"",
-      phoneNumber: json['phoneNumber']??"",
-      role: json['role'],
+      profilePicture: json['profilePicture'], // might be null
+      phoneNumber: json['phoneNumber'],       // might be null
+      role: json['roles'],
       emailConfirmed: json['emailConfirmed'],
     );
   }
@@ -44,7 +44,7 @@ class GetProfileDataModel {
       'email': email,
       'profilePicture': profilePicture,
       'phoneNumber': phoneNumber,
-      'role': role,
+      'roles': role,
       'emailConfirmed': emailConfirmed,
     };
   }

@@ -1,55 +1,93 @@
 class GetPostsResponse {
-  final List<GetPostsResponseData> posts;
+  final List<PortfolioPost> posts;
+  final List<SavedDesign> savedDesigns;
 
-  GetPostsResponse({required this.posts});
+  GetPostsResponse({
+    required this.posts,
+    required this.savedDesigns,
+  });
 
-  factory GetPostsResponse.fromJson(List<dynamic> json) {
-    List<GetPostsResponseData> posts = json.map((item) => GetPostsResponseData.fromJson(item)).toList();
-    return GetPostsResponse(posts: posts);
-  }
-
-  List<Map<String, dynamic>> toJson() {
-    return posts.map((post) => post.toJson()).toList();
+  factory GetPostsResponse.fromJson(Map<String, dynamic> json) {
+    return GetPostsResponse(
+      posts: (json['portfolioPosts'] as List)
+          .map((e) => PortfolioPost.fromJson(e))
+          .toList(),
+      savedDesigns: (json['savedDesigns'] as List)
+          .map((e) => SavedDesign.fromJson(e))
+          .toList(),
+    );
   }
 }
 
-class GetPostsResponseData {
+class PortfolioPost {
   final String id;
   final String imagePath;
   final String description;
-  final String createdAt;
-  final String applicationUserId;
-  final String? ownerUserName;
-  final String? ownerProfilePicture;
+  final DateTime createdAt;
+  final String userId;
+  final String userName;
+  final String? userProfilePicture;
+  final List<dynamic> comments; // You can define a Comment model later
+  final int likesCount;
 
-  GetPostsResponseData( {
+  PortfolioPost({
     required this.id,
     required this.imagePath,
     required this.description,
     required this.createdAt,
-    required this.applicationUserId,
-    this.ownerUserName, this.ownerProfilePicture,
+    required this.userId,
+    required this.userName,
+    this.userProfilePicture,
+    required this.comments,
+    required this.likesCount,
   });
 
-  factory GetPostsResponseData.fromJson(Map<String, dynamic> json) {
-    return GetPostsResponseData(
-      id: json['id'] ?? '',
-      imagePath: json['imagePath'] ?? '',
-      description: json['description'] ?? '',
-      createdAt: json['createdAt'] ?? '',
-      applicationUserId: json['applicationUserId'] ?? '',
-      ownerUserName: json['ownerUserName'],
-      ownerProfilePicture: json['ownerProfilePicture'],
+  factory PortfolioPost.fromJson(Map<String, dynamic> json) {
+    return PortfolioPost(
+      id: json['id'],
+      imagePath: json['imagePath'],
+      description: json['description'],
+      createdAt: DateTime.parse(json['createdAt']),
+      userId: json['userId'],
+      userName: json['userName'],
+      userProfilePicture: json['userProfilePicture'],
+      comments: json['comments'] ?? [],
+      likesCount: json['likesCount'],
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'imagePath': imagePath,
-      'description': description,
-      'createdAt': createdAt,
-      'applicationUserId': applicationUserId,
-    };
+class SavedDesign {
+  final String id;
+  final String generatedImageUrl;
+  final DateTime savedAt;
+  final String userId;
+  final String userName;
+  final String? userProfilePicture;
+  final List<dynamic> comments;
+  final int likesCount;
+
+  SavedDesign({
+    required this.id,
+    required this.generatedImageUrl,
+    required this.savedAt,
+    required this.userId,
+    required this.userName,
+    this.userProfilePicture,
+    required this.comments,
+    required this.likesCount,
+  });
+
+  factory SavedDesign.fromJson(Map<String, dynamic> json) {
+    return SavedDesign(
+      id: json['id'],
+      generatedImageUrl: json['generatedImageUrl'],
+      savedAt: DateTime.parse(json['savedAt']),
+      userId: json['userId'],
+      userName: json['userName'],
+      userProfilePicture: json['userProfilePicture'],
+      comments: json['comments'] ?? [],
+      likesCount: json['likesCount'],
+    );
   }
 }

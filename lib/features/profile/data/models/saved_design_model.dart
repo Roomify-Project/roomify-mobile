@@ -1,6 +1,6 @@
 class SavedDesignsResponse {
   final String status;
-  final List<SavedDesign> savedDesigns;
+  final List<SavedDesignData> savedDesigns;
 
   SavedDesignsResponse({
     required this.status,
@@ -10,35 +10,56 @@ class SavedDesignsResponse {
   factory SavedDesignsResponse.fromJson(Map<String, dynamic> json) {
     return SavedDesignsResponse(
       status: json['status'],
-      savedDesigns: List<SavedDesign>.from(
-        json['savedDesigns'].map((x) => SavedDesign.fromJson(x)),
-      ),
+      savedDesigns: (json['savedDesigns'] as List)
+          .map((item) => SavedDesignData.fromJson(item))
+          .toList(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'savedDesigns': savedDesigns.map((item) => item.toJson()).toList(),
+    };
   }
 }
 
-class SavedDesign {
+class SavedDesignData {
   final String id;
   final String generatedImageUrl;
-  final DateTime savedAt;
-  final String applicationUserId;
-  final dynamic applicationUser;
+  final String savedAt;
+  final String userId;
+  final String userFullName;
+  final String? userProfilePicture;
 
-  SavedDesign({
+  SavedDesignData({
     required this.id,
     required this.generatedImageUrl,
     required this.savedAt,
-    required this.applicationUserId,
-    this.applicationUser,
+    required this.userId,
+    required this.userFullName,
+    this.userProfilePicture,
   });
 
-  factory SavedDesign.fromJson(Map<String, dynamic> json) {
-    return SavedDesign(
+  factory SavedDesignData.fromJson(Map<String, dynamic> json) {
+    return SavedDesignData(
       id: json['id'],
       generatedImageUrl: json['generatedImageUrl'],
-      savedAt: DateTime.parse(json['savedAt']),
-      applicationUserId: json['applicationUserId'],
-      applicationUser: json['applicationUser'],
+      savedAt: json['savedAt'],
+      userId: json['userId'],
+      userFullName: json['userFullName'],
+      userProfilePicture: json['userProfilePicture'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'generatedImageUrl': generatedImageUrl,
+      'savedAt': savedAt,
+      'userId': userId,
+      'userFullName': userFullName,
+      'userProfilePicture': userProfilePicture,
+    };
   }
 }

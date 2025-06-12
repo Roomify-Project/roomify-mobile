@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rommify_app/features/explore_screen/data/models/get_post_model.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/login_states.dart';
 import 'package:rommify_app/features/main_screen/widget/comment_item.dart';
 
@@ -15,7 +16,6 @@ import '../../explore_screen/logic/cubit/posts_cubit.dart';
 
 class CommentListView extends StatefulWidget {
   final String postId;
-
   const CommentListView({super.key, required this.postId});
 
   @override
@@ -26,7 +26,7 @@ class _CommentListViewState extends State<CommentListView> {
   @override
   void initState() {
     // TODO: implement initState
-    PostsCubit.get(context).getComment(postId: widget.postId);
+    // PostsCubit.get(context).getComment(postId: widget.postId);
 
     super.initState();
   }
@@ -35,9 +35,9 @@ class _CommentListViewState extends State<CommentListView> {
   Widget build(BuildContext context) {
     return BlocConsumer<PostsCubit, PostsStates>(
       buildWhen: (previous, current) =>
-          current is GetCommentSuccessState ||
-          current is GetCommentErrorState ||
-          current is GetCommentLoadingState ||
+      current is GetPostLoadingState ||
+          context is GetPostErrorState ||
+          current is GetPostSuccessState ||
           current is AddCommentSuccessState ||
           current is ChangeTimeState ||
           current is EditState ||
@@ -85,46 +85,53 @@ class _CommentListViewState extends State<CommentListView> {
         }
       },
       builder: (BuildContext context, state) {
-        final comments = PostsCubit.get(context).getCommentResponse?.comments;
-        return ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              if (state is GetCommentLoadingState) {
-                return const CustomShimmerEffect();
-              }
-              if (state is GetCommentErrorState) {
-                Center(
-                  child: AnimatedErrorWidget(
-                    title: "Loading Error",
-                    message: state.message,
-                    lottieAnimationPath: 'assets/animation/error.json',
-                    // onRetry: _loadUserPosts,
-                  ),
-                );
-              }
-              if (comments == null || comments.isEmpty) {
-                return const Center(
-                  child: AnimatedEmptyList(
-                    title: "No Comments Found",
-                    subtitle:  "Start by creating your first Comment",
-                        // : "",
-                    // comments![index].userId ==
-                    //                             SharedPrefHelper.getString(SharedPrefKey.userId)
-                    //                         ?
-                    lottieAnimationPath: 'assets/animation/empity_list.json',
-                  ),
-                );
-              }
-              return CommentItem(
-                getCommentData:
-                    PostsCubit.get(context).getCommentResponse!.comments[index],
-              );
-            },
-            separatorBuilder: (context, index) => SizedBox(
-                  height: 20.h,
-                ),
-            itemCount: comments?.length ?? 0);
+        final comments = PostsCubit.get(context).getPostResponse?.postData.comments;
+        return Column(
+          children: [
+            SizedBox(height: 10.h,),
+            Expanded(
+              child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    if (state is GetCommentLoadingState) {
+                      return const CustomShimmerEffect();
+                    }
+                    if (state is GetPostErrorState) {
+                      Center(
+                        child: AnimatedErrorWidget(
+                          title: "Loading Error",
+                          message: state.message,
+                          lottieAnimationPath: 'assets/animation/error.json',
+                          // onRetry: _loadUserPosts,
+                        ),
+                      );
+                    }
+                    if (comments == null || comments.isEmpty) {
+                      return const Center(
+                        child: AnimatedEmptyList(
+                          title: "No Comments Found",
+                          subtitle:  "Start by creating your first Comment",
+                              // : "",
+                          // comments![index].userId ==
+                          //                             SharedPrefHelper.getString(SharedPrefKey.userId)
+                          //                         ?
+                          lottieAnimationPath: 'assets/animation/empity_list.json',
+                        ),
+                      );
+                    }
+                    return CommentItem(
+                      getCommentData:
+                          PostsCubit.get(context).getPostResponse!.postData.comments[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(
+                        height: 20.h,
+                      ),
+                  itemCount: comments?.length ?? 0),
+            ),
+            SizedBox(height: 10.h,),
+
+          ],
+        );
       },
     );
   }

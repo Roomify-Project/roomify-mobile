@@ -4,6 +4,7 @@ import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/core/widgets/custom_chached_network_image.dart';
 import 'package:rommify_app/features/explore_screen/data/models/get_omment_model.dart';
+import 'package:rommify_app/features/explore_screen/data/models/get_post_model.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
 import 'package:rommify_app/features/main_screen/widget/show_update_dialog.dart';
 
@@ -12,7 +13,7 @@ import '../../../core/routing/routes.dart';
 import '../../../core/theming/styles.dart';
 
 class CommentItem extends StatefulWidget {
-  final CommentData getCommentData;
+  final CommentModel getCommentData;
 
   const CommentItem({super.key, required this.getCommentData});
 
@@ -46,6 +47,7 @@ class _CommentItemState extends State<CommentItem> {
       },
       child: Column(
         children: [
+
           Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: Column(

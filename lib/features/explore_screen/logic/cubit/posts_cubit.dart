@@ -14,6 +14,7 @@ import '../../../../core/widgets/signal_r_notification.dart';
 import '../../data/models/get_omment_model.dart';
 import '../../data/models/get_post_model.dart';
 import '../../data/models/get_posts_response.dart';
+import '../../data/models/get_user_post_response.dart';
 import '../../data/repos/posts_repo.dart';
 import 'login_states.dart';
 
@@ -25,6 +26,7 @@ class PostsCubit extends Cubit<PostsStates> {
   static PostsCubit get(context) => BlocProvider.of<PostsCubit>(context);
   GetPostsResponse? getPostsResponse;
   GetPostsResponse? getAllPostsResponse;
+  GetUserPost? getUserPost;
   GetPostResponse? getPostResponse;
   GetCommentResponse? getCommentResponse;
   final commentController = TextEditingController();
@@ -40,8 +42,8 @@ class PostsCubit extends Cubit<PostsStates> {
       },
       (right) {
         getAllPostsResponse = right;
-        isExpandedListExploreScreen =
-            List.generate(right.posts.length, (index) => false);
+        isExpandedListExploreScreen = List.generate(
+            right.posts.length + right.savedDesigns.length, (index) => false);
 
         emit(GetAllPostsSuccessState());
       },
@@ -61,7 +63,7 @@ class PostsCubit extends Cubit<PostsStates> {
         isExpandedList = List.generate(right.posts.length, (index) => false);
 
         print("sucessssss ${getAllPostsResponse?.posts}");
-        getPostsResponse = right;
+        getUserPost = right;
 
         emit(GetUserPostsSuccessState());
       },
@@ -79,7 +81,8 @@ class PostsCubit extends Cubit<PostsStates> {
       },
       (right) {
         getPostResponse = right;
-        getElapsedTime(getPostResponse!.createdAt, getPostResponse!.id);
+        getElapsedTime(
+            getPostResponse!.postData.createdAt, getPostResponse!.postData.id);
         emit(GetPostSuccessState());
       },
     );
@@ -113,18 +116,37 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(AddPostErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        final newPost = GetPostsResponseData(
+        final newPost = PortfolioPost(
+          id: right.id,
+          imagePath: right.imagePath,
+          description: right.message,
+          createdAt: DateTime.now(),
+          // Better date format
+          userId: right.user.id,
+          userName: right.user.userName,
+          comments: [],
+          likesCount: 0,
+          userProfilePicture: right.user.profilePicture,
+          // ownerUserName:right.user.userName,ownerProfilePicture: right.user.profilePicture
+        );
+
+        final newUserPost = PostInformation(
           id: right.id,
           imagePath: right.imagePath,
           description: right.message,
           createdAt: DateTime.now().toIso8601String(),
           // Better date format
-          applicationUserId: right.user.id,
+          userId: right.user.id,
+          userName: right.user.userName,
+          comments: [],
+          likesCount: 0,
+          userProfilePicture: right.user.profilePicture,
           // ownerUserName:right.user.userName,ownerProfilePicture: right.user.profilePicture
         );
 
         // Update posts list
         getPostsResponse!.posts.insert(0, newPost); // Add to beginning of list
+        getUserPost!.posts.insert(0, newUserPost); // Add to beginning of list
         isExpandedList =
             List.generate(getPostsResponse!.posts.length, (index) => false);
 
@@ -167,46 +189,124 @@ class PostsCubit extends Cubit<PostsStates> {
     );
   }
 
-  void addComment({required String postId, required String recieverId}) async {
+  void addComment(
+      {required String postId,
+      required String recieverId,
+      required bool isPost}) async {
     emit(AddCommentLoadingState());
     final response = await _postsRepo.addComment(
         addCommentBody: AddCommentBody(
             content: commentController.text, portfolioPostId: postId),
-        userId: await SharedPrefHelper.getString(SharedPrefKey.userId));
+        userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+        isPost: isPost);
     response.fold(
       (left) {
         emit(AddCommentErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        final newPost = CommentData(
+        final newComment = CommentModel(
             content: right.content,
             userId: right.userId,
             userName: right.userName,
-            portfolioPostId: right.portfolioPostId,
+            portfolioPostId: right.portfolioPostId ?? "",
             id: right.id,
-            createdAt: right.createdAt,
-            userProfilePicture: right.userProfilePicture);
+            createdAt: DateTime.now(),
+            userProfilePicture: right.userProfilePicture,
+            isDeleted: false);
         if (recieverId != SharedPrefHelper.getString(SharedPrefKey.userId)) {
           NotificationSignalRService.sendPushNotification(
-              title: 'New Notification',
-              body:
-                  "${SharedPrefHelper.getString(SharedPrefKey.name)} commented on your post",
-              userId: recieverId,
+            title: 'New Notification',
+            body:
+                "${SharedPrefHelper.getString(SharedPrefKey.name)} commented on your post",
+            userId: recieverId,
             postId: postId,
           );
         }
+        print("[postiddd ${getPostResponse!.postData.id}");
+        print("[postiddd ${right.portfolioPostId}");
+
+        if (getPostResponse != null) {
+          final targetId = getPostResponse!.postData.id;
+          final matchId = isPost ? right.portfolioPostId : right.savedDesignId;
+
+          if (targetId == matchId) {
+            getPostResponse!.postData.comments.insert(0, newComment);
+          }
+        }
 
         // Update posts list
-        getCommentResponse!.comments
-            .insert(0, newPost); // Add to beginning of list
+        // getCommentResponse?.comments
+        //     .insert(0, newComment); // Add to beginning of list
         getElapsedTime(right.createdAt, right.id);
 
-        Timer.periodic(const Duration(seconds: 30), (_) {
+        Timer.periodic(const Duration(minutes: 1), (_) {
           getElapsedTime(right.createdAt, right.id);
         });
         commentController.clear();
 
         emit(AddCommentSuccessState(right));
+      },
+    );
+  }
+
+  void addLike(
+      {required String postId,
+      required bool isPost,
+      required String recieverId}) async {
+    emit(AddLikeLoadingState());
+    final response = await _postsRepo.addLike(
+        userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+        isPost: isPost,
+        postId: postId);
+    response.fold(
+      (left) {
+        emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+      (right) {
+        int index = getUserPost!.posts
+            .indexWhere((post) => post.userId == right.portfolioPostId);
+        if (index != -1) {
+          getUserPost!.posts[index] = getUserPost!.posts[index].copyWith(
+            likesCount: getUserPost!.posts[index].likesCount + 1,
+          );
+        }
+
+        if (recieverId != SharedPrefHelper.getString(SharedPrefKey.userId)) {
+          NotificationSignalRService.sendPushNotification(
+            title: 'New Notification',
+            body:
+                "${SharedPrefHelper.getString(SharedPrefKey.name)} liked on your post",
+            userId: recieverId,
+            postId: postId,
+          );
+        }
+        emit(AddLikeSuccessState(right));
+      },
+    );
+  }
+
+  void removeLike(
+      {required String postId,
+      required bool isPost,
+      required String recieverId}) async {
+    emit(AddLikeLoadingState());
+    final response = await _postsRepo.removeLike(
+        userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
+        isPost: isPost,
+        postId: postId);
+    response.fold(
+      (left) {
+        emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
+      },
+      (right) {
+        int index = getUserPost!.posts
+            .indexWhere((post) => post.userId == right.portfolioPostId);
+        if (index != -1) {
+          getUserPost!.posts[index] = getUserPost!.posts[index].copyWith(
+            likesCount: getUserPost!.posts[index].likesCount - 1,
+          );
+        }
+        emit(AddLikeSuccessState(right));
       },
     );
   }
@@ -229,16 +329,26 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(UpdateCommentErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        for (int i = 0; i < getCommentResponse!.comments.length; i++) {
-          if (getCommentResponse!.comments[i].id == right.id) {
-            getCommentResponse!.comments[i] =
-                getCommentResponse!.comments[i].copyWith(
+        for (int i = 0; i < getPostResponse!.postData.comments.length; i++) {
+          if (getPostResponse!.postData.comments[i].id == right.id) {
+            getPostResponse!.postData.comments[i] =
+                getPostResponse!.postData.comments[i].copyWith(
               content: right.content,
             );
             print("righttt ${right.content}");
             break;
           }
         }
+        // for (int i = 0; i < getCommentResponse!.comments.length; i++) {
+        //   if (getCommentResponse!.comments[i].id == right.id) {
+        //     getCommentResponse!.comments[i] =
+        //         getCommentResponse!.comments[i].copyWith(
+        //       content: right.content,
+        //     );
+        //     print("righttt ${right.content}");
+        //     break;
+        //   }
+        // }
         isEditingMap[commentId] = false;
         // emit(EditState());
         emit(UpdateCommentSuccessState(right));
@@ -258,9 +368,12 @@ class PostsCubit extends Cubit<PostsStates> {
         emit(DeleteCommentErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        getCommentResponse!.comments.removeWhere(
+        getPostResponse!.postData.comments.removeWhere(
           (element) => element.id == commentId,
         );
+        // getCommentResponse!.comments.removeWhere(
+        //   (element) => element.id == commentId,
+        // );
         // emit(EditState());
         emit(DeleteCommentSuccessState(right));
       },
@@ -367,18 +480,19 @@ class PostsCubit extends Cubit<PostsStates> {
   }
 
   Map<String, bool> isBookmarked = {};
-  Map<String, bool> isFavorite = {};
+  Map<String, bool> isSaved = {};
   Map<String, bool> isDownloaded = {};
+  Map<String, bool> isLove = {};
 
   // void toggleBookmark() {
   //   isBookmarked=!isBookmarked;
-  //   isFavorited=false;
+  //   isSavedd=false;
   //   isDownloaded=false;
   //   emit(TogelState());
   // }
   //
   // void toggleFavorite() {
-  //   isFavorited=!isFavorited;
+  //   isSavedd=!isSavedd;
   //   isDownloaded=false;
   //   isBookmarked=false;
   //   emit(TogelState());
@@ -388,7 +502,7 @@ class PostsCubit extends Cubit<PostsStates> {
   // void toggleDownload() {
   //   isDownloaded=!isDownloaded;
   //   isBookmarked=false;
-  //   isFavorited=false;
+  //   isSavedd=false;
   //
   //   emit(TogelState());
   //
@@ -416,7 +530,7 @@ class PostsCubit extends Cubit<PostsStates> {
   }
 
   void saveDesign({required String imageUrl}) async {
-    isFavorite[imageUrl] = true;
+    isSaved[imageUrl] = true;
 
     emit(SaveDesignLoadingState());
     final response = await _postsRepo.saveDesign(
@@ -426,13 +540,13 @@ class PostsCubit extends Cubit<PostsStates> {
 
     response.fold(
       (left) {
-        isFavorite[imageUrl] = !isFavorite[imageUrl]!;
+        isSaved[imageUrl] = !isSaved[imageUrl]!;
         print("errorrrrr ${left.apiErrorModel.title}");
 
         emit(SaveDesignErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        isFavorite[imageUrl] = false;
+        isSaved[imageUrl] = false;
         print("sucesssssssssss downloaddd");
 
         emit(SaveDesignSuccessState());
