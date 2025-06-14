@@ -90,9 +90,7 @@ class _MainScreenState extends State<MainScreen> {
               children: [
                 // المحتوى الأساسي
                 Expanded(
-                  child: Stack(
-                    children: [
-                      CircleWidget(),
+                  child: 
                       SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -269,8 +267,7 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                   
                 ),
 
                 Column(

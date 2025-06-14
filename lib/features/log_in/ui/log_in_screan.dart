@@ -29,9 +29,7 @@ class LogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsManager.colorPrimary,
-      body: Stack(
-        children: [
-          const StaticGradientBeam(), // الخلفية المتحركة
+      body: 
           SafeArea(
             child: SingleChildScrollView(
               child: BlocProvider(
@@ -151,8 +149,6 @@ class LogInScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
     );
   }
 }

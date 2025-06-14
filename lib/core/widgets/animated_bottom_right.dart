@@ -1,147 +1,6 @@
-// import 'dart:async';
-// import 'dart:ui';
-// import 'package:flutter/material.dart';
-
-// class StaticGradientBeam extends StatefulWidget {
-//   final Duration duration;
-
-//   const StaticGradientBeam({
-//     Key? key,
-//     this.duration = const Duration(seconds: 3),
-//   }) : super(key: key);
-
-//   @override
-//   State<StaticGradientBeam> createState() => _StaticGradientBeamState();
-// }
-
-// class _StaticGradientBeamState extends State<StaticGradientBeam>
-//     with SingleTickerProviderStateMixin {
-//   late AnimationController _controller;
-//   late Animation<double> _animation;
-//   bool _beamAnimationComplete = false;
-//   int currentColorIndex = 0;
-//   int nextColorIndex = 1;
-//   double colorTransitionValue = 0.0;
-//   Timer? _colorTimer;
-
-//   final List<Color> colors = [
-//     Color.fromRGBO(204, 193, 70, 0.43).withOpacity(0.2),
-//     Color.fromRGBO(204, 70, 70, 1.0).withOpacity(0.2),
-//     Color.fromRGBO(204, 70, 164, 1.0).withOpacity(0.2),
-//     Color.fromRGBO(158, 172, 206, 1.0).withOpacity(0.2),
-//   ];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller = AnimationController(
-//       duration: widget.duration,
-//       vsync: this,
-//     )..addListener(() {
-//         setState(() {});
-//       });
-
-//     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-//       CurvedAnimation(
-//         parent: _controller,
-//         curve: Curves.easeInOut,
-//       ),
-//     );
-
-//     Future.delayed(Duration(milliseconds: 500), () {
-//       if (mounted) {
-//         _controller.forward().then((_) {
-//           setState(() {
-//             _beamAnimationComplete = true;
-//           });
-//           startColorTransition();
-//         });
-//       }
-//     });
-//   }
-
-//   void startColorTransition() {
-//     const transitionDuration =
-//         Duration(milliseconds: 3000); // مدة الانتقال بين الألوان
-//     const colorShowDuration = Duration(seconds: 1); // مدة ظهور كل لون
-
-//     _colorTimer?.cancel();
-//     _colorTimer = Timer.periodic(colorShowDuration, (timer) {
-//       if (mounted) {
-//         setState(() {
-//           currentColorIndex = nextColorIndex;
-//           nextColorIndex = (currentColorIndex + 1) % colors.length;
-//           colorTransitionValue = 0.0;
-//         });
-
-//         // انيميشن انتقالي سلس
-//         const fps = 60;
-//         const interval = Duration(milliseconds: 1000 ~/ fps);
-//         Timer.periodic(interval, (animationTimer) {
-//           if (!mounted) {
-//             animationTimer.cancel();
-//             return;
-//           }
-
-//           setState(() {
-//             colorTransitionValue += 1 /
-//                 (transitionDuration.inMilliseconds / interval.inMilliseconds);
-//             if (colorTransitionValue >= 1.0) {
-//               animationTimer.cancel();
-//             }
-//           });
-//         });
-//       }
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     _controller.dispose();
-//     _colorTimer?.cancel();
-//     super.dispose();
-//   }
-
-//   Color getCurrentColor() {
-//     return Color.lerp(colors[currentColorIndex], colors[nextColorIndex],
-//             Curves.easeInOut.transform(colorTransitionValue.clamp(0.0, 1.0))) ??
-//         colors[currentColorIndex];
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final currentColor = getCurrentColor();
-
-//     return Container(
-//       decoration: BoxDecoration(
-//         gradient: RadialGradient(
-//           center: Alignment.bottomRight,
-//           radius: _beamAnimationComplete ? 1.2 : _animation.value * 1.2,
-//           colors: [
-//             currentColor,
-//             currentColor.withOpacity(0.0),
-//           ],
-//           stops: const [0.0, 1.0],
-//         ),
-//       ),
-//       // child: BackdropFilter(
-//       //   filter: ImageFilter.blur(
-//       //     sigmaX: 0,
-//       //     sigmaY: 0,
-//       //   ),
-//       //   child: Container(
-//       //     decoration: BoxDecoration(
-//       //       color: Colors.transparent,
-//       //     ),
-//       //   ),
-//       // ),
-//     );
-//   }
-// }
-
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:rommify_app/features/create_room_screen/ui/widget/circle_widget.dart';
 
 class StaticGradientBeam extends StatefulWidget {
   final Duration duration;
@@ -156,60 +15,60 @@ class StaticGradientBeam extends StatefulWidget {
 }
 
 class _StaticGradientBeamState extends State<StaticGradientBeam>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  bool _beamAnimationComplete = false;
+    with TickerProviderStateMixin {
+  late AnimationController _beamController;
+  late AnimationController _circleFadeController;
+  late Animation<double> _beamAnimation;
+
+  bool showCircle = false;
+  bool _firstColorShown = false;
+
   int currentColorIndex = 0;
   int nextColorIndex = 1;
   double colorTransitionValue = 0.0;
   Timer? _colorTimer;
-  bool _firstColorShown = false;
 
   final List<Color> colors = [
-    Color.fromRGBO(204, 193, 70, 0.43).withOpacity(0.2),
-    Color.fromRGBO(204, 70, 70, 1.0).withOpacity(0.2),
-    Color.fromRGBO(204, 70, 164, 1.0).withOpacity(0.2),
-    Color.fromRGBO(158, 172, 206, 1.0).withOpacity(0.2),
+    const Color.fromRGBO(204, 193, 70, 0.18),
+    const Color.fromRGBO(204, 70, 70, 0.18),
+    const Color.fromRGBO(204, 70, 164, 0.18),
+    const Color.fromRGBO(158, 172, 206, 0.18),
   ];
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+
+    _beamController = AnimationController(
       duration: widget.duration,
       vsync: this,
-    )..addListener(() {
-        setState(() {});
+    )..forward().then((_) {
+        // بعد ما يخلص انميشن الشعاع
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) {
+            setState(() {
+              showCircle = true;
+              _firstColorShown = true;
+            });
+            _circleFadeController.forward();
+            startColorTransition();
+          }
+        });
       });
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
+    _circleFadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
     );
 
-    // ظهور سريع للون الأصفر
-    Future.delayed(Duration(milliseconds: 200), () {
-      if (mounted) {
-        _controller.forward().then((_) {
-          setState(() {
-            _beamAnimationComplete = true;
-            _firstColorShown = true;
-          });
-          // بدء التحول البطيء للألوان بعد ظهور اللون الأصفر
-          Future.delayed(Duration(seconds: 1), () {
-            startColorTransition();
-          });
-        });
-      }
-    });
+    _beamAnimation = Tween<double>(begin: 0.0, end: 1.2).animate(
+      CurvedAnimation(parent: _beamController, curve: Curves.easeInOut),
+    );
   }
 
   void startColorTransition() {
-    const transitionDuration = Duration(milliseconds: 5000); // وقت أطول للتحول
-    const colorShowDuration = Duration(seconds: 6); // وقت أطول لعرض كل لون
+    const transitionDuration = Duration(milliseconds: 5000);
+    const colorShowDuration = Duration(seconds: 6);
 
     _colorTimer?.cancel();
     _colorTimer = Timer.periodic(colorShowDuration, (timer) {
@@ -220,7 +79,6 @@ class _StaticGradientBeamState extends State<StaticGradientBeam>
           colorTransitionValue = 0.0;
         });
 
-        // انيميشن انتقالي بطيء وسلس
         const fps = 60;
         const interval = Duration(milliseconds: 1000 ~/ fps);
         Timer.periodic(interval, (animationTimer) {
@@ -243,7 +101,8 @@ class _StaticGradientBeamState extends State<StaticGradientBeam>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _beamController.dispose();
+    _circleFadeController.dispose();
     _colorTimer?.cancel();
     super.dispose();
   }
@@ -252,8 +111,11 @@ class _StaticGradientBeamState extends State<StaticGradientBeam>
     if (!_firstColorShown) {
       return colors[0];
     }
-    return Color.lerp(colors[currentColorIndex], colors[nextColorIndex],
-            Curves.easeInOut.transform(colorTransitionValue.clamp(0.0, 1.0))) ??
+    return Color.lerp(
+          colors[currentColorIndex],
+          colors[nextColorIndex],
+          Curves.easeInOut.transform(colorTransitionValue.clamp(0.0, 1.0)),
+        ) ??
         colors[currentColorIndex];
   }
 
@@ -261,29 +123,42 @@ class _StaticGradientBeamState extends State<StaticGradientBeam>
   Widget build(BuildContext context) {
     final currentColor = getCurrentColor();
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.bottomRight,
-          radius: _beamAnimationComplete ? 1.2 : _animation.value * 1.2,
-          colors: [
-            currentColor,
-            currentColor.withOpacity(0.0),
-          ],
-          stops: const [0.0, 1.0],
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 15,
-          sigmaY: 15,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
+    return Stack(
+      children: [
+        if (showCircle)
+          Positioned.fill(
+            child: FadeTransition(
+              opacity: _circleFadeController,
+              child: CircleWidget(
+                currentColor: currentColor,
+                delay: const Duration(seconds: 0),
+              ),
+            ),
+          ),
+        IgnorePointer(
+          child: AnimatedBuilder(
+            animation: _beamAnimation,
+            builder: (context, child) {
+              return Opacity(
+                opacity: _beamAnimation.value / 1.2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment.bottomRight,
+                      radius: _beamAnimation.value,
+                      colors: [
+                        currentColor,
+                        currentColor.withOpacity(0.0),
+                      ],
+                      stops: const [0.0, 1.0],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
-      ),
+      ],
     );
   }
 }
