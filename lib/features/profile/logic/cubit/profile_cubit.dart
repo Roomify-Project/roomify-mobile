@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:rommify_app/features/profile/data/models/get_follow_count_model.
 import 'package:rommify_app/features/profile/data/models/get_follow_model.dart';
 import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../../../core/helpers/sound.dart';
@@ -321,6 +323,23 @@ class ProfileCubit extends Cubit<ProfileStates> {
     context.pushNamedAndRemoveUntil(Routes.loginScreen,
         predicate: (Route<dynamic> route) => false);
     print("tokennnn ${SharedPrefHelper.getString('token')}");
+  }
+  static const _languageKey = 'language';
+
+  Future<void> loadSavedLanguage(BuildContext context) async {
+    final langCode = SharedPrefHelper.getString(_languageKey) ?? 'en';
+    final locale = Locale(langCode);
+    emit(ChangeLanguage());
+    context.setLocale(locale); // Apply language immediately
+  }
+
+  Future<void> changeLanguage(BuildContext context, bool isArabic) async {
+    final newLocale = isArabic ? const Locale('ar') : const Locale('en');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_languageKey, newLocale.languageCode);
+
+    emit(ChangeLanguage());
+    context.setLocale(newLocale);
   }
 
 }

@@ -58,7 +58,7 @@ void main() async {
     supportedLocales: const [Locale('en'), Locale('ar')],
     path: 'assets/language',
     fallbackLocale: const Locale('en'),
-    startLocale: const Locale('ar'), // اللغة الافتراضية
+    startLocale:  Locale(SharedPrefHelper.getString('language')??'en'), // اللغة الافتراضية
     child: RoomifyApp(appRouter: AppRouter(),),
   )
   );
