@@ -23,6 +23,8 @@ class PostInformation {
   final String? userProfilePicture;
   final dynamic comments; // ممكن تغيره لاحقًا حسب نوع التعليقات
   final int likesCount;
+  final bool isLiked;
+
 
   PostInformation({
     required this.id,
@@ -34,6 +36,7 @@ class PostInformation {
     this.userProfilePicture,
     this.comments,
     required this.likesCount,
+    required this.isLiked
   });
 
   factory PostInformation.fromJson(Map<String, dynamic> json) {
@@ -46,7 +49,7 @@ class PostInformation {
       userName: json['userName'],
       userProfilePicture: json['userProfilePicture'],
       comments: json['comments'],
-      likesCount: json['likesCount'],
+      likesCount: json['likesCount'], isLiked: json['isLiked'],
     );
   }
 
@@ -74,6 +77,7 @@ class PostInformation {
     String? userProfilePicture,
     dynamic comments,
     int? likesCount,
+    bool? isLiked
   }) {
     return PostInformation(
       id: id ?? this.id,
@@ -84,7 +88,7 @@ class PostInformation {
       userName: userName ?? this.userName,
       userProfilePicture: userProfilePicture ?? this.userProfilePicture,
       comments: comments ?? this.comments,
-      likesCount: likesCount ?? this.likesCount,
+      likesCount: likesCount ?? this.likesCount, isLiked: isLiked??this.isLiked,
     );
   }
 }

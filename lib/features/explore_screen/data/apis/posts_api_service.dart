@@ -47,7 +47,7 @@ class PostsApiService {
   }
 
   Future<Response> deletePost({required String postId}) async {
-    final response = await dio.delete(ApiConstants.getPost(id: postId));
+    final response = await dio.delete(ApiConstants.deletePost( postId: postId));
     return response;
   }
 

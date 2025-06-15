@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -25,7 +26,7 @@ class AddPostPage extends StatelessWidget {
           color: Colors.white,
         ),
         title: Text(
-          'Add Post',
+          'Add Post'.tr(),
           style: TextStyles.font18WhiteRegular,
         ),
         centerTitle: true,
@@ -67,10 +68,10 @@ class AddPostPage extends StatelessWidget {
                             SizedBox(
                               height: 80.h,
                             ),
-                            const Center(
+                             Center(
                               child: Text(
-                                'Add Image',
-                                style: TextStyle(color: Colors.white),
+                                'Add Image'.tr(),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                             SizedBox(
@@ -132,7 +133,7 @@ class AddPostPage extends StatelessWidget {
                         controller: postCubit.addPostTextController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Write your post here...',
+                          hintText: 'Write your post here...'.tr(),
                           hintStyle: const TextStyle(color: Colors.white54),
                           filled: true,
                           fillColor: Colors.white24,
@@ -157,7 +158,7 @@ class AddPostPage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Post',
+                          'Post'.tr(),
                           style: TextStyles.font16WhiteInter,
                         ),
                       ),

@@ -45,9 +45,14 @@ class _ChatsScreenState extends State<ChatsScreen> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: ColorsManager.colorPrimary,
-            leading: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
+            leading: InkWell(
+              onTap: () {
+                context.pop();
+              },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
             ),
             centerTitle: true,
             title: Text(
@@ -162,7 +167,7 @@ class ChatItem extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  getAllChatResponseData.lastMessageContent,
+                  getAllChatResponseData.lastMessageContent.tr(),
                   style: TextStyles.font19WhiteBold.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 16.sp,
@@ -173,7 +178,7 @@ class ChatItem extends StatelessWidget {
           ),
           Text(
             ChatCubit.get(context)
-                .formatChatTime(getAllChatResponseData.lastMessageTime),
+                .formatChatTime(getAllChatResponseData.lastMessageTime).tr(),
             style: TextStyle(
               color: Colors.white54,
               fontSize: 10.3.sp,

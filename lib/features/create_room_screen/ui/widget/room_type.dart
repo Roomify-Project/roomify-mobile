@@ -36,25 +36,29 @@ class RoomType extends StatelessWidget {
         ),
         child: Row(
           children: [
-            generateCubit.imageType!=''?
-            Expanded(
+            generateCubit.imageType != ''
+                ? Expanded(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Container(
-                    width: 80.w,
-                    height: 90.h,
-                    decoration: BoxDecoration(
-                      color: ColorsManager.colorContainer,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(8.r),
-                        bottomLeft: Radius.circular(12.r),
-                        topRight: Radius.circular(8.r),
-                      ),
+                  width: 80.w,
+                  height: 90.h,
+                  decoration: BoxDecoration(
+                    color: ColorsManager.colorContainer,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(8.r),
+                      bottomLeft: Radius.circular(12.r),
+                      topRight: Radius.circular(8.r),
                     ),
-                    child: Image.asset(generateCubit.imageType,fit: BoxFit.fill,)
+                  ),
+                  child: Image.asset(
+                    generateCubit.imageType,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ):const Spacer(),
+            )
+                : const Spacer(),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +86,7 @@ class RoomType extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Add room images".tr(),
+                    "Add room type".tr(),
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w400,

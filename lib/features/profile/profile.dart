@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -72,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 // Image and info row
                                 Padding(
-                                  padding: EdgeInsets.only(left: 24.w),
+                                  padding: EdgeInsets.only(left: 24.w,right: 24.w),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -113,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           Text(
                                             profileCubit
-                                                .getProfileDataModel!.role,
+                                                .getProfileDataModel!.role.tr(),
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 14.sp),
@@ -142,12 +143,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                   .profileId
                                                             });
                                                       },
-                                                      child: Text(
-                                                          "${profileCubit.getFollowCountModel!.followers} followers",
-                                                          style: TextStyle(
-                                                              color:
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                                "${profileCubit.getFollowCountModel!.followers} ",
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      Colors.white,
+                                                                  fontSize: 14.sp)),
+                                                          Text(
+                                                              "followers".tr(),
+                                                              style: TextStyle(
+                                                                  color:
                                                                   Colors.white,
-                                                              fontSize: 14.sp)),
+                                                                  fontSize: 14.sp)),
+                                                        ],
+                                                      ),
                                                     ),
                                                     SizedBox(width: 20.w),
                                                     InkWell(
@@ -162,12 +173,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                   .profileId
                                                             });
                                                       },
-                                                      child: Text(
-                                                          "${profileCubit.getFollowCountModel!.following} following",
-                                                          style: TextStyle(
-                                                              color:
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                              "${profileCubit.getFollowCountModel!.following} ".tr(),
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      Colors.white,
+                                                                  fontSize: 14.sp)),
+                                                          Text(
+                                                              "following".tr(),
+                                                              style: TextStyle(
+                                                                  color:
                                                                   Colors.white,
-                                                              fontSize: 14.sp)),
+                                                                  fontSize: 14.sp)),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 )
@@ -213,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                             widget.profileId);
                                                                   },
                                                                   child: Text(
-                                                                    'Follow',
+                                                                    'Follow'.tr(),
                                                                     style: TextStyles
                                                                         .font16WhiteInter,
                                                                   ),
@@ -240,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                           Row(
                                                                         children: [
                                                                           Text(
-                                                                            'Following',
+                                                                            'Following'.tr(),
                                                                             style:
                                                                                 TextStyles.font16WhiteInter.copyWith(color: Colors.green),
                                                                           ),
@@ -291,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                                 BorderRadius.circular(8),
                                                                             child:
                                                                                 Center(
-                                                                              child: Text("Unfollow", style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)),
+                                                                              child: Text("Unfollow".tr(), style: TextStyles.font16WhiteInter.copyWith(color: Colors.red)),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -326,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               });
                                                         },
                                                         child: Text(
-                                                          'Message',
+                                                          'Message'.tr(),
                                                           style: TextStyles
                                                               .font16WhiteInter,
                                                         ),
@@ -387,22 +408,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         //                 profileId:
                                         //                     widget.profileId),
                                         //       )
-                                    : profileCubit.item == 1
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 23.w, right: 23.w),
-                                            child:
-                                            CustomHistoryDesignGridViewProfile(
-                                                profileId:
-                                                widget.profileId),
-                                    )
+                                        : profileCubit.item == 1
+                                            ? Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 23.w, right: 23.w),
+                                                child:
+                                                    CustomHistoryDesignGridViewProfile(
+                                                        profileId:
+                                                            widget.profileId),
+                                              )
                                             : Padding(
                                                 padding: EdgeInsets.only(
                                                     left: 23.w, right: 23.w),
                                                 child:
-                                                CustomSavedDesignGridViewProfile(
-                                                    profileId:
-                                                    widget.profileId),
+                                                    CustomSavedDesignGridViewProfile(
+                                                        profileId:
+                                                            widget.profileId),
                                               ))
                               ],
                             ),
@@ -497,7 +518,10 @@ class ImageCard extends StatelessWidget {
   final bool isZoom;
   final bool isSave;
   final bool isLove;
-
+  final bool? isLiked;
+  final String? postId;
+  final bool? isPost;
+  final String? recieverId;
   const ImageCard({
     super.key,
     required this.imageUrl,
@@ -508,7 +532,10 @@ class ImageCard extends StatelessWidget {
     required this.postsCubit,
     this.isProfile = false,
     this.fit = BoxFit.cover,
-    this.isZoom = true,  this.isSave=false,  this.isLove=false,
+    this.isZoom = true,
+    this.isSave = false,
+    this.isLove = false,
+    this.isLiked, this.postId,  this.isPost, this.recieverId
   });
 
   @override
@@ -517,18 +544,17 @@ class ImageCard extends StatelessWidget {
       listener: (context, state) {
         if (state is DownloadLoadingState || state is SaveDesignLoadingState) {
           EasyLoading.show();
-        }
-        else {
+        } else {
           EasyLoading.dismiss();
           if (state is DownloadErrorState) {
             flutterShowToast(
                 message: state.message, toastCase: ToastCase.error);
           } else if (state is DownloadSuccessState) {
             flutterShowToast(
-                message: "Download successfully", toastCase: ToastCase.success);
+                message: "Download successfully".tr(), toastCase: ToastCase.success);
           } else if (state is SaveDesignSuccessState) {
             flutterShowToast(
-                message: "Saved successfully", toastCase: ToastCase.success);
+                message: "Saved successfully".tr(), toastCase: ToastCase.success);
           } else if (state is SaveDesignErrorState) {
             flutterShowToast(
                 message: state.message, toastCase: ToastCase.error);
@@ -559,25 +585,25 @@ class ImageCard extends StatelessWidget {
             ),
             isProfile
                 ? Positioned(
-              top: 10.w,
-              left: 8.w,
-              child: InkWell(
-                onTap: onPressed,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipOval(
-                      child: CustomCachedNetworkImage(
-                        imageUrl: profileImageUrl,
-                        fit: BoxFit.cover,
-                        width: 20.w,
-                        height: 20.h,
-                        isDefault: true,
-                      )),
-                ),
-              ),
-            )
+                    top: 10.w,
+                    left: 8.w,
+                    child: InkWell(
+                      onTap: onPressed,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                            child: CustomCachedNetworkImage(
+                          imageUrl: profileImageUrl,
+                          fit: BoxFit.cover,
+                          width: 20.w,
+                          height: 20.h,
+                          isDefault: true,
+                        )),
+                      ),
+                    ),
+                  )
                 : const SizedBox(),
             Positioned(
               top: 12.h,
@@ -591,40 +617,50 @@ class ImageCard extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          isSave?
-                          InkWell(
-                            child: Icon(Icons.bookmark_border,
-                                color: postsCubit.isSaved[imageUrl] ?? false
-                                    ? Colors.red
-                                    : ColorsManager.white,
-                                size: 20),
-                            onTap: () {
-                              postsCubit.saveDesign(imageUrl: imageUrl);
-                            },
-                          ):SizedBox(),
-                          isSave?
-                          SizedBox(width: 10.w):SizedBox(),
-                          isLove?
-                          InkWell(
-                            onTap: () {
-                            },
-                            child: const Icon(Icons.favorite_border,
-                                color:  false
-                                    ? Colors.red
-                                    : ColorsManager.white,
-                                size: 20),
-                          ):const SizedBox(),
-                          isLove?
-                          SizedBox(width: 10.w):const SizedBox(),
+                          isSave
+                              ? InkWell(
+                                  child: Icon(Icons.bookmark_border,
+                                      color:
+                                          postsCubit.isSaved[imageUrl] ?? false
+                                              ? Colors.red
+                                              : ColorsManager.white,
+                                      size: 20),
+                                  onTap: () {
+                                    postsCubit.saveDesign(imageUrl: imageUrl);
+                                  },
+                                )
+                              : SizedBox(),
+                          isSave ? SizedBox(width: 10.w) : SizedBox(),
+                          isLove
+                              ? InkWell(
+                                  onTap: () {
+                                    !isLiked!
+                                        ? postsCubit.addLike(
+                                            postId:postId??"",
+                                            isPost:isPost!,
+                                            recieverId: recieverId!)
+                                        : postsCubit.removeLike(
+                                        postId:postId??"",
+                                        isPost: isPost!,
+                                        recieverId: recieverId!);
+                                  },
+                                  child: Icon(Icons.favorite_border,
+                                      color: isLiked!
+                                          ? Colors.red
+                                          : ColorsManager.white,
+                                      size: 20),
+                                )
+                              : const SizedBox(),
+                          isLove ? SizedBox(width: 10.w) : const SizedBox(),
                           InkWell(
                               onTap: () {
                                 postsCubit.download(imageUrl: imageUrl);
                               },
                               child: Icon(Icons.download,
                                   color:
-                                  postsCubit.isDownloaded[imageUrl] ?? false
-                                      ? Colors.red
-                                      : ColorsManager.white,
+                                      postsCubit.isDownloaded[imageUrl] ?? false
+                                          ? Colors.red
+                                          : ColorsManager.white,
                                   size: 20)),
                           SizedBox(width: 10.w),
                         ],

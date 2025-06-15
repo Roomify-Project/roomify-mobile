@@ -223,7 +223,7 @@ class _CommentItemState extends State<CommentItem> {
                             Text(
                               PostsCubit.get(context)
                                       .timeMap[widget.getCommentData.id] ??
-                                  "",
+                                  "".tr(),
                               style: TextStyles.font12GreyLight,
                             ),
                           ],

@@ -54,9 +54,15 @@ class _NavBarScreenState extends State<NavBarScreen> {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            left: (_selectedIndex * (MediaQuery.of(context).size.width / 3)) +
-                (MediaQuery.of(context).size.width / 6) - 25,
-            top: 15, // لضبط موقع الدائرة عموديًا
+            left: Directionality.of(context) == TextDirection.ltr
+                ? (_selectedIndex * (MediaQuery.of(context).size.width / 3)) +
+                (MediaQuery.of(context).size.width / 6) - 25
+                : null,
+            right: Directionality.of(context) == TextDirection.rtl
+                ? (_selectedIndex * (MediaQuery.of(context).size.width / 3)) +
+                (MediaQuery.of(context).size.width / 6) - 25
+                : null,
+            top: 15,
             child: Container(
               width: 50,
               height: 50,

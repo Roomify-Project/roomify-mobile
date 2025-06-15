@@ -33,7 +33,7 @@ class UploadRoomDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
-                padding: EdgeInsets.only(left: 20.w),
+                padding: EdgeInsets.only(left: 20.w,right: 20.w),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,

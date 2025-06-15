@@ -9,14 +9,9 @@ import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'core/di/dependency_injection.dart';
 import 'core/helpers/shared_pref_helper.dart';
 import 'core/routing/app_router.dart';
-import 'features/create_room_screen/ui/widget/circle_widget.dart';
-import 'features/log_in/data/repos/login_repo.dart';
-import 'features/notification/logic/cubit/notiication_cubit.dart';
 
 class RoomifyApp extends StatelessWidget {
   final AppRouter appRouter;

@@ -42,6 +42,7 @@ class PostData {
   final String? userProfilePicture;
   final List<CommentModel> comments;
   final int likesCount;
+  final bool isLiked;
 
   PostData({
     required this.id,
@@ -53,6 +54,7 @@ class PostData {
     this.userProfilePicture,
     required this.comments,
     required this.likesCount,
+    required this.isLiked
   });
 
   factory PostData.fromJson(Map<String, dynamic> json, String type) {
@@ -67,7 +69,7 @@ class PostData {
       comments: (json['comments'] as List<dynamic>? ?? [])
           .map((e) => CommentModel.fromJson(e))
           .toList(),
-      likesCount: json['likesCount'] ?? 0,
+      likesCount: json['likesCount'] ?? 0, isLiked: json['isLiked'],
     );
   }
 
@@ -85,6 +87,7 @@ class PostData {
       'userProfilePicture': userProfilePicture,
       'comments': comments.map((c) => c.toJson()).toList(),
       'likesCount': likesCount,
+      'isLiked':isLiked
     };
   }
 
@@ -98,6 +101,7 @@ class PostData {
     String? userProfilePicture,
     List<CommentModel>? comments,
     int? likesCount,
+    bool?isLiked,
   }) {
     return PostData(
       id: id ?? this.id,
@@ -108,7 +112,7 @@ class PostData {
       userName: userName ?? this.userName,
       userProfilePicture: userProfilePicture ?? this.userProfilePicture,
       comments: comments ?? this.comments,
-      likesCount: likesCount ?? this.likesCount,
+      likesCount: likesCount ?? this.likesCount, isLiked: isLiked??this.isLiked,
     );
   }
 }

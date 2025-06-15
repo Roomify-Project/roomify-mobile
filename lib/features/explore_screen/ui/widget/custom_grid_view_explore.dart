@@ -108,6 +108,10 @@ class _CustomGridViewExploreState extends State<CustomGridViewExplore> {
                   });
                 },
                 child: ImageCard(
+                  recieverId: item.isPost?item.post!.userId:item.saved!.userId,
+                  isPost: item.isPost,
+                  postId: item.isPost?item.post!.id:item.saved!.id,
+                  isLiked: item.isPost?item.post?.isLiked:item.saved?.isLiked,
                   isZoom: false,
                   isProfile: true,
                   isLove: true,

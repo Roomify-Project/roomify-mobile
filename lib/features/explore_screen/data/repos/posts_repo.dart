@@ -20,6 +20,7 @@ import '../models/get_user_post_response.dart';
 import '../models/like_response.dart';
 import '../models/save_design_response.dart';
 import '../models/search_user_model.dart';
+import '../models/update_comment_model.dart';
 
 
 class PostsRepo {
@@ -112,11 +113,11 @@ class PostsRepo {
   }
 
 
-  Future<Either<ErrorHandler,CommentData>> updateComment({required String userId,required String commentId,  required String content,
+  Future<Either<ErrorHandler,UpdateCommentModel>> updateComment({required String userId,required String commentId,  required String content,
   }) async {
     try {
       final response = await _postsApiService.updateComment(userId: userId, commentId: commentId, content: content);
-      return Right(CommentData.fromJson(response.data));
+      return Right(UpdateCommentModel.fromJson(response.data));
     } catch (error) {
       return Left(ErrorHandler.handle(error));
     }

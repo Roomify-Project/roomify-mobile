@@ -81,32 +81,18 @@ class _ChatFriendScreenState extends State<ChatFriendScreen> {
             appBar: AppBar(
               backgroundColor: ColorsManager.colorPrimary,
               elevation: 0,
-              leading: InkWell(
-                onTap: () {
-                  context.pushNamed(Routes.profile, arguments: {
-                    'profileId': widget.getProfileDataModel.id
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    radius: 12.r,
-                    // backgroundImage: AssetImage('assets/profile_image.jpg'),
-                    child: ClipOval(
-                      child: CustomCachedNetworkImage(
-                        width: double.infinity,
-                        height: double.infinity,
-                        imageUrl: widget.getProfileDataModel.profilePicture ==
-                                    null ||
-                                widget.getProfileDataModel.profilePicture == ""
-                            ? Constants.defaultImagePerson
-                            : widget.getProfileDataModel.profilePicture,
-                        isZoom: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+              leadingWidth: 40.w, // قللها حسب المساحة اللي تريحك
+              leading: IconButton(
+                icon: Padding(
+                  padding:  EdgeInsets.only(right: 2.w,left:2.w),
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
                   ),
                 ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
               title: InkWell(
                 onTap: () {
@@ -114,10 +100,34 @@ class _ChatFriendScreenState extends State<ChatFriendScreen> {
                     'profileId': widget.getProfileDataModel.id
                   });
                 },
-                child: Text(
-                  widget.getProfileDataModel.userName ?? "",
-                  style: TextStyles.font19WhiteBold
-                      .copyWith(fontWeight: FontWeight.w700),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 18.r,
+                      child: ClipOval(
+                        child: CustomCachedNetworkImage(
+                          width: double.infinity,
+                          height: double.infinity,
+                          imageUrl: widget.getProfileDataModel.profilePicture == null ||
+                              widget.getProfileDataModel.profilePicture == ""
+                              ? Constants.defaultImagePerson
+                              : widget.getProfileDataModel.profilePicture,
+                          isZoom: true,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        widget.getProfileDataModel.userName ?? "",
+                        style: TextStyles.font19WhiteBold.copyWith(
+                          fontWeight: FontWeight.w700,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

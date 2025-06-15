@@ -5,6 +5,7 @@ import 'package:rommify_app/features/explore_screen/data/models/get_omment_model
 import '../../data/models/add_post_nodel.dart';
 import '../../data/models/create_comment_model.dart';
 import '../../data/models/like_response.dart';
+import '../../data/models/update_comment_model.dart';
 
 abstract class PostsStates{}
 class PostsInitialState extends PostsStates{}
@@ -93,8 +94,8 @@ class AddLikeErrorState extends PostsStates{
 //// update comment
 class UpdateCommentLoadingState extends PostsStates{}
 class  UpdateCommentSuccessState extends PostsStates{
-  final CommentData commentData;
-  UpdateCommentSuccessState(this.commentData);
+  final UpdateCommentModel updateCommentModel;
+  UpdateCommentSuccessState(this.updateCommentModel);
 }
 class UpdateCommentErrorState extends PostsStates{
   final String message;

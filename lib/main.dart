@@ -53,9 +53,10 @@ void main() async {
   }
 
   configLoading();
-  runApp(  EasyLocalization(
+  runApp(
+      EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('ar')],
-    path: 'assets/translations',
+    path: 'assets/language',
     fallbackLocale: const Locale('en'),
     startLocale: const Locale('ar'), // اللغة الافتراضية
     child: RoomifyApp(appRouter: AppRouter(),),

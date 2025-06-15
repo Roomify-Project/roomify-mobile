@@ -16,6 +16,7 @@ import 'package:rommify_app/features/profile/data/models/get_profile_data.dart';
 import 'package:rommify_app/features/profile/data/models/update_profile_response.dart';
 
 import '../../../../core/helpers/shared_pref_helper.dart';
+import '../../../../core/helpers/sound.dart';
 import '../../../../core/widgets/signal_r_notification.dart';
 import '../../data/models/get_history_design.dart';
 import '../../data/models/saved_design_model.dart';
@@ -50,8 +51,11 @@ class ProfileCubit extends Cubit<ProfileStates> {
     emit(ChangeFollowCount());
   }
   void addFollow({required String followId,bool isAdd=true}) async {
+
     isFollowingList[followId]=! isFollowingList[followId]!;
     isFollowing = !isFollowing!;
+    await playSound('sounds/like.wav');
+
     // emit(AddFollowSuccessState(message: ""));
     final response = _profileRepo.addFollow(followId: followId);
 
@@ -63,7 +67,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
-          (right) {
+          (right) async {
             if(isAdd) {
               getFollowCountModel =
                   getFollowCountModel!.copyWith(
@@ -84,6 +88,8 @@ class ProfileCubit extends Cubit<ProfileStates> {
     isFollowingList[followId]=! isFollowingList[followId]!;
 
     isFollowing = !isFollowing!;
+    await playSound('sounds/like.wav');
+
     // emit(AddFollowSuccessState(message: ""));
     final response = _profileRepo.unFollow(followId: followId);
 
@@ -95,13 +101,14 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
         emit(AddFollowErrorState(message: left.apiErrorModel.title));
       },
-          (right) {
+          (right) async {
             if(isMinus) {
               getFollowCountModel = getFollowCountModel!.copyWith(
                 followers: getFollowCountModel!.followers - 1,
               );
             }
-        isFollow=false;
+
+            isFollow=false;
 
         emit(AddFollowSuccessState(message: right.message));
       },
@@ -315,4 +322,5 @@ class ProfileCubit extends Cubit<ProfileStates> {
         predicate: (Route<dynamic> route) => false);
     print("tokennnn ${SharedPrefHelper.getString('token')}");
   }
+
 }

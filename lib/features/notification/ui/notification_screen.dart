@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:rommify_app/core/helpers/extensions.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/custom_shimmer.dart';
 import 'package:rommify_app/features/notification/data/repo/notification_repo.dart';
@@ -32,13 +34,19 @@ class NotificationScreen extends StatelessWidget {
               Scaffold(
                 appBar: AppBar(
                   backgroundColor: ColorsManager.colorPrimary,
-                  leading: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
+                  leading: InkWell(
+                    onTap: () {
+                      context.pop();
+
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
                   ),
                   centerTitle: true,
                   title: Text(
-                    'Notifications',
+                    'Notifications'.tr(),
                     style: TextStyles.font18WhiteRegular,
                   ),
                 ),

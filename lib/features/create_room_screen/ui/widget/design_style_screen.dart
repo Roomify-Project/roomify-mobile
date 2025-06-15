@@ -68,8 +68,9 @@ class DesignStyleScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20.h),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 29),
+                      padding:  EdgeInsets.only(bottom: 29.h),
                       child: ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(

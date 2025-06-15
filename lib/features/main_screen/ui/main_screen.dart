@@ -45,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
       current is GetPostLoadingState ||
           current is GetPostErrorState ||
           current is AddCommentSuccessState||
+          current is DeleteCommentSuccessState||
           current is GetPostSuccessState ||
           current is ChangeEmojiState||
       current is AddLikeSuccessState,
@@ -76,8 +77,14 @@ class _MainScreenState extends State<MainScreen> {
                     child: const CustomShimmerEffect(),
                   )));
         } else if (state is GetPostErrorState) {
-          return AnimatedErrorWidget(
-            title: state.message,
+          return Scaffold(
+            backgroundColor: ColorsManager.colorPrimary,
+            body: Padding(
+              padding:  EdgeInsets.only(top: 250.h),
+              child: AnimatedErrorWidget(
+                title: state.message,
+              ),
+            ),
           );
         }
         return Scaffold(
@@ -148,7 +155,7 @@ class _MainScreenState extends State<MainScreen> {
                                               .getPostResponse!
                                               .postData
                                               .id] ??
-                                              "",
+                                              "".tr(),
                                           style: TextStyles.font12WhiteRegular
                                               .copyWith(
                                               fontWeight: FontWeight.w700),
@@ -181,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                                         ),
                                       ],
                                       onSelected: (value) {
-                                        if (value == 'delete') {
+                                        if (value == 'delete'.tr()) {
                                           showDialog(
                                             context: context,
                                             builder:
@@ -270,7 +277,7 @@ class _MainScreenState extends State<MainScreen> {
                                   )),
                             ]),
                             Padding(
-                              padding:  EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                              padding:  EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -280,33 +287,41 @@ class _MainScreenState extends State<MainScreen> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       // عدد اللايكات
-                                      Row(
-                                        children: [
-                                          InkWell(
-
-                                            child: Icon(
+                                      InkWell(
+                                        onTap: () {
+                                          !postCubit.getPostResponse!.postData.isLiked? postCubit.addLike(
+                                              postId: postCubit.getPostResponse!.postData.id,
+                                              isPost: postCubit.getPostResponse!.type=='Post',
+                                              recieverId: postCubit.getPostResponse!.postData.userId
+                                          ):postCubit.removeLike(
+                                              postId: postCubit.getPostResponse!.postData.id,
+                                              isPost: postCubit.getPostResponse!.type=='Post',
+                                              recieverId: postCubit.getPostResponse!.postData.userId
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
                                               Icons.favorite,
-                                              color: Colors.white,
+                                              color:
+                                              postCubit.getPostResponse!.postData.isLiked?
+                                              Colors.red:Colors.white,
                                               size: 20.sp,
                                             ),
-                                            onTap: () {
-                                              true? postCubit.addLike(
-                                                  postId: postCubit.getPostResponse!.postData.id,
-                                                  isPost: postCubit.getPostResponse!.type=='Post',
-                                                  recieverId: postCubit.getPostResponse!.postData.userId
-                                              ):postCubit.removeLike(
-                                                  postId: postCubit.getPostResponse!.postData.id,
-                                                  isPost: postCubit.getPostResponse!.type=='Post',
-                                                  recieverId: postCubit.getPostResponse!.postData.userId
-                                              );
-                                            },
-                                          ),
-                                          SizedBox(width: 8.w),
-                                          Text(
-                                            "${postCubit.getPostResponse!.postData.likesCount} likes".tr(),
-                                            style: TextStyles.font14WhiteRegular,
-                                          ),
-                                        ],
+                                            SizedBox(width: 8.w),
+                                            Row(
+                                              children: [
+                                                Text("${postCubit.getPostResponse!.postData.likesCount} ",
+                                                  style: TextStyles.font14WhiteRegular,
+                                                ),
+                                                Text(
+                                                  "likes".tr(),
+                                                  style: TextStyles.font14WhiteRegular,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       // عدد التعليقات
                                       Row(
@@ -317,9 +332,17 @@ class _MainScreenState extends State<MainScreen> {
                                             size: 20.sp,
                                           ),
                                           SizedBox(width: 8.w),
-                                          Text(
-                                            "${postCubit.getPostResponse!.postData.comments.length ?? 0} comments".tr(),
-                                            style: TextStyles.font14WhiteRegular,
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "${postCubit.getPostResponse!.postData.comments.length ?? 0} ".tr(),
+                                                style: TextStyles.font14WhiteRegular,
+                                              ),
+                                              Text(
+                                                "comments".tr(),
+                                                style: TextStyles.font14WhiteRegular,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),

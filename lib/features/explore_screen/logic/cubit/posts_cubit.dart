@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/explore_screen/data/models/add_comment_body.dart';
 import 'package:rommify_app/features/explore_screen/data/models/search_user_model.dart';
 
+import '../../../../core/helpers/sound.dart';
 import '../../../../core/widgets/signal_r_notification.dart';
 import '../../data/models/get_omment_model.dart';
 import '../../data/models/get_post_model.dart';
@@ -31,6 +33,7 @@ class PostsCubit extends Cubit<PostsStates> {
   GetCommentResponse? getCommentResponse;
   final commentController = TextEditingController();
   late TextEditingController updateCommentController;
+  Map<String, bool> isLikedMap = {};
 
   void getAllPosts() async {
     emit(GetAllPostsLoadingState());
@@ -44,7 +47,12 @@ class PostsCubit extends Cubit<PostsStates> {
         getAllPostsResponse = right;
         isExpandedListExploreScreen = List.generate(
             right.posts.length + right.savedDesigns.length, (index) => false);
-
+        for (int i = 0; i < right.posts.length; i++) {
+          isLikedMap[right.posts[i].id] = right.posts[i].isLiked;
+        }
+        for (int i = 0; i < right.savedDesigns.length; i++) {
+          isLikedMap[right.savedDesigns[i].id] = right.savedDesigns[i].isLiked;
+        }
         emit(GetAllPostsSuccessState());
       },
     );
@@ -115,7 +123,7 @@ class PostsCubit extends Cubit<PostsStates> {
       (left) {
         emit(AddPostErrorState(message: left.apiErrorModel.title ?? ""));
       },
-      (right) {
+      (right) async {
         final newPost = PortfolioPost(
           id: right.id,
           imagePath: right.imagePath,
@@ -127,6 +135,7 @@ class PostsCubit extends Cubit<PostsStates> {
           comments: [],
           likesCount: 0,
           userProfilePicture: right.user.profilePicture,
+          isLiked: false,
           // ownerUserName:right.user.userName,ownerProfilePicture: right.user.profilePicture
         );
 
@@ -141,14 +150,17 @@ class PostsCubit extends Cubit<PostsStates> {
           comments: [],
           likesCount: 0,
           userProfilePicture: right.user.profilePicture,
+          isLiked: false,
           // ownerUserName:right.user.userName,ownerProfilePicture: right.user.profilePicture
         );
 
         // Update posts list
         getPostsResponse?.posts.insert(0, newPost); // Add to beginning of list
         getUserPost?.posts.insert(0, newUserPost); // Add to beginning of list
+        await playSound('sounds/comment.mp3');
+
         isExpandedList =
-            List.generate(getUserPost?.posts.length??0, (index) => false);
+            List.generate(getUserPost?.posts.length ?? 0, (index) => false);
 
         emit(AddPostSuccessState(right));
       },
@@ -193,6 +205,9 @@ class PostsCubit extends Cubit<PostsStates> {
       {required String postId,
       required String recieverId,
       required bool isPost}) async {
+    if (commentController.text.isEmpty) {
+      return;
+    }
     emit(AddCommentLoadingState());
     final response = await _postsRepo.addComment(
         addCommentBody: AddCommentBody(
@@ -203,7 +218,7 @@ class PostsCubit extends Cubit<PostsStates> {
       (left) {
         emit(AddCommentErrorState(message: left.apiErrorModel.title ?? ""));
       },
-      (right) {
+      (right) async {
         final newComment = CommentModel(
             content: right.content,
             userId: right.userId,
@@ -233,6 +248,7 @@ class PostsCubit extends Cubit<PostsStates> {
             getPostResponse!.postData.comments.insert(0, newComment);
           }
         }
+        await playSound('sounds/comment.mp3');
 
         // Update posts list
         // getCommentResponse?.comments
@@ -249,17 +265,96 @@ class PostsCubit extends Cubit<PostsStates> {
     );
   }
 
-  void addLike(
-      {required String postId,
-      required bool isPost,
-      required String recieverId}) async {
+  void addLike({
+    required String postId,
+    required bool isPost,
+    required String recieverId,
+  }) async {
     emit(AddLikeLoadingState());
+    if (getPostResponse != null) {
+      getPostResponse = getPostResponse!.copyWith(
+          postData: getPostResponse!.postData.copyWith(isLiked: true));
+    }
+    await playSound('sounds/like.wav');
+    if (isPost) {
+      print("trueeee");
+      final postIndex =
+          getAllPostsResponse!.posts.indexWhere((post) => post.id == postId);
+      if (postIndex != -1) {
+        final updatedPost =
+            getAllPostsResponse!.posts[postIndex].copyWith(isLiked: true);
+
+        final updatedPosts =
+            List<PortfolioPost>.from(getAllPostsResponse!.posts);
+        updatedPosts[postIndex] = updatedPost;
+
+        getAllPostsResponse = GetPostsResponse(
+          posts: updatedPosts,
+          savedDesigns: getAllPostsResponse!.savedDesigns,
+        );
+      }
+    } else {
+      final savedIndex = getAllPostsResponse!.savedDesigns
+          .indexWhere((design) => design.id == postId);
+
+      if (savedIndex != -1) {
+        final updatedDesign = getAllPostsResponse!.savedDesigns[savedIndex]
+            .copyWith(isLiked: true);
+
+        final updatedSavedDesigns =
+            List<SavedDesign>.from(getAllPostsResponse!.savedDesigns);
+        updatedSavedDesigns[savedIndex] = updatedDesign;
+
+        getAllPostsResponse = GetPostsResponse(
+          posts: getAllPostsResponse!.posts,
+          savedDesigns: updatedSavedDesigns,
+        );
+      }
+    }
     final response = await _postsRepo.addLike(
         userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
         isPost: isPost,
         postId: postId);
     response.fold(
       (left) {
+        if (getPostResponse != null) {
+          getPostResponse = getPostResponse!.copyWith(
+              postData: getPostResponse!.postData.copyWith(isLiked: false));
+        }
+        if (isPost) {
+          final postIndex = getAllPostsResponse!.posts
+              .indexWhere((post) => post.id == postId);
+          if (postIndex != -1) {
+            final updatedPost =
+                getAllPostsResponse!.posts[postIndex].copyWith(isLiked: false);
+
+            final updatedPosts =
+                List<PortfolioPost>.from(getAllPostsResponse!.posts);
+            updatedPosts[postIndex] = updatedPost;
+
+            getAllPostsResponse = GetPostsResponse(
+              posts: updatedPosts,
+              savedDesigns: getAllPostsResponse!.savedDesigns,
+            );
+          }
+        } else {
+          final savedIndex = getAllPostsResponse!.savedDesigns
+              .indexWhere((design) => design.id == postId);
+
+          if (savedIndex != -1) {
+            final updatedDesign = getAllPostsResponse!.savedDesigns[savedIndex]
+                .copyWith(isLiked: false);
+
+            final updatedSavedDesigns =
+                List<SavedDesign>.from(getAllPostsResponse!.savedDesigns);
+            updatedSavedDesigns[savedIndex] = updatedDesign;
+
+            getAllPostsResponse = GetPostsResponse(
+              posts: getAllPostsResponse!.posts,
+              savedDesigns: updatedSavedDesigns,
+            );
+          }
+        }
         emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
@@ -273,12 +368,14 @@ class PostsCubit extends Cubit<PostsStates> {
         //
         //   }
         // }
-        getPostResponse = getPostResponse!.copyWith(
-          postData: getPostResponse!.postData.copyWith(
-            likesCount: getPostResponse!.postData.likesCount + 1,
-          ),
-        );
-
+        if (getPostResponse != null) {
+          getPostResponse = getPostResponse!.copyWith(
+            postData: getPostResponse!.postData.copyWith(
+                likesCount: getPostResponse!.postData.likesCount + 1,
+                isLiked: true),
+          );
+        }
+        isLikedMap[right.id] = true;
         if (recieverId != SharedPrefHelper.getString(SharedPrefKey.userId)) {
           NotificationSignalRService.sendPushNotification(
             title: 'New Notification',
@@ -299,21 +396,103 @@ class PostsCubit extends Cubit<PostsStates> {
       required String recieverId,
       required}) async {
     emit(AddLikeLoadingState());
+await playSound
+('sounds/like.wav');
+    if (getPostResponse != null) {
+      getPostResponse = getPostResponse!.copyWith(
+          postData: getPostResponse!.postData.copyWith(isLiked: false));
+    }
+    if (isPost) {
+      final postIndex =
+          getAllPostsResponse!.posts.indexWhere((post) => post.id == postId);
+      if (postIndex != -1) {
+        final updatedPost =
+            getAllPostsResponse!.posts[postIndex].copyWith(isLiked: false);
 
+        final updatedPosts =
+            List<PortfolioPost>.from(getAllPostsResponse!.posts);
+        updatedPosts[postIndex] = updatedPost;
+
+        getAllPostsResponse = GetPostsResponse(
+          posts: updatedPosts,
+          savedDesigns: getAllPostsResponse!.savedDesigns,
+        );
+      }
+    } else {
+      final savedIndex = getAllPostsResponse!.savedDesigns
+          .indexWhere((design) => design.id == postId);
+
+      if (savedIndex != -1) {
+        final updatedDesign = getAllPostsResponse!.savedDesigns[savedIndex]
+            .copyWith(isLiked: false);
+
+        final updatedSavedDesigns =
+            List<SavedDesign>.from(getAllPostsResponse!.savedDesigns);
+        updatedSavedDesigns[savedIndex] = updatedDesign;
+
+        getAllPostsResponse = GetPostsResponse(
+          posts: getAllPostsResponse!.posts,
+          savedDesigns: updatedSavedDesigns,
+        );
+      }
+    }
     final response = await _postsRepo.removeLike(
         userId: await SharedPrefHelper.getString(SharedPrefKey.userId),
         isPost: isPost,
         postId: postId);
     response.fold(
       (left) {
+        if (getPostResponse != null) {
+          getPostResponse = getPostResponse!.copyWith(
+              postData: getPostResponse!.postData.copyWith(isLiked: true));
+        }
+        if (isPost) {
+          final postIndex = getAllPostsResponse!.posts
+              .indexWhere((post) => post.id == postId);
+          if (postIndex != -1) {
+            final updatedPost =
+                getAllPostsResponse!.posts[postIndex].copyWith(isLiked: true);
+
+            final updatedPosts =
+                List<PortfolioPost>.from(getAllPostsResponse!.posts);
+            updatedPosts[postIndex] = updatedPost;
+
+            getAllPostsResponse = GetPostsResponse(
+              posts: updatedPosts,
+              savedDesigns: getAllPostsResponse!.savedDesigns,
+            );
+          }
+        } else {
+          final savedIndex = getAllPostsResponse!.savedDesigns
+              .indexWhere((design) => design.id == postId);
+
+          if (savedIndex != -1) {
+            final updatedDesign = getAllPostsResponse!.savedDesigns[savedIndex]
+                .copyWith(isLiked: true);
+
+            final updatedSavedDesigns =
+                List<SavedDesign>.from(getAllPostsResponse!.savedDesigns);
+            updatedSavedDesigns[savedIndex] = updatedDesign;
+
+            getAllPostsResponse = GetPostsResponse(
+              posts: getAllPostsResponse!.posts,
+              savedDesigns: updatedSavedDesigns,
+            );
+          }
+        }
         emit(AddLikeErrorState(message: left.apiErrorModel.title ?? ""));
       },
       (right) {
-        getPostResponse = getPostResponse!.copyWith(
-          postData: getPostResponse!.postData.copyWith(
-            likesCount: getPostResponse!.postData.likesCount - 1,
-          ),
-        );
+// isLikedMap[right.id]=false;
+        if (getPostResponse != null) {
+          getPostResponse = getPostResponse!.copyWith(
+            postData: getPostResponse!.postData.copyWith(
+                likesCount: getPostResponse!.postData.likesCount > 0
+                    ? getPostResponse!.postData.likesCount - 1
+                    : getPostResponse!.postData.likesCount,
+                isLiked: false),
+          );
+        }
 
         emit(AddLikeSuccessState());
       },
@@ -430,50 +609,47 @@ class PostsCubit extends Cubit<PostsStates> {
 
 // Return appropriate format based on elapsed time
     if (seconds < 60) {
-      timeMap[commentId] = '$seconds seconds ago';
+      timeMap[commentId] =
+          'time.seconds_ago'.tr(namedArgs: {'seconds': seconds.toString()});
     } else if (minutes < 60) {
-      minutes == 1
-          ? timeMap[commentId] = 'a minute ago'
-          : timeMap[commentId] = '$minutes minutes ago';
+      timeMap[commentId] = minutes == 1
+          ? 'time.minute_ago'.tr()
+          : 'time.minutes_ago'.tr(namedArgs: {'minutes': minutes.toString()});
     } else if (hours < 24) {
       if (hours == 1) {
-        timeMap[commentId] = 'an hour ago';
+        timeMap[commentId] = 'time.hour_ago'.tr();
       } else if (hours == 2) {
-        timeMap[commentId] = '2 hours ago';
-      } else if (hours >= 3 && hours <= 10) {
-        timeMap[commentId] = '$hours hours ago';
+        timeMap[commentId] = 'time.hours_ago_2'.tr();
       } else {
-        timeMap[commentId] = '$hours hours ago';
+        timeMap[commentId] =
+            'time.hours_ago'.tr(namedArgs: {'hours': hours.toString()});
       }
     } else if (days < 30) {
       if (days == 1) {
-        timeMap[commentId] = 'a day ago';
+        timeMap[commentId] = 'time.day_ago'.tr();
       } else if (days == 2) {
-        timeMap[commentId] = '2 days ago';
-      } else if (days >= 3 && days <= 10) {
-        timeMap[commentId] = '$days days ago';
+        timeMap[commentId] = 'time.days_ago_2'.tr();
       } else {
-        timeMap[commentId] = '$days days ago';
+        timeMap[commentId] =
+            'time.days_ago'.tr(namedArgs: {'days': days.toString()});
       }
     } else if (months < 12) {
       if (months == 1) {
-        timeMap[commentId] = 'a month ago';
+        timeMap[commentId] = 'time.month_ago'.tr();
       } else if (months == 2) {
-        timeMap[commentId] = '2 months ago';
-      } else if (months >= 3 && months <= 10) {
-        timeMap[commentId] = '$months months ago';
+        timeMap[commentId] = 'time.months_ago_2'.tr();
       } else {
-        timeMap[commentId] = '$months months ago';
+        timeMap[commentId] =
+            'time.months_ago'.tr(namedArgs: {'months': months.toString()});
       }
     } else {
       if (years == 1) {
-        timeMap[commentId] = 'a year ago';
+        timeMap[commentId] = 'time.year_ago'.tr();
       } else if (years == 2) {
-        timeMap[commentId] = '2 years ago';
-      } else if (years >= 3 && years <= 10) {
-        timeMap[commentId] = '$years years ago';
+        timeMap[commentId] = 'time.years_ago_2'.tr();
       } else {
-        timeMap[commentId] = '$years years ago';
+        timeMap[commentId] =
+            'time.years_ago'.tr(namedArgs: {'years': years.toString()});
       }
     }
     emit(ChangeTimeState());

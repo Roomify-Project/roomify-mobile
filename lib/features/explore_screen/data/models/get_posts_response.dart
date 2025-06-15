@@ -27,8 +27,9 @@ class PortfolioPost {
   final String userId;
   final String userName;
   final String? userProfilePicture;
-  final List<dynamic> comments; // You can define a Comment model later
+  final List<dynamic> comments;
   final int likesCount;
+  final bool isLiked;
 
   PortfolioPost({
     required this.id,
@@ -40,6 +41,7 @@ class PortfolioPost {
     this.userProfilePicture,
     required this.comments,
     required this.likesCount,
+    required this.isLiked,
   });
 
   factory PortfolioPost.fromJson(Map<String, dynamic> json) {
@@ -53,6 +55,33 @@ class PortfolioPost {
       userProfilePicture: json['userProfilePicture'],
       comments: json['comments'] ?? [],
       likesCount: json['likesCount'],
+      isLiked: json['isLiked'],
+    );
+  }
+
+  PortfolioPost copyWith({
+    String? id,
+    String? imagePath,
+    String? description,
+    DateTime? createdAt,
+    String? userId,
+    String? userName,
+    String? userProfilePicture,
+    List<dynamic>? comments,
+    int? likesCount,
+    bool? isLiked,
+  }) {
+    return PortfolioPost(
+      id: id ?? this.id,
+      imagePath: imagePath ?? this.imagePath,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userProfilePicture: userProfilePicture ?? this.userProfilePicture,
+      comments: comments ?? this.comments,
+      likesCount: likesCount ?? this.likesCount,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 }
@@ -66,6 +95,7 @@ class SavedDesign {
   final String? userProfilePicture;
   final List<dynamic> comments;
   final int likesCount;
+  final bool isLiked;
 
   SavedDesign({
     required this.id,
@@ -76,6 +106,7 @@ class SavedDesign {
     this.userProfilePicture,
     required this.comments,
     required this.likesCount,
+    required this.isLiked,
   });
 
   factory SavedDesign.fromJson(Map<String, dynamic> json) {
@@ -88,6 +119,31 @@ class SavedDesign {
       userProfilePicture: json['userProfilePicture'],
       comments: json['comments'] ?? [],
       likesCount: json['likesCount'],
+      isLiked: json['isLiked'],
+    );
+  }
+
+  SavedDesign copyWith({
+    String? id,
+    String? generatedImageUrl,
+    DateTime? savedAt,
+    String? userId,
+    String? userName,
+    String? userProfilePicture,
+    List<dynamic>? comments,
+    int? likesCount,
+    bool? isLiked,
+  }) {
+    return SavedDesign(
+      id: id ?? this.id,
+      generatedImageUrl: generatedImageUrl ?? this.generatedImageUrl,
+      savedAt: savedAt ?? this.savedAt,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userProfilePicture: userProfilePicture ?? this.userProfilePicture,
+      comments: comments ?? this.comments,
+      likesCount: likesCount ?? this.likesCount,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 }

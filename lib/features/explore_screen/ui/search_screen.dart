@@ -48,9 +48,14 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
       backgroundColor: ColorsManager.colorPrimary,
       appBar: AppBar(
         backgroundColor: ColorsManager.colorPrimary,
-        leading: const Icon(
-          Icons.arrow_back_ios,
-          color: Colors.white,
+        leading: InkWell(
+          onTap: () {
+            context.pop();
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         title: Text(

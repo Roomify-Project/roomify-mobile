@@ -354,7 +354,9 @@ class _MessageBubbleState extends State<MessageBubble> {
               isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Stack(
-              alignment: Alignment.bottomRight,
+              alignment:
+              context.locale.languageCode == 'ar'?Alignment.bottomLeft:
+              Alignment.bottomRight,
               children: [
                 Container(
                   padding: EdgeInsets.only(
@@ -402,7 +404,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                                       height: 10.h,
                                     ),
                                     Text(
-                                      widget.getMessageResponseData.content,
+                                      widget.getMessageResponseData.content.tr(),
                                       style: TextStyles.font16WhiteInter
                                           .copyWith(
                                               fontWeight: FontWeight.w700),
@@ -425,7 +427,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                                       height: 10.h,
                                     ),
                                     Text(
-                                      widget.getMessageResponseData.content,
+                                      widget.getMessageResponseData.content.tr(),
                                       style: TextStyles.font16WhiteInter
                                           .copyWith(
                                               fontWeight: FontWeight.w700),
@@ -434,17 +436,16 @@ class _MessageBubbleState extends State<MessageBubble> {
                                 )
                           :
                       Text(
-                              widget.getMessageResponseData.content,
+                              widget.getMessageResponseData.content.tr(),
                               style: TextStyles.font16WhiteInter
                                   .copyWith(fontWeight: FontWeight.w700),
                             ),
                       SizedBox(height: 5.h),
                       SizedBox(
-                        width: 60,
+                        width: 60.w,
                         child: Text(
                           widget.chatCubit.formatTimeOnly(
-                                  widget.getMessageResponseData.sentAt) ??
-                              "",
+                                  widget.getMessageResponseData.sentAt).tr(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 9.3.sp,
@@ -459,7 +460,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                     ? !widget.chatCubit.checkSendMessage[
                             widget.getMessageResponseData.messageId]!
                         ? Padding(
-                            padding: EdgeInsets.only(right: 5.w, bottom: 5.h),
+                            padding: EdgeInsets.only(right: 5.w, bottom: 5.h,left: 5.w),
                             child: Icon(
                               Icons.access_time,
                               // أو أي أيقونة تانية زي Icons.check أو Icons.done_all
@@ -468,7 +469,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                             ),
                           )
                         : Padding(
-                            padding: EdgeInsets.only(right: 5.w, bottom: 5.h),
+                            padding: EdgeInsets.only(right: 5.w, bottom: 5.h,left: 5.w),
                             child: Icon(
                               Icons.check,
                               // أو أي أيقونة تانية زي Icons.check أو Icons.done_all

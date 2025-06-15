@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -75,7 +76,7 @@ class SignUpScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           verticatSpace(30),
-                          Center(child: const AnimatedText(text: 'Sign up')),
+                          Center(child:  AnimatedText(text: 'Sign up'.tr())),
                           verticatSpace(15),
                           LoginRichText(
                             onLoginTap: () {
@@ -88,11 +89,11 @@ class SignUpScreen extends StatelessWidget {
                           OrDivider(),
                           verticatSpace(61),
                           CustomTextFormField(
-                            labelText: 'Full Name',
+                            labelText: 'Full Name'.tr(),
                             controller: signUpCubit.fullNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your full name';
+                                return 'Please enter your full name'.tr();
                               }
                               return null;
                             },
@@ -100,11 +101,11 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 20.h),
                           CustomTextFormField(
-                            labelText: 'User Name',
+                            labelText: 'User Name'.tr(),
                             controller: signUpCubit.userNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your username';
+                                return 'Please enter your username'.tr();
                               }
                               return null;
                             },
@@ -112,15 +113,15 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 20.h),
                           CustomTextFormField(
-                            labelText: 'E-mail',
+                            labelText: 'E-mail'.tr(),
                             controller: signUpCubit.emailController,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                                return 'Please enter your email'.tr();
                               }
                               if (!AppRegex.isEmailValid(value)) {
-                                return 'Please enter a valid email';
+                                return 'Please enter a valid email'.tr();
                               }
                               return null;
                             },
@@ -128,15 +129,15 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 20.h),
                           CustomTextFormField(
-                            labelText: 'Password',
+                            labelText: 'Password'.tr(),
                             controller: signUpCubit.passwordController,
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return 'Please enter your password'.tr();
                               }
                               if (!AppRegex.isPasswordValid(value)) {
-                                return 'Use At Least 8 Characters One Uppercase Letter\nOneLowercase Letter And One Number In\nYour Password';
+                                return 'Use At Least 8 Characters One Uppercase Letter\nOneLowercase Letter And One Number In\nYour Password'.tr();
                               }
                               return null;
                             },
@@ -149,10 +150,10 @@ class SignUpScreen extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding:  EdgeInsets.only(left: 8.w),
-                                  child: const Text(
-                                    'Select Role',
+                                  child:  Text(
+                                    'Select Role'.tr(),
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
@@ -162,7 +163,7 @@ class SignUpScreen extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: RadioListTile<String>(
-                                        title: const Text('Normal User', style: TextStyle(color: Colors.white)),
+                                        title:  Text('Normal User'.tr(), style: const TextStyle(color: Colors.white)),
                                         value: 'normalUser',
                                         groupValue: signUpCubit.selectedRole,
                                         contentPadding: EdgeInsets.zero,
@@ -174,7 +175,7 @@ class SignUpScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: RadioListTile<String>(
-                                        title: const Text('Interior Designer', style: TextStyle(color: Colors.white)),
+                                        title:  Text('Interior Designer'.tr(), style: const TextStyle(color: Colors.white)),
                                         value: 'InteriorDesigner',
                                         groupValue: signUpCubit.selectedRole,
                                         contentPadding: EdgeInsets.zero,
@@ -207,7 +208,7 @@ class SignUpScreen extends StatelessWidget {
                                 const EdgeInsets.only(top: 100, bottom: 60),
                             child: Center(
                               child: ColorChangingButton(
-                                buttonText: "Sign Up",
+                                buttonText: "Sign Up".tr(),
                                 onPressed: () {
                                   if (signUpCubit.formKey.currentState!
                                       .validate()&&signUpCubit.selectedRole!='') {

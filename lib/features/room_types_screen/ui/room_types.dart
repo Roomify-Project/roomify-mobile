@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,15 +30,15 @@ class RoomTypeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10),
+                       Padding(
+                        padding: EdgeInsets.only(left: 10.w),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Choose room type',
+                            'Choose room type'.tr(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 24.sp,
                             ),
                           ),
                         ),
@@ -64,8 +65,10 @@ class RoomTypeScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      SizedBox(height: 20.h),
+
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 29),
+                        padding:  EdgeInsets.only(bottom: 29.h),
                         child: ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
@@ -74,11 +77,11 @@ class RoomTypeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
-                            'Save',
+                          child:  Text(
+                            'Save'.tr(),
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                             ),
                           ),
                         ),
@@ -123,7 +126,7 @@ class RoomTypeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            displayName,
+            displayName.tr(),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,

@@ -31,7 +31,7 @@ class AddRoomImage extends StatelessWidget {
               if (generateCubit.imageFile != null)
                 Expanded(
                   child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: Container(
                       width: 80.w,
                       height: 90.h,
@@ -88,6 +88,7 @@ class AddRoomImage extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+
             ],
           )
 

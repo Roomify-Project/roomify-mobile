@@ -36,25 +36,32 @@ class DesignStyle extends StatelessWidget {
           ),
           child: Row(
             children: [
-              generateCubit.imageStyle!=''?
-              Expanded(
+              generateCubit.imageStyle != ''
+                  ? Expanded(
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: context.locale.languageCode == 'ar'
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
-                      width: 80.w,
-                      height: 90.h,
-                      decoration: BoxDecoration(
-                        color: ColorsManager.colorContainer,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(8.r),
-                          bottomLeft: Radius.circular(12.r),
-                          topRight: Radius.circular(8.r),
-                        ),
+                    width: 80.w,
+                    height: 90.h,
+                    decoration: BoxDecoration(
+                      color: ColorsManager.colorContainer,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(8.r),
+                        bottomLeft: Radius.circular(12.r),
+                        topRight: Radius.circular(8.r),
                       ),
-                      child: Image.asset(generateCubit.imageStyle,fit: BoxFit.fill,)
+                    ),
+                    child: Image.asset(
+                      generateCubit.imageStyle,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ):const Spacer(),
+              )
+                  : const Spacer(),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

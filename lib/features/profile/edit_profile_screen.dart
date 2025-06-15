@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 import 'package:rommify_app/core/widgets/flutter_show_toast.dart';
@@ -14,6 +16,7 @@ import 'package:rommify_app/features/profile/widget/profile_image.dart';
 
 import '../../core/di/dependency_injection.dart';
 import '../../core/helpers/shared_pref_helper.dart';
+import '../../core/theming/styles.dart';
 import '../change_password/logic/cubit/change_password_cubit.dart';
 import '../change_password/ui/change_password_dialog.dart';
 
@@ -64,67 +67,67 @@ class EditProfileScreen extends StatelessWidget {
                   ProfileImage(
                     profileCubit: ProfileCubit.get(context),
                   ),
-                  const SizedBox(height: 40),
+                   SizedBox(height: 40.h),
                   CustomTextField(
                     controller: profileCubit.fullNameController,
-                    hint: 'FULL NAME',
+                    hint: 'FULL NAME'.tr(),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
+                        return 'Please enter your full name'.tr();
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 15),
+                   SizedBox(height: 15.h),
                   CustomTextField(
                     controller: profileCubit.userNameController,
-                    hint: 'USER NAME',
+                    hint: 'USER NAME'.tr(),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
+                        return 'Please enter your username'.tr();
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 15),
+                   SizedBox(height: 15.h),
                   CustomTextField(
                     controller: profileCubit.emailController,
-                    hint: 'EMAIL@GMAIL.COM',
+                    hint: 'EMAIL@GMAIL.COM'.tr(),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Please enter your email'.tr();
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 15),
+                   SizedBox(height: 15.h),
                   CustomTextField(
                     controller: profileCubit.phoneNumberController,
-                    hint: 'PHONE NUMBER',
+                    hint: 'PHONE NUMBER'.tr(),
                     keyboardType: TextInputType.phone,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
+                        return 'Please enter your phone number'.tr();
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 15),
+                   SizedBox(height: 15.h),
                   CustomTextField(
                     controller: profileCubit.bioController,
-                    hint: 'Bio',
+                    hint: 'Bio'.tr(),
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
+                        return 'Please enter your phone number'.tr();
                       }
                       return null;
                     },
                   ),
-                  const SizedBox(height: 30),
+                   SizedBox(height: 30.h),
                   CustomButton(
-                    text: 'CHANGE PASSWORD',
+                    text: 'CHANGE PASSWORD'.tr(),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -139,9 +142,24 @@ class EditProfileScreen extends StatelessWidget {
                     },
                     color: const Color(0xff200625),
                   ),
-                  const SizedBox(height: 60),
+                  SizedBox(height: 20.h,),
+                  ListTile(
+                    // title: Text('language'.tr(),style: TextStyles.font14WhiteRegular,),
+                    title: Text(context.locale.languageCode == 'ar' ? 'العربية' : 'English',style: TextStyles.font14WhiteRegular,),
+                    trailing: Switch(
+                      value: context.locale.languageCode == 'ar',
+                      onChanged: (value) {
+                        if (value) {
+                          context.setLocale(const Locale('ar'));
+                        } else {
+                          context.setLocale(const Locale('en'));
+                        }
+                      },
+                    ),
+                  ),
+                   SizedBox(height: 60.h),
                   CustomButton(
-                    text: 'SAVE CHANGES',
+                    text: 'SAVE CHANGES'.tr(),
                     onPressed: () {
                       profileCubit.updateProfile(
                         updateProfileId: SharedPrefHelper.getString(SharedPrefKey.userId)
@@ -149,23 +167,23 @@ class EditProfileScreen extends StatelessWidget {
                     },
                     color: const Color(0xff320c39),
                     width: 147,
-                    height: 47,
+                    height: 47.h,
                   ),
-                  const SizedBox(height: 40),
+                   SizedBox(height: 40.h),
                   TextButton(
                     onPressed: () async {
                      await profileCubit.logOut(context: context);
                     },
-                    child: const Text(
-                      'LOG OUT',
+                    child:  Text(
+                      'LOG OUT'.tr(),
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                   SizedBox(height: 20.h),
                 ],
               );
             },

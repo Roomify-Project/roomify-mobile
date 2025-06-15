@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -69,13 +70,13 @@ class GenerateCubit extends Cubit<GenerateStates> {
   }
   void generate({required BuildContext context}) async {
     if (imageFile == null) {
-      emit(GenerateValidationErrorState(message: "Please upload an image."));
+        emit(GenerateValidationErrorState(message: "Please upload an image.".tr()));
       // flutterShowToast(message: "Please upload an image.", toastCase: ToastCase.error);
       return;
     }
 
     if (generateController.text.trim().isEmpty) {
-      emit(GenerateValidationErrorState(message: "Please enter a description."));
+      emit(GenerateValidationErrorState(message: "Please enter a description.".tr()));
       // flutterShowToast(message: "Please enter a description.", toastCase: ToastCase.error);
       return;
     }
@@ -83,12 +84,12 @@ class GenerateCubit extends Cubit<GenerateStates> {
     if (roomType == '' || roomType.trim().isEmpty) {
       // flutterShowToast(message: "Please select room type.", toastCase: ToastCase.error);
 
-      emit(GenerateValidationErrorState(message: "Please select room type."));
+      emit(GenerateValidationErrorState(message: "Please select room type.".tr()));
       return;
     }
 
     if (roomStyle == '' || roomStyle.trim().isEmpty) {
-      emit(GenerateValidationErrorState(message: "Please select design style."));
+      emit(GenerateValidationErrorState(message: "Please select design style.".tr()));
       return;
     }
 

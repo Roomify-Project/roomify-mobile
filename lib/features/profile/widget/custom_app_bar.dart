@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/theming/colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -14,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 17),
+          padding:  EdgeInsets.only(right: 17.w,left: 17.w),
           child: GestureDetector(
             onTap: onClose,
             child: Container(

@@ -3,17 +3,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:rommify_app/core/helpers/constans.dart';
 import 'package:rommify_app/core/helpers/shared_pref_helper.dart';
 import 'package:rommify_app/features/chat/data/model/send_message_body.dart';
 import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
 import 'package:rommify_app/features/profile/data/models/get_all_chats_response.dart';
 
+import '../../../../core/helpers/sound.dart';
 import '../../../../core/widgets/signal_R_service.dart';
 import '../../../../core/widgets/signal_r_notification.dart';
 import '../../../log_in/data/models/login_response.dart';
@@ -78,6 +81,7 @@ class ChatCubit extends Cubit<ChatStates> {
       Map<String, dynamic> userMap = jsonDecode(jsonString!);
       model = LoginResponse.fromJson(userMap);
     }
+
     GetMessageResponseData getMessageResponse = GetMessageResponseData(
         messageId: (i++).toString(),
         senderId: SharedPrefHelper.getString(SharedPrefKey.userId),
@@ -116,6 +120,7 @@ class ChatCubit extends Cubit<ChatStates> {
       },
       (right) async {
         print("iiiii ${i}");
+        await playSound('sounds/send_message.mp3');
 
         isSent = true;
         int index = getMessagesResponse!.messages.indexWhere(
@@ -149,7 +154,7 @@ class ChatCubit extends Cubit<ChatStates> {
             if (chat.chatWithUserId == receiverId) {
               return chat.copyWith(
                 lastMessageContent:getMessageResponse.content.isEmpty&&right.messageData.attachmentUrl!=null?
-                "Send photo":
+                "Send photo".tr():
                 getMessageResponse.content,
                 lastMessageTime: currentDateTime.toString(),
               );
@@ -211,7 +216,7 @@ class ChatCubit extends Cubit<ChatStates> {
             if (chat.chatWithUserId == getMessage.senderId) {
               return chat.copyWith(
                 lastMessageContent:getMessage.content.isEmpty&&getMessage.attachmentUrl!=null?
-              "Send photo":getMessage.content,
+              "Send photo".tr():getMessage.content,
                 lastMessageTime: currentDateTime.toString(),
               );
             }
@@ -305,7 +310,7 @@ class ChatCubit extends Cubit<ChatStates> {
 
         if (index != -1) {
           final updatedMessage = getMessagesResponse!.messages[index].copyWith(
-            content: "🚫 you deleted this message",
+            content: "🚫 you deleted this message".tr(),
             attachmentUrl: "",
           );
 
@@ -319,7 +324,7 @@ class ChatCubit extends Cubit<ChatStates> {
               // print("chatWithUserId${chat.chatWithUserId}");
               if (chat.chatWithUserId == recievdId) {
                 return chat.copyWith(
-                  lastMessageContent: "🚫 you deleted this message",
+                  lastMessageContent: "🚫 you deleted this message".tr(),
                   lastMessageTime: currentDateTime.toString(),
                 );
               }
@@ -335,15 +340,15 @@ class ChatCubit extends Cubit<ChatStates> {
         }
         NotificationSignalRService.sendPushNotification(
           title: '${SharedPrefHelper.getString(SharedPrefKey.name)}',
-          body: "message is deleted",
+          body: "message is deleted".tr(),
           userId: recievdId,
           messageId: messageId,
           chatId: await SharedPrefHelper.getString(SharedPrefKey.userId),
-          userName: model!.userName,
+          userName: model?.userName,
           userImage: await SharedPrefHelper.getString(SharedPrefKey.image),
-          role: model!.roles,
-          bio: model!.userName,
-          email: model!.userName,
+          role: model?.roles,
+          bio: model?.userName,
+          email: model?.userName,
         );
 
         emit(DeleteMessageSuccessStates(messgae: right));
@@ -404,25 +409,50 @@ class ChatCubit extends Cubit<ChatStates> {
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
     final diff = now.difference(dateTime);
 
-    final timeFormat = DateFormat.jm(); // Example: 9:00 AM
+    String formatTimeArabic(DateTime dt) {
+      final timeFormat = DateFormat.jm();
+      return timeFormat.format(dt)
+          .replaceAll('AM', 'ص')
+          .replaceAll('PM', 'م');
+    }
 
     if (messageDate == today) {
-      return "Today ${timeFormat.format(dateTime)}";
+      return 'Today at {time}'.tr(namedArgs: {'time': formatTimeArabic(dateTime)});
     } else if (messageDate == yesterday) {
-      return "Yesterday ${timeFormat.format(dateTime)}";
+      return 'Yesterday at {time}'.tr(namedArgs: {'time': formatTimeArabic(dateTime)});
     } else if (diff.inDays < 7) {
-      return "${DateFormat.EEEE().format(dateTime)} ${timeFormat.format(dateTime)}"; // e.g. Monday 3:00 PM
+      return '${DateFormat.EEEE().format(dateTime)} ${formatTimeArabic(dateTime)}';
     } else if (diff.inDays < 14) {
-      return "Last week";
+      return 'Last week'.tr();
     } else {
-      return DateFormat.yMd()
-          .add_jm()
-          .format(dateTime); // e.g. 6/5/2025 12:38 PM
+      return DateFormat.yMd().add_jm().format(dateTime)
+          .replaceAll('AM', 'ص')
+          .replaceAll('PM', 'م');
     }
+  }  String formatTimeOnly(String timeString) {
+    final dateTime = DateTime.parse(timeString);
+
+    // تنسيق الوقت بدون AM/PM
+    final hour12 = dateTime.hour == 0 ? 12 : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+
+    return '$hour12:$minute ${'$period'.tr()}';
   }
 
-  String formatTimeOnly(String timeString) {
-    final dateTime = DateTime.parse(timeString);
-    return DateFormat.jm().format(dateTime); // مثال: 3:45 PM
-  }
+// أو لو عايز تستخدم DateFormat مع locale محدد:
+//   String formatTimeOnlyWithLocale(String timeString) {
+//     final dateTime = DateTime.parse(timeString);
+//     final locale = context.locale.languageCode; // من easy_localization
+//
+//     // استخدم locale محدد
+//     final formatter = DateFormat.jm(locale);
+//     String formattedTime = formatter.format(dateTime);
+//
+//     // استبدل AM/PM بالترجمة
+//     formattedTime = formattedTime.replaceAll('AM', 'AM'.tr());
+//     formattedTime = formattedTime.replaceAll('PM', 'PM'.tr());
+//
+//     return formattedTime;
+//   }
 }
