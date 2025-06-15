@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -9,9 +8,15 @@ import 'package:rommify_app/features/chat/data/repos/chat_repo.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:rommify_app/features/explore_screen/data/repos/posts_repo.dart';
 import 'package:rommify_app/features/explore_screen/logic/cubit/posts_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'core/di/dependency_injection.dart';
 import 'core/helpers/shared_pref_helper.dart';
 import 'core/routing/app_router.dart';
+// ✅ استخدم ملف الشعاع المعدل
+import 'core/widgets/animated_bottom_right.dart';
+import 'features/log_in/data/repos/login_repo.dart';
+import 'features/notification/logic/cubit/notiication_cubit.dart';
 
 class RoomifyApp extends StatelessWidget {
   final AppRouter appRouter;
@@ -34,20 +39,18 @@ class RoomifyApp extends StatelessWidget {
         designSize: const Size(402, 874),
         minTextAdapt: true,
         child: MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-
           navigatorKey: Constants.navigatorKey,
           title: 'RoomifyApp',
           builder: (context, child) {
             return Stack(
               children: [
-                EasyLoading.init()(context, child), // مهم
-                 // IgnorePointer(
-                 //   ignoring: true,
-                 //   child: CircleWidget(),
-                 // ),
+                EasyLoading.init()(context, child),
+
+
+                const IgnorePointer(
+                  ignoring: true,
+                  child: StaticGradientBeam(),
+                ),
               ],
             );
           },

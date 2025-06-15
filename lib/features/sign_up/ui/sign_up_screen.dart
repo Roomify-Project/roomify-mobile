@@ -29,9 +29,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsManager.colorPrimary,
-      body: Stack(
-        children: [
-          const StaticGradientBeam(),
+      body: 
           SafeArea(
             child: SingleChildScrollView(
               child: BlocProvider(
@@ -226,8 +224,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+     
     );
   }
 }

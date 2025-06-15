@@ -28,9 +28,7 @@ class NotificationScreen extends StatelessWidget {
       child: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (BuildContext context, state) {
           final notification = NotificationCubit.get(context);
-          return Stack(
-            children: [
-              CircleWidget(),
+          return 
               Scaffold(
                 appBar: AppBar(
                   backgroundColor: ColorsManager.colorPrimary,
@@ -123,8 +121,7 @@ class NotificationScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-              ),
-            ],
+            
           );
         },
       ),

@@ -2,47 +2,32 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class CircleWidget extends StatefulWidget {
+  final Color currentColor;
+  final Duration delay;
+
+  const CircleWidget({
+    Key? key,
+    required this.currentColor,
+    this.delay = const Duration(seconds: 2),
+  }) : super(key: key);
+
   @override
   _CircleWidgetState createState() => _CircleWidgetState();
 }
 
-class _CircleWidgetState extends State<CircleWidget>
-    with SingleTickerProviderStateMixin {
+class _CircleWidgetState extends State<CircleWidget> with TickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _xAnimation, _yAnimation;
-  late int _currentStep;
+  Animation<double>? _xAnimation, _yAnimation;
+  int _currentStep = 0;
 
   final double radius = 120;
-  final double margin = 10; // المسافة اللي يدخلها داخل الشاشة
+  final double margin = 10;
   late List<Offset> _path;
-
-  final List<Color> colors = [
-    Color(0xFFCC46A4),
-    Color(0xFFCCC146),
-    Color(0xFFCC4646),
-    Color(0xFF9EACCE),
-  ];
+  bool isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _currentStep = 0;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final size = MediaQuery.of(context).size;
-
-    final double offset = radius - margin;
-
-    _path = [
-      Offset(size.width / 2, size.height - offset), // أسفل
-      Offset(offset, size.height / 2), // يسار
-      Offset(size.width / 2, offset), // أعلى
-      Offset(size.width - offset, size.height / 2), // يمين
-    ];
-
     _controller = AnimationController(
       duration: Duration(seconds: 7),
       vsync: this,
@@ -50,13 +35,25 @@ class _CircleWidgetState extends State<CircleWidget>
         if (mounted) setState(() {});
       });
 
-    _setUpAnimations();
-    _controller.forward();
+    Future.delayed(widget.delay, () {
+      if (!mounted) return;
+      final size = MediaQuery.of(context).size;
+      final double offset = radius - margin;
+
+      _path = [
+        Offset(size.width / 2, size.height - offset),
+        Offset(offset, size.height / 2),
+        Offset(size.width / 2, offset),
+        Offset(size.width - offset, size.height / 2),
+      ];
+
+      _setUpAnimations();
+      isInitialized = true;
+      _controller.forward();
+    });
   }
 
   void _setUpAnimations() {
-    final size = MediaQuery.of(context).size;
-
     _xAnimation = Tween<double>(
       begin: _path[_currentStep].dx,
       end: _path[(_currentStep + 1) % 4].dx,
@@ -75,33 +72,32 @@ class _CircleWidgetState extends State<CircleWidget>
   }
 
   Color getColorForPosition() {
-    final currentColor = colors[_currentStep];
-    final nextColor = colors[(_currentStep + 1) % 4];
-    return Color.lerp(currentColor, nextColor, _controller.value) ??
-        currentColor;
+    return widget.currentColor;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!isInitialized || _xAnimation == null || _yAnimation == null) {
+      return SizedBox.expand();
+    }
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         if (_controller.isCompleted) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              _currentStep = (_currentStep + 1) % 4;
-              _setUpAnimations();
-              _controller.reset();
-              _controller.forward();
-            });
+            _currentStep = (_currentStep + 1) % 4;
+            _setUpAnimations();
+            _controller.reset();
+            _controller.forward();
           });
         }
 
         return CustomPaint(
           size: Size.infinite,
           painter: MovingShapePainter(
-            _xAnimation.value,
-            _yAnimation.value,
+            _xAnimation!.value,
+            _yAnimation!.value,
             getColorForPosition(),
             radius,
           ),
@@ -121,8 +117,7 @@ class MovingShapePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.saveLayer(null,
-        Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15));
+    canvas.saveLayer(null, Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15));
 
     final Paint paint = Paint()
       ..shader = RadialGradient(

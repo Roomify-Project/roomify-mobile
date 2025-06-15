@@ -31,9 +31,7 @@ class AddPostPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          CircleWidget(),
+      body: 
           BlocConsumer<PostsCubit, PostsStates>(
             listener: (BuildContext context, PostsStates state) {
               if(state is AddPostLoadingState){
@@ -169,8 +167,7 @@ class AddPostPage extends StatelessWidget {
 
             },
           ),
-        ],
-      ),
+       
     );
   }
 }

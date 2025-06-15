@@ -354,7 +354,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             SizedBox(height: 8.h),
                             CommentListView(postId: widget.postId),
-                            SizedBox(height: 30.h), // مساحة إضافية للكومنت بار
+                            SizedBox(height: 30.h),
                           ],
                         ),
                       ),

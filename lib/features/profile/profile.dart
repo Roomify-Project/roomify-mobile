@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : profileCubit.getProfileDataModel != null
                     ? Stack(
                         children: [
-                          CircleWidget(),
+                        
                           Padding(
                             padding: const EdgeInsets.only(top: 60),
                             child: Column(
