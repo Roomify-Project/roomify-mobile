@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rommify_app/features/chat/logic/cubit/chat_cubit.dart';
@@ -14,14 +15,14 @@ void showPickImageSnackBarChat(BuildContext context,ChatCubit chatCubit) {
               chatCubit.pickImage(source: ImageSource.camera);
             },
             icon: const Icon(Icons.camera_alt, color: Colors.white),
-            label: const Text('Camera', style: TextStyle(color: Colors.white)),
+            label:  Text('Camera'.tr(), style: const TextStyle(color: Colors.white)),
           ),
           TextButton.icon(
             onPressed: () {
               chatCubit.pickImage(source: ImageSource.gallery);
             },
             icon: const Icon(Icons.photo_library, color: Colors.white),
-            label: const Text('Gallery', style: TextStyle(color: Colors.white)),
+            label:  Text('Gallery'.tr(), style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../logic/forget_cubit.dart';
 import '../logic/forget_states.dart';
 import '../../profile/widget/custom_text_field.dart';
@@ -35,7 +37,7 @@ class NewPassword extends StatelessWidget {
       listener: (context, state) {
         if (state is ResetPasswordSuccessState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password reset successfully')),
+             SnackBar(content: Text('Password reset successfully'.tr())),
           );
           // Navigate to the login screen
           Navigator.of(context).pushNamedAndRemoveUntil('/loginScreen', (route) => false);
@@ -61,25 +63,25 @@ class NewPassword extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'New Password',
+               Text(
+                'New Password'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Text(
-                'Enter your new password',
+               Text(
+                'Enter your new password'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               const SizedBox(height: 15),
               CustomTextField(
-                hint: 'New Password',
+                hint: 'New Password'.tr(),
                 controller: cubit.passwordController,
                 obscureText: true,
                 validator: (value) {},
@@ -96,8 +98,8 @@ class NewPassword extends StatelessWidget {
                             final password = cubit.passwordController.text;
                             if (password.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter a new password'),
+                                 SnackBar(
+                                  content: Text('Please enter a new password'.tr()),
                                 ),
                               );
                               return;
@@ -112,11 +114,11 @@ class NewPassword extends StatelessWidget {
                     ),
                     child: state is ResetPasswordLoadingState
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Confirm',
+                        :  Text(
+                            'Confirm'.tr(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

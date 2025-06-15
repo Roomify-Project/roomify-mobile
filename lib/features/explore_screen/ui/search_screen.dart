@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,7 +54,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
         ),
         centerTitle: true,
         title: Text(
-          'Search',
+          'Search'.tr(),
           style: TextStyles.font18WhiteRegular,
         ),
       ),
@@ -76,9 +77,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             child: TextField(
               controller: _searchController,
               focusNode: _searchFocusNode,
-              textDirection: TextDirection.ltr,
               decoration: InputDecoration(
-                hintText: 'Search for users...',
+                hintText: 'Search for users...'.tr(),
                 hintStyle: TextStyle(
                   color: Colors.grey[500],
                   fontSize: 16,
@@ -151,9 +151,9 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: const Text('Retry'),
+                          child:  Text('Retry'.tr(),
                         ),
-                      ],
+                        )],
                     ),
                   );
                 }
@@ -175,7 +175,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No results found',
+                            'No results found'.tr(),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey[600],
@@ -184,7 +184,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Try searching with different keywords',
+                            'Try searching with different keywords'.tr(),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -268,7 +268,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Search for users',
+                        'Search for users'.tr(),
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.grey[600],
@@ -277,7 +277,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Enter a username or email',
+                        'Enter a username or email'.tr(),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[500],

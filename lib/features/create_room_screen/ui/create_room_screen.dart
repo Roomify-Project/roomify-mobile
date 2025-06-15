@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,7 +70,7 @@ class CreateRoomScreen extends StatelessWidget {
                                   ),
                                   maxLines: null,
                                   decoration: InputDecoration(
-                                    hintText: "write description",
+                                    hintText: "write description".tr(),
                                     hintStyle: TextStyles.font14WhiteRegular.copyWith(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class CreateRoomScreen extends StatelessWidget {
                               SizedBox(height: 65.h),
                               InkWell(
                                 child: Text(
-                                  "Room type",
+                                  "Room type".tr(),
                                   style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp),
                                 ),
                                 onTap: () {
@@ -106,7 +107,7 @@ class CreateRoomScreen extends StatelessWidget {
                               RoomType(generateCubit: generateCubit),
                               SizedBox(height: 20.h),
                               Text(
-                                "Style",
+                                "Style".tr(),
                                 style: TextStyles.font15WhiteRegular.copyWith(fontSize: 16.sp),
                               ),
                               SizedBox(height: 3.h),
@@ -131,7 +132,7 @@ class CreateRoomScreen extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'GENERATE',
+                            'GENERATE'.tr(),
                             style: TextStyles.font21BlackSemiBold
                                 .copyWith(color: Colors.white, fontSize: 18.sp),
                           ),

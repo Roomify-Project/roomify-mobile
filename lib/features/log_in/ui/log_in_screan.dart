@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -61,8 +62,8 @@ class LogInScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 30.h),
-                          const Center(
-                            child:  AnimatedText(text: 'Log In'),
+                           Center(
+                            child:  AnimatedText(text: 'Log In'.tr()),
                           ),
                           SizedBox(height: 20.h),
                           SingupRichText(
@@ -75,16 +76,16 @@ class LogInScreen extends StatelessWidget {
                           OrDivider(),
                           SizedBox(height: 20.16.h),
                           CustomTextFormField(
-                            labelText: 'Email',
+                            labelText: 'Email'.tr(),
                             controller: loginCubit.emailController,
                             obscureText: false,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please Enter Email';
+                                return 'Please Enter Email'.tr();
                               }
                               if (!AppRegex.isEmailValid(value)) {
-                                return 'Use Valid E-mail';
+                                return 'Use Valid E-mail'.tr();
                               }
                               return null;
                             },
@@ -93,11 +94,11 @@ class LogInScreen extends StatelessWidget {
                           CustomTextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please Enter Password';
+                                return 'Please Enter Password'.tr();
                               }
                               return null;
                             },
-                            labelText: 'Password',
+                            labelText: 'Password'.tr(),
                             controller: loginCubit.passwordController,
                             obscureText: true,
                             keyboardType: TextInputType.visiblePassword,
@@ -107,7 +108,7 @@ class LogInScreen extends StatelessWidget {
                                 const EdgeInsets.only(top: 100, bottom: 60),
                             child: Center(
                               child: ColorChangingButton(
-                                buttonText: "Log In",
+                                buttonText: "Log In".tr(),
                                 onPressed: () {
                                   if (loginCubit.formKey.currentState!
                                       .validate()) {
@@ -134,11 +135,11 @@ class LogInScreen extends StatelessWidget {
                                   },
                                 );
                               },
-                              child: const Text(
-                                'Forgot Password?',
+                              child:  Text(
+                                'Forgot Password?'.tr(),
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
                             ),

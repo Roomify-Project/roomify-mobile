@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -54,11 +55,11 @@ class ChangePasswordDialog extends StatelessWidget {
                         const SizedBox(height: 20),
                         CustomTextField(
                           controller: cubit.currentPasswordController,
-                          hint: 'OLD PASSWORD',
+                          hint: 'OLD PASSWORD'.tr(),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your old password';
+                              return 'Please enter your old password'.tr();
                             }
                             return null;
                           },
@@ -66,11 +67,11 @@ class ChangePasswordDialog extends StatelessWidget {
                         const SizedBox(height: 15),
                         CustomTextField(
                           controller: cubit.newPasswordController,
-                          hint: 'NEW PASSWORD',
+                          hint: 'NEW PASSWORD'.tr(),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your new password';
+                              return 'Please enter your new password'.tr();
                             }
                             return null;
                           },
@@ -78,11 +79,11 @@ class ChangePasswordDialog extends StatelessWidget {
                         const SizedBox(height: 15),
                         CustomTextField(
                           controller: cubit.confirmNewPasswordController,
-                          hint: 'CONFIRM NEW PASSWORD',
+                          hint: 'CONFIRM NEW PASSWORD'.tr(),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please confirm your new password';
+                              return 'Please confirm your new password'.tr();
                             }
                             return null;
                           },
@@ -99,9 +100,9 @@ class ChangePasswordDialog extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(17),
                               ),
                             ),
-                            child: const Text(
-                              'CONFIRM',
-                              style: TextStyle(
+                            child:  Text(
+                              'CONFIRM'.tr(),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,

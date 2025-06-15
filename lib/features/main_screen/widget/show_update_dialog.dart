@@ -1,4 +1,5 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,9 +24,9 @@ void showOptionsBottomSheet({required PostsCubit postCubit,required BuildContext
         children: [
           ListTile(
             leading: const Icon(Icons.edit, color: Colors.white),
-            title: const Text(
-              'Update',
-              style: TextStyle(color: Colors.white),
+            title:  Text(
+              'Update'.tr(),
+              style: const TextStyle(color: Colors.white),
             ),
             onTap: () {
               Navigator.pop(context);
@@ -34,9 +35,9 @@ void showOptionsBottomSheet({required PostsCubit postCubit,required BuildContext
           ),
           ListTile(
             leading: const Icon(Icons.delete, color: Colors.red),
-            title: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
+            title:  Text(
+              'Delete'.tr(),
+              style: const TextStyle(color: Colors.red),
             ),
             onTap: () {
               Navigator.pop(context);
@@ -55,20 +56,20 @@ void showDeleteConfirmation({required BuildContext context,required PostsCubit p
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: const Color(0xFF1E1E1E),
-      title: const Text(
-        'Delete Comment',
-        style: TextStyle(color: Colors.white),
+      title:  Text(
+        'Delete Comment'.tr(),
+        style: const TextStyle(color: Colors.white),
       ),
-      content: const Text(
-        'Are you sure you want to delete this comment?',
-        style: TextStyle(color: Colors.white70),
+      content:  Text(
+        'Are you sure you want to delete this comment?'.tr(),
+        style: const TextStyle(color: Colors.white70),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(color: Colors.white70),
+          child:  Text(
+            'Cancel'.tr(),
+            style: const TextStyle(color: Colors.white70),
           ),
         ),
         TextButton(
@@ -76,9 +77,9 @@ void showDeleteConfirmation({required BuildContext context,required PostsCubit p
             Navigator.pop(context);
            postsCubit.deleteComment(commentId: commentId);
           },
-          child: const Text(
-            'Delete',
-            style: TextStyle(color: Colors.red),
+          child:  Text(
+            'Delete'.tr(),
+            style: const TextStyle(color: Colors.red),
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,13 +28,13 @@ class DesignStyleScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Choose design style',
-                          style: TextStyle(
+                          'Choose design style'.tr(),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                           ),
@@ -77,11 +78,11 @@ class DesignStyleScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text(
-                          'Save',
+                        child:  Text(
+                          'Save'.tr(),
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           ),
                         ),
                       ),
@@ -125,10 +126,10 @@ class DesignStyleScreen extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            displayName,
-            style: const TextStyle(
+            displayName.tr(),
+            style:  TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 18.sp,
             ),
             textAlign: TextAlign.center,
           ),

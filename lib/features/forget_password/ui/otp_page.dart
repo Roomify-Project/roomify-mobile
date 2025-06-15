@@ -169,9 +169,11 @@
 //   }
 // }
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/features/forget_password/ui/new_password.dart';
 import '../logic/forget_cubit.dart';
 import '../logic/forget_states.dart';
@@ -236,19 +238,19 @@ class OtpPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'Verify OTP',
+               Text(
+                'Verify OTP'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Text(
-                'Enter the verification code sent to your email',
+               Text(
+                'Enter the verification code sent to your email'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -284,9 +286,9 @@ class OtpPage extends StatelessWidget {
                               cubit.verifyOtp(otpCode);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                 SnackBar(
                                   content: Text(
-                                      'Please enter the complete verification code'),
+                                      'Please enter the complete verification code'.tr()),
                                 ),
                               );
                             }
@@ -299,11 +301,11 @@ class OtpPage extends StatelessWidget {
                     ),
                     child: state is OtpVerificationLoadingState
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Verify',
+                        :  Text(
+                            'Verify'.tr(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

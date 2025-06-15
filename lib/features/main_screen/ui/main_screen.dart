@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -164,15 +165,15 @@ class _MainScreenState extends State<MainScreen> {
                                       icon: const Icon(Icons.more_vert,
                                           color: Colors.white),
                                       itemBuilder: (context) => [
-                                        const PopupMenuItem(
-                                          value: 'delete',
+                                         PopupMenuItem(
+                                          value: 'delete'.tr(),
                                           child: Row(
                                             children: [
-                                              Icon(Icons.delete,
+                                              const Icon(Icons.delete,
                                                   color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text('Delete Post',
-                                                  style: TextStyle(
+                                              SizedBox(width: 8.w),
+                                              Text('Delete Post'.tr(),
+                                                  style: const TextStyle(
                                                       color:
                                                       Colors.white)),
                                             ],
@@ -190,19 +191,19 @@ class _MainScreenState extends State<MainScreen> {
                                                 const Color(
                                                     0xFF2D1B2E),
                                                 title: Text(
-                                                  'Delete Post',
+                                                  'Delete Post'.tr(),
                                                   style: TextStyles
                                                       .font18WhiteRegular,
                                                 ),
                                                 content: Text(
-                                                    'Are you sure you want to delete this post?',
+                                                    'Are you sure you want to delete this post?'.tr(),
                                                     style: TextStyles
                                                         .font16WhiteInter),
                                                 actions: [
                                                   TextButton(
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(
+                                                    child:  Text(
+                                                      'Cancel'.tr(),
+                                                      style: const TextStyle(
                                                           color: Colors
                                                               .white),
                                                     ),
@@ -213,9 +214,9 @@ class _MainScreenState extends State<MainScreen> {
                                                     },
                                                   ),
                                                   TextButton(
-                                                    child: const Text(
-                                                        'Delete',
-                                                        style: TextStyle(
+                                                    child:  Text(
+                                                        'Delete'.tr(),
+                                                        style: const TextStyle(
                                                             color: Colors
                                                                 .red)),
                                                     onPressed: () {
@@ -302,7 +303,7 @@ class _MainScreenState extends State<MainScreen> {
                                           ),
                                           SizedBox(width: 8.w),
                                           Text(
-                                            "${postCubit.getPostResponse!.postData.likesCount} likes",
+                                            "${postCubit.getPostResponse!.postData.likesCount} likes".tr(),
                                             style: TextStyles.font14WhiteRegular,
                                           ),
                                         ],
@@ -317,7 +318,7 @@ class _MainScreenState extends State<MainScreen> {
                                           ),
                                           SizedBox(width: 8.w),
                                           Text(
-                                            "${postCubit.getPostResponse!.postData.comments.length ?? 0} comments",
+                                            "${postCubit.getPostResponse!.postData.comments.length ?? 0} comments".tr(),
                                             style: TextStyles.font14WhiteRegular,
                                           ),
                                         ],
@@ -368,7 +369,7 @@ class _MainScreenState extends State<MainScreen> {
                             fontSize: 16.sp,
                           ),
                           decoration: InputDecoration(
-                            hintText: "Comment.....",
+                            hintText: "Comment.....".tr(),
                             hintStyle: TextStyle(
                               color: Colors.white.withOpacity(0.7),
                               fontSize: 16.sp,
@@ -467,14 +468,14 @@ class _MainScreenState extends State<MainScreen> {
                             showBackspaceButton: false,
                             showSearchViewButton: false,
                           ),
-                          searchViewConfig: const SearchViewConfig(
+                          searchViewConfig:  SearchViewConfig(
                             backgroundColor: ColorsManager.colorPrimary,
                             buttonIconColor: Colors.white,
-                            hintText: 'Search emoji...',
+                            hintText: 'Search emoji...'.tr(),
                           ),
                         ),
                       )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ),
                   ],
                 ),

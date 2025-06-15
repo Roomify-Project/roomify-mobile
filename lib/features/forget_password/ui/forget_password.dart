@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/di/dependency_injection.dart';
 import 'package:rommify_app/features/forget_password/logic/forget_cubit.dart';
 import 'package:rommify_app/features/forget_password/logic/forget_states.dart';
@@ -61,7 +63,7 @@ class _ForgetPasswordDialogState extends State<ForgetPasswordDialog> {
             MaterialPageRoute(
               builder: (_) => BlocProvider.value(
                 value: _cubit,
-                child:  OtpPage(),
+                child:  const OtpPage(),
               ),
             ),
           );
@@ -85,25 +87,25 @@ class _ForgetPasswordDialogState extends State<ForgetPasswordDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'Reset password',
+               Text(
+                'Reset password'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Text(
-                'Type your email to send OTP',
+               Text(
+                'Type your email to send OTP'.tr(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               const SizedBox(height: 15),
               CustomTextField(
-                hint: 'E-mail',
+                hint: 'E-mail'.tr(),
                 controller: _cubit.emailController,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {},
@@ -120,8 +122,8 @@ class _ForgetPasswordDialogState extends State<ForgetPasswordDialog> {
                             final email = _cubit.emailController.text.trim();
                             if (email.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter your email'),
+                                 SnackBar(
+                                  content: Text('Please enter your email'.tr()),
                                 ),
                               );
                               return;
@@ -136,11 +138,11 @@ class _ForgetPasswordDialogState extends State<ForgetPasswordDialog> {
                     ),
                     child: state is ForgetPasswordLoadingState
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Continue',
+                        :  Text(
+                            'Continue'.tr(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

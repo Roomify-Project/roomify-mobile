@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rommify_app/core/helpers/extensions.dart';
@@ -167,7 +168,7 @@ class _CommentItemState extends State<CommentItem> {
                                                     BorderRadius.circular(12.r),
                                               ),
                                               child: Text(
-                                                'Save',
+                                                'Save'.tr(),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12.sp,
@@ -193,7 +194,7 @@ class _CommentItemState extends State<CommentItem> {
                                                     BorderRadius.circular(12.r),
                                               ),
                                               child: Text(
-                                                'Cancel',
+                                                'Cancel'.tr(),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12.sp,

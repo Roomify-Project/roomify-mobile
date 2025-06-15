@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -104,9 +105,9 @@ class _GenerateRoomScreenState extends State<GenerateRoomScreen> {
                                 ),
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                               ),
-                              child: const Text(
-                                'More',
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                              child:  Text(
+                                'More'.tr(),
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
                               ),
                             ),
                           )

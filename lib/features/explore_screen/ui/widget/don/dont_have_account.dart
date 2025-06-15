@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,11 +13,11 @@ class SingupRichText extends StatelessWidget {
     return Center(
       child: RichText(
         text: TextSpan(
-          text: "Don't have an account? ",
+          text: "Don't have an account? ".tr(),
           style: TextStyle(color: Colors.white, fontSize: 16.sp),
           children: [
             TextSpan(
-              text: "Sign up",
+              text: "Sign up".tr(),
               style: TextStyle(color: Colors.red, fontSize: 18.sp),
               recognizer: TapGestureRecognizer()..onTap = onLoginTap,
             ),

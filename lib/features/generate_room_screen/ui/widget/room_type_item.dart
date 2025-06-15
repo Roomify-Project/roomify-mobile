@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,7 @@ class RoomTypeItem extends StatelessWidget {
           children: [
              Icon(Icons.ice_skating_sharp,color: Colors.white,size: 29.sp,),
             SizedBox(height: 2.h,),
-            Text("living room",style: TextStyles.font14WhiteRegular.copyWith(fontSize: 12.sp),)
+            Text("living room".tr(),style: TextStyles.font14WhiteRegular.copyWith(fontSize: 12.sp),)
           ],
         ),
       ),

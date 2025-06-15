@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,7 +51,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
             ),
             centerTitle: true,
             title: Text(
-              'Chats',
+              'Chats'.tr(),
               style: TextStyles.font18WhiteRegular,
             ),
           ),
@@ -62,9 +63,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 )
               : ChatCubit.get(context).getAllChatResponse!.chats.isEmpty ||
                       ChatCubit.get(context).getAllChatResponse == null
-                  ? const Center(
+                  ?  Center(
                       child: AnimatedEmptyList(
-                        title: "No Following Found",
+                        title: "No Following Found".tr(),
                         lottieAnimationPath:
                             'assets/animation/empity_list.json',
                       ),
@@ -72,7 +73,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   : state is GetAllChatsErrorStates
                       ? Center(
                           child: AnimatedErrorWidget(
-                            title: "Loading Error",
+                            title: "Loading Error".tr(),
                             message: state.error ?? "No data available",
                             lottieAnimationPath: 'assets/animation/error.json',
                             // onRetry: () => postsCubit.getAllPosts(),

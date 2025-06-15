@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -52,7 +53,14 @@ void main() async {
   }
 
   configLoading();
-  runApp(RoomifyApp(appRouter: AppRouter(),));
+  runApp(  EasyLocalization(
+    supportedLocales: const [Locale('en'), Locale('ar')],
+    path: 'assets/translations',
+    fallbackLocale: const Locale('en'),
+    startLocale: const Locale('ar'), // اللغة الافتراضية
+    child: RoomifyApp(appRouter: AppRouter(),),
+  )
+  );
 }
 void configLoading() {
   EasyLoading.instance

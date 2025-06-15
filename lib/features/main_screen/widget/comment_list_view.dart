@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -70,12 +71,12 @@ class _CommentListViewState extends State<CommentListView> {
         } else if (state is AddCommentSuccessState) {
           EasyLoading.dismiss();
           flutterShowToast(
-              message: "comment sent successfully",
+              message: "comment sent successfully".tr(),
               toastCase: ToastCase.success);
         } else if (state is UpdateCommentSuccessState) {
           EasyLoading.dismiss();
           flutterShowToast(
-              message: "comment updated successfully",
+              message: "comment updated successfully".tr(),
               toastCase: ToastCase.success);
         } else if (state is DeleteCommentSuccessState) {
           EasyLoading.dismiss();

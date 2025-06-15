@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,7 +60,7 @@ Widget buildMessageComposer(
                             Expanded(
                               child: TextField(
                                 decoration: InputDecoration(
-                                  hintText: 'Type...',
+                                  hintText: 'Type...'.tr(),
                                   hintStyle: TextStyle(
                                     color: Colors.white54,
                                     fontSize: 14.sp,
@@ -252,15 +253,15 @@ Widget buildMessageComposer(
                       showBackspaceButton: false,
                       showSearchViewButton: false, // إخفاء البحث للسرعة
                     ),
-                    searchViewConfig: const SearchViewConfig(
+                    searchViewConfig:  SearchViewConfig(
                       backgroundColor: ColorsManager.colorPrimary,
                       // buttonColor: ColorsManager.colorSecondry,
                       buttonIconColor: Colors.white,
-                      hintText: 'Search emoji...',
+                      hintText: "Search emoji...".tr(),
                     ),
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ),
 
         SizedBox(height: 20.h),
@@ -311,27 +312,27 @@ class _MessageBubbleState extends State<MessageBubble> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: ColorsManager.mainColor,
-                    title: const Text(
-                      'Delete Message',
-                      style: TextStyle(color: Colors.white),
+                    title:  Text(
+                      'Delete Message'.tr(),
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    content: const Text(
-                      'Are you sure you want to delete this message?',
-                      style: TextStyle(color: Colors.white),
+                    content:  Text(
+                      'Are you sure you want to delete this message?'.tr(),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     actions: [
                       TextButton(
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.white),
+                        child:  Text(
+                          'Cancel'.tr(),
+                          style: const TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the dialog
                         },
                       ),
                       TextButton(
-                        child: const Text('Delete',
-                            style: TextStyle(color: Colors.red)),
+                        child:  Text('Delete'.tr(),
+                            style: const TextStyle(color: Colors.red)),
                         onPressed: () {
                           widget.chatCubit.deleteMessage(
                               messageId:

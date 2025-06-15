@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,7 +24,7 @@ class CustomRoomSizesTextForm extends StatelessWidget {
           decoration: InputDecoration(
             isCollapsed: true, // لإزالة الـ padding الافتراضي
             contentPadding: EdgeInsets.zero, // لإزالة المسافات الداخلية
-            hintText: 'length',
+            hintText: 'length'.tr(),
             hintStyle: TextStyles.font12WhiteRegular,
             border: InputBorder.none,
           ),

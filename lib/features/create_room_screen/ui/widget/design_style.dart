@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,7 +76,7 @@ class DesignStyle extends StatelessWidget {
                         child: SvgPicture.asset('assets/images/pin.svg',color:  ColorsManager.colorCircle,height: 12.h,width: 12.w,),
                       ),
                     ),
-                    Text("Design style",style: TextStyle(fontSize: 10.sp,fontWeight: FontWeight.w400,color: Colors.white),)
+                    Text("Design style".tr(),style: TextStyle(fontSize: 10.sp,fontWeight: FontWeight.w400,color: Colors.white),)
                   ],
                 ),
               ),

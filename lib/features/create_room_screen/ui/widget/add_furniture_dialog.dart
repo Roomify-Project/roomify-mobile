@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,11 +43,11 @@ class _AddFurniturImageState extends State<AddFurniturImage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Upload room images',
+                  Text('Upload room images'.tr(),
                       style: TextStyles.font16WhiteInter),
                   SizedBox(height: 9.h),
                   Text(
-                    'Upload one or maximum two images for your room.\nAnd enter its 3 dimensions values.',
+                    'Upload one or maximum two images for your room.\nAnd enter its 3 dimensions values.'.tr(),
                     style: TextStyles.font14WhiteRegular
                         .copyWith(fontWeight: FontWeightHelper.regular),
                   ),
@@ -76,9 +77,9 @@ class _AddFurniturImageState extends State<AddFurniturImage> {
                           color: Colors.white,
                         ),
                         SizedBox(height: 6.h),
-                        const Text(
-                          'room image',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                         Text(
+                          'room image'.tr(),
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ],
                     ),
@@ -134,7 +135,7 @@ class _AddFurniturImageState extends State<AddFurniturImage> {
                     width: 5.w,
                   ),
                   Text(
-                    "Add last one",
+                    "Add last one".tr(),
                     style: TextStyles.font14WhiteRegular
                         .copyWith(fontWeight: FontWeight.w700),
                   )
@@ -159,7 +160,7 @@ class _AddFurniturImageState extends State<AddFurniturImage> {
                       ),
                       padding:EdgeInsets.zero
                     ),
-                    child: Text('Save',
+                    child: Text('Save'.tr(),
                         style: TextStyles.font24WhiteExtraBold.copyWith(
                             fontWeight: FontWeight.w600,
                             color: ColorsManager.colorDeepBurble)),

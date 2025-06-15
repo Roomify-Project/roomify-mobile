@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -131,7 +132,7 @@ class AnimatedEmptyList extends StatelessWidget {
                   ],
                 ).createShader(bounds),
                 child: Text(
-                  title!,
+                  title!.tr(),
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -144,7 +145,7 @@ class AnimatedEmptyList extends StatelessWidget {
 
               // Subtitle
               Text(
-                subtitle!,
+                subtitle!.tr(),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
                 ),
