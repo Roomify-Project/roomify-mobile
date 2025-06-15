@@ -93,4 +93,4 @@ class GetFollowingErrorState extends ProfileStates {
 }
 class ChangeFollowCount extends ProfileStates {}
 
-class ChangeLanguage extends ProfileStates {}
+class ChangeLanguageState extends ProfileStates {}

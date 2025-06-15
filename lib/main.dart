@@ -25,6 +25,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await SharedPrefHelper.init();
+  final langCode = await SharedPrefHelper.getString('language') ?? 'en';
+  final savedLocale = Locale(langCode);
+
   await setupGetIt();
   // await CheckServerConnection.checkServerConnection();
   // await CheckServerNotificationConnection.checkServerNotificationConnection();
@@ -58,7 +61,7 @@ void main() async {
     supportedLocales: const [Locale('en'), Locale('ar')],
     path: 'assets/language',
     fallbackLocale: const Locale('en'),
-    startLocale:  Locale(SharedPrefHelper.getString('language')??'en'), // اللغة الافتراضية
+    startLocale:  savedLocale,
     child: RoomifyApp(appRouter: AppRouter(),),
   )
   );

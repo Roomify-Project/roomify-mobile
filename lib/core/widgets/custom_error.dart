@@ -71,7 +71,7 @@ class CustomErrorWidget extends StatelessWidget {
 
           // Error Title
           Text(
-            title!,
+            title!.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.red,
@@ -82,7 +82,7 @@ class CustomErrorWidget extends StatelessWidget {
 
           // Error Message
           Text(
-            message!,
+            message!.tr(),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Colors.grey[600],
             ),
@@ -111,7 +111,7 @@ class CustomErrorWidget extends StatelessWidget {
                 children: [
                   const Icon(Icons.refresh),
                   const SizedBox(width: 8),
-                  Text(buttonText!),
+                  Text(buttonText!.tr()),
                 ],
               ),
             ),
@@ -253,7 +253,7 @@ class _AnimatedErrorWidgetState extends State<AnimatedErrorWidget>
             FadeTransition(
               opacity: _fadeAnimation,
               child: Text(
-                widget.message!,
+                widget.message!.tr(),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
                 ),
@@ -296,7 +296,7 @@ class _AnimatedErrorWidgetState extends State<AnimatedErrorWidget>
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: widget.onContactSupport,
-                      child: const Text('Contact Support'),
+                      child:  Text('Contact Support'.tr()),
                     ),
                   ],
                 ],

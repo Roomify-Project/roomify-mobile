@@ -150,7 +150,6 @@ class EditProfileScreen extends StatelessWidget {
                       value: context.locale.languageCode == 'ar',
                       onChanged: (value) {
                        ProfileCubit.get(context).changeLanguage(context, value);
-
                       },
                     ),
                   ),

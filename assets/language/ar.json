@@ -244,6 +244,17 @@
   "Saturday": "السبت",
   "Sunday": "الأحد",
   "AM": "ص",
-  "PM": "م"
+  "PM": "م",
+  "Oops! Something went wrong": "عذرًا! حدث خطأ ما",
+  "An unexpected error occurred. Please try again later.": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.",
+  "Try Again": "حاول مرة أخرى",
+  "Network Error": "خطأ في الشبكة",
+  "Please check your internet connection and try again.": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.",
+  "Contact Support": "اتصل بالدعم",
+  "No Data Found": "لا توجد بيانات",
+  "It seems there are no items to display at the moment": "يبدو أنه لا توجد عناصر للعرض حاليًا",
+  "Refresh": "تحديث",
+  "No Posts Yet": "لا توجد منشورات بعد",
+  "Be the first one to create a post!": "كن أول من ينشئ منشورًا!"
 
 }

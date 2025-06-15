@@ -242,5 +242,16 @@
   "Thursday": "Thursday",
   "Friday": "Friday",
   "Saturday": "Saturday",
-  "Sunday": "Sunday"
+  "Sunday": "Sunday",
+  "Oops! Something went wrong": "Oops! Something went wrong",
+  "An unexpected error occurred. Please try again later.": "An unexpected error occurred. Please try again later.",
+  "Try Again": "Try Again",
+  "Network Error": "Network Error",
+  "Please check your internet connection and try again.": "Please check your internet connection and try again.",
+  "Contact Support": "Contact Support",
+  "No Data Found": "No Data Found",
+  "It seems there are no items to display at the moment": "It seems there are no items to display at the moment",
+  "Refresh": "Refresh",
+  "No Posts Yet": "No Posts Yet",
+  "Be the first one to create a post!": "Be the first one to create a post!"
 }

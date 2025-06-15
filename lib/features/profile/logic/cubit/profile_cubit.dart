@@ -329,16 +329,17 @@ class ProfileCubit extends Cubit<ProfileStates> {
   Future<void> loadSavedLanguage(BuildContext context) async {
     final langCode = SharedPrefHelper.getString(_languageKey) ?? 'en';
     final locale = Locale(langCode);
-    emit(ChangeLanguage());
+    emit(ChangeLanguageState());
     context.setLocale(locale); // Apply language immediately
   }
 
   Future<void> changeLanguage(BuildContext context, bool isArabic) async {
     final newLocale = isArabic ? const Locale('ar') : const Locale('en');
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_languageKey, newLocale.languageCode);
+    // final prefs = await SharedPreferences.getInstance();
+    print("newww ${newLocale}");
+    await SharedPrefHelper.setData(_languageKey, newLocale.languageCode);
 
-    emit(ChangeLanguage());
+    emit(ChangeLanguageState());
     context.setLocale(newLocale);
   }
 
