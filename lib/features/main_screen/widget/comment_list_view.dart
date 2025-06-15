@@ -86,52 +86,45 @@ class _CommentListViewState extends State<CommentListView> {
       },
       builder: (BuildContext context, state) {
         final comments = PostsCubit.get(context).getPostResponse?.postData.comments;
-        return Column(
-          children: [
-            SizedBox(height: 10.h,),
-            Expanded(
-              child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    if (state is GetCommentLoadingState) {
-                      return const CustomShimmerEffect();
-                    }
-                    if (state is GetPostErrorState) {
-                      Center(
-                        child: AnimatedErrorWidget(
-                          title: "Loading Error",
-                          message: state.message,
-                          lottieAnimationPath: 'assets/animation/error.json',
-                          // onRetry: _loadUserPosts,
-                        ),
-                      );
-                    }
-                    if (comments == null || comments.isEmpty) {
-                      return const Center(
-                        child: AnimatedEmptyList(
-                          title: "No Comments Found",
-                          subtitle:  "Start by creating your first Comment",
-                              // : "",
-                          // comments![index].userId ==
-                          //                             SharedPrefHelper.getString(SharedPrefKey.userId)
-                          //                         ?
-                          lottieAnimationPath: 'assets/animation/empity_list.json',
-                        ),
-                      );
-                    }
-                    return CommentItem(
-                      getCommentData:
-                          PostsCubit.get(context).getPostResponse!.postData.comments[index],
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                        height: 20.h,
-                      ),
-                  itemCount: comments?.length ?? 0),
+        return ListView.separated(
+          shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              if (state is GetCommentLoadingState) {
+                return const CustomShimmerEffect();
+              }
+              if (state is GetPostErrorState) {
+                Center(
+                  child: AnimatedErrorWidget(
+                    title: "Loading Error",
+                    message: state.message,
+                    lottieAnimationPath: 'assets/animation/error.json',
+                    // onRetry: _loadUserPosts,
+                  ),
+                );
+              }
+              if (comments == null || comments.isEmpty) {
+                return const Center(
+                  child: AnimatedEmptyList(
+                    title: "No Comments Found",
+                    subtitle:  "Start by creating your first Comment",
+                    // : "",
+                    // comments![index].userId ==
+                    //                             SharedPrefHelper.getString(SharedPrefKey.userId)
+                    //                         ?
+                    lottieAnimationPath: 'assets/animation/empity_list.json',
+                  ),
+                );
+              }
+              return CommentItem(
+                getCommentData:
+                PostsCubit.get(context).getPostResponse!.postData.comments[index],
+              );
+            },
+            separatorBuilder: (context, index) => SizedBox(
+              height: 20.h,
             ),
-            SizedBox(height: 10.h,),
-
-          ],
-        );
+            itemCount: comments?.length ?? 0);
       },
     );
   }
