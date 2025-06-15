@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/sign_request_body.dart';
@@ -32,9 +33,9 @@ class SignUpCubit extends Cubit<SignUpStates> {
         String errorMessage = left.apiErrorModel.title ?? "An error occurred";
      
         if (errorMessage.toLowerCase().contains('username')) {
-          errorMessage = "This username is already taken. Please try another one.";
+          errorMessage = "This username is already taken. Please try another one.".tr();
         } else if (errorMessage.toLowerCase().contains('email')) {
-          errorMessage = "This email is already registered. Please use another email or login.";
+          errorMessage = "This email is already registered. Please use another email or login.".tr();
         }
         
         emit(SignUpLoadingErrorState(message: errorMessage));
@@ -49,7 +50,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
   void verifyOtp(String otp) async {
     if (registeredEmail == null) {
       emit(OtpLoadingErrorState(
-          message: "Email not found. Please register first."));
+          message: "Email not found. Please register first.".tr()));
       return;
     }
 
@@ -64,7 +65,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
       
           if (errorMessage.toLowerCase().contains('bad request') || 
               errorMessage.toLowerCase().contains('invalid')) {
-            errorMessage = "Invalid verification code. Please check and try again.";
+            errorMessage = "Invalid verification code. Please check and try again.".tr();
           }
           
           emit(OtpLoadingErrorState(message: errorMessage));
@@ -77,12 +78,12 @@ class SignUpCubit extends Cubit<SignUpStates> {
               right.message.contains("verified")) {
             emit(OtpSuccessState());
           } else {
-            emit(OtpLoadingErrorState(message: "Invalid verification code. Please try again."));
+            emit(OtpLoadingErrorState(message: "Invalid verification code. Please try again.".tr()));
           }
         },
       );
     } catch (e) {
-      emit(OtpLoadingErrorState(message: "Verification failed. Please try again."));
+      emit(OtpLoadingErrorState(message: "Verification failed. Please try again.".tr()));
     }
   }
 }

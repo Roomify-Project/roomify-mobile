@@ -162,7 +162,7 @@ class SignUpScreen extends StatelessWidget {
                                     Expanded(
                                       child: RadioListTile<String>(
                                         title:  Text('Normal User'.tr(), style: const TextStyle(color: Colors.white)),
-                                        value: 'normalUser',
+                                        value: 'User',
                                         groupValue: signUpCubit.selectedRole,
                                         contentPadding: EdgeInsets.zero,
                                         onChanged: (value) {
