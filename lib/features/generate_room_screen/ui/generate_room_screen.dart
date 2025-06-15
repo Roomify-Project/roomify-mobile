@@ -59,7 +59,7 @@ class _GenerateRoomScreenState extends State<GenerateRoomScreen> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding:  EdgeInsets.only(left: 23.w,right: 23.w),
+                              padding:  EdgeInsets.only(left: 14.w,right: 14.w),
                               child: GridView.builder(
                                 itemCount: generateCubitItem.generatedImagesResponse!
                                     .generatedImageUrls.length,
